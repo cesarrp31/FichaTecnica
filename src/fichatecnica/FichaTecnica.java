@@ -18,6 +18,7 @@ public class FichaTecnica {
      */
     public static void main(String[] args) {
         FichaTecnicaImpresion ft=new FichaTecnicaImpresion();
+        ft.pack();
         ft.setVisible(true);
     }
     

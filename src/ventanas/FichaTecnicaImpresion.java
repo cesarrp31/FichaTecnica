@@ -27,7 +27,15 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lfecha = new javax.swing.JPanel();
+        centro = new javax.swing.JPanel();
+        superiortareas = new javax.swing.JPanel();
+        ltareas = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tatareas = new javax.swing.JTextArea();
+        inferiorcomponentes = new javax.swing.JPanel();
+        lcomponentes = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tacomponentes = new javax.swing.JTextArea();
         superior = new javax.swing.JPanel();
         superiologo = new javax.swing.JPanel();
         superlogosolo = new javax.swing.JPanel();
@@ -37,33 +45,99 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         ltel = new javax.swing.JLabel();
         ltel2 = new javax.swing.JLabel();
         ldir = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        infdatos = new javax.swing.JPanel();
         ltitulo = new javax.swing.JLabel();
         ldependencia = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         tfdependencia = new javax.swing.JTextField();
         tffecha = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        lpatrimonio = new javax.swing.JLabel();
+        tfpatrimonio = new javax.swing.JTextField();
         inferior = new javax.swing.JPanel();
+        icentro = new javax.swing.JPanel();
+        icfirma = new javax.swing.JLabel();
+        tffirma = new javax.swing.JTextField();
+        iizq = new javax.swing.JPanel();
+        iitecnico = new javax.swing.JLabel();
+        tftecnico = new javax.swing.JTextField();
+        ider = new javax.swing.JPanel();
+        idaclaracion = new javax.swing.JLabel();
+        tfaclaracion = new javax.swing.JTextField();
         derecha = new javax.swing.JPanel();
+        cbtareas = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
         izquierda = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lfecha.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        centro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        centro.setLayout(new java.awt.GridLayout(2, 1));
 
-        javax.swing.GroupLayout lfechaLayout = new javax.swing.GroupLayout(lfecha);
-        lfecha.setLayout(lfechaLayout);
-        lfechaLayout.setHorizontalGroup(
-            lfechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1151, Short.MAX_VALUE)
+        ltareas.setText("Se Realizo:");
+
+        tatareas.setColumns(20);
+        tatareas.setRows(5);
+        jScrollPane2.setViewportView(tatareas);
+
+        javax.swing.GroupLayout superiortareasLayout = new javax.swing.GroupLayout(superiortareas);
+        superiortareas.setLayout(superiortareasLayout);
+        superiortareasLayout.setHorizontalGroup(
+            superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(superiortareasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(ltareas)
+                .addContainerGap(1088, Short.MAX_VALUE))
+            .addGroup(superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(superiortareasLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1131, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
-        lfechaLayout.setVerticalGroup(
-            lfechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        superiortareasLayout.setVerticalGroup(
+            superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(superiortareasLayout.createSequentialGroup()
+                .addComponent(ltareas)
+                .addContainerGap(104, Short.MAX_VALUE))
+            .addGroup(superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(superiortareasLayout.createSequentialGroup()
+                    .addGap(10, 10, 10)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
+                    .addGap(21, 21, 21)))
         );
 
-        getContentPane().add(lfecha, java.awt.BorderLayout.CENTER);
+        centro.add(superiortareas);
+
+        lcomponentes.setText("Componentes utilizados:");
+
+        tacomponentes.setColumns(20);
+        tacomponentes.setRows(5);
+        jScrollPane1.setViewportView(tacomponentes);
+
+        javax.swing.GroupLayout inferiorcomponentesLayout = new javax.swing.GroupLayout(inferiorcomponentes);
+        inferiorcomponentes.setLayout(inferiorcomponentesLayout);
+        inferiorcomponentesLayout.setHorizontalGroup(
+            inferiorcomponentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inferiorcomponentesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(inferiorcomponentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(inferiorcomponentesLayout.createSequentialGroup()
+                        .addComponent(lcomponentes)
+                        .addGap(0, 1014, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
+        );
+        inferiorcomponentesLayout.setVerticalGroup(
+            inferiorcomponentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inferiorcomponentesLayout.createSequentialGroup()
+                .addComponent(lcomponentes)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
+                .addGap(6, 6, 6))
+        );
+
+        centro.add(inferiorcomponentes);
+
+        getContentPane().add(centro, java.awt.BorderLayout.CENTER);
 
         superior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         superior.setLayout(new java.awt.GridLayout(2, 1));
@@ -156,78 +230,176 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("jLabel1");
+        lpatrimonio.setText("Nº Patrimonio");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ldependencia))
+        tfpatrimonio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfpatrimonioActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout infdatosLayout = new javax.swing.GroupLayout(infdatos);
+        infdatos.setLayout(infdatosLayout);
+        infdatosLayout.setHorizontalGroup(
+            infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(infdatosLayout.createSequentialGroup()
+                .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(infdatosLayout.createSequentialGroup()
+                        .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(infdatosLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(ldependencia))
+                            .addGroup(infdatosLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lpatrimonio)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(tffecha, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(42, 42, 42)
-                                .addComponent(jLabel1))
-                            .addComponent(tfdependencia, javax.swing.GroupLayout.PREFERRED_SIZE, 864, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(infdatosLayout.createSequentialGroup()
+                                .addComponent(tfdependencia, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tffecha, javax.swing.GroupLayout.DEFAULT_SIZE, 810, Short.MAX_VALUE))
+                            .addComponent(tfpatrimonio)))
+                    .addGroup(infdatosLayout.createSequentialGroup()
                         .addGap(417, 417, 417)
                         .addComponent(ltitulo)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        infdatosLayout.setVerticalGroup(
+            infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(infdatosLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(ltitulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ldependencia)
-                    .addComponent(tfdependencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfdependencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(tffecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addContainerGap(131, Short.MAX_VALUE))
+                    .addComponent(tffecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lpatrimonio)
+                    .addComponent(tfpatrimonio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        superior.add(jPanel2);
+        superior.add(infdatos);
 
         getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
 
         inferior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        inferior.setLayout(new java.awt.GridLayout());
 
-        javax.swing.GroupLayout inferiorLayout = new javax.swing.GroupLayout(inferior);
-        inferior.setLayout(inferiorLayout);
-        inferiorLayout.setHorizontalGroup(
-            inferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1355, Short.MAX_VALUE)
+        icfirma.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        icfirma.setText("Firma");
+
+        javax.swing.GroupLayout icentroLayout = new javax.swing.GroupLayout(icentro);
+        icentro.setLayout(icentroLayout);
+        icentroLayout.setHorizontalGroup(
+            icentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(icentroLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(icentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(icfirma, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                    .addComponent(tffirma))
+                .addContainerGap())
         );
-        inferiorLayout.setVerticalGroup(
-            inferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+        icentroLayout.setVerticalGroup(
+            icentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(icentroLayout.createSequentialGroup()
+                .addComponent(icfirma, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tffirma, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
+                .addContainerGap())
         );
+
+        inferior.add(icentro);
+
+        iitecnico.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        iitecnico.setText("Tecnico");
+
+        javax.swing.GroupLayout iizqLayout = new javax.swing.GroupLayout(iizq);
+        iizq.setLayout(iizqLayout);
+        iizqLayout.setHorizontalGroup(
+            iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(iitecnico, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
+            .addGroup(iizqLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(tftecnico))
+        );
+        iizqLayout.setVerticalGroup(
+            iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(iizqLayout.createSequentialGroup()
+                .addComponent(iitecnico, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tftecnico)
+                .addContainerGap())
+        );
+
+        inferior.add(iizq);
+
+        idaclaracion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        idaclaracion.setText("Aclaracion");
+
+        javax.swing.GroupLayout iderLayout = new javax.swing.GroupLayout(ider);
+        ider.setLayout(iderLayout);
+        iderLayout.setHorizontalGroup(
+            iderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(iderLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(iderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(iderLayout.createSequentialGroup()
+                        .addComponent(idaclaracion, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                        .addGap(220, 220, 220))
+                    .addGroup(iderLayout.createSequentialGroup()
+                        .addComponent(tfaclaracion)
+                        .addContainerGap())))
+        );
+        iderLayout.setVerticalGroup(
+            iderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(iderLayout.createSequentialGroup()
+                .addComponent(idaclaracion, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfaclaracion, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        inferior.add(ider);
 
         getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
         derecha.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        cbtareas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Backup", "Desinfeccion (Virus y Malwares)", "SO xp", "SO w7 x32", "SO w7 x64", " " }));
+        cbtareas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbtareasActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("TRABAJO REALIZADO");
+
         javax.swing.GroupLayout derechaLayout = new javax.swing.GroupLayout(derecha);
         derecha.setLayout(derechaLayout);
         derechaLayout.setHorizontalGroup(
             derechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, derechaLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(derechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cbtareas, 0, 291, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         derechaLayout.setVerticalGroup(
             derechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(derechaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(cbtareas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(118, Short.MAX_VALUE))
         );
 
         getContentPane().add(derecha, java.awt.BorderLayout.LINE_END);
@@ -255,6 +427,15 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private void tffechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tffechaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tffechaActionPerformed
+
+    private void tfpatrimonioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfpatrimonioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfpatrimonioActionPerformed
+
+    private void cbtareasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbtareasActionPerformed
+        // TODO add your handling code here:
+        this.tatareas.append((String) cbtareas.getSelectedItem()+"-");
+    }//GEN-LAST:event_cbtareasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -292,25 +473,45 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cbtareas;
+    private javax.swing.JPanel centro;
     private javax.swing.JPanel derecha;
+    private javax.swing.JPanel icentro;
+    private javax.swing.JLabel icfirma;
+    private javax.swing.JLabel idaclaracion;
+    private javax.swing.JPanel ider;
+    private javax.swing.JLabel iitecnico;
+    private javax.swing.JPanel iizq;
+    private javax.swing.JPanel infdatos;
     private javax.swing.JPanel inferior;
+    private javax.swing.JPanel inferiorcomponentes;
     private javax.swing.JPanel izquierda;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lcomponentes;
     private javax.swing.JLabel ldependencia;
     private javax.swing.JLabel ldir;
-    private javax.swing.JPanel lfecha;
     private javax.swing.JLabel llogo;
     private javax.swing.JLabel lnombre;
+    private javax.swing.JLabel lpatrimonio;
+    private javax.swing.JLabel ltareas;
     private javax.swing.JLabel ltel;
     private javax.swing.JLabel ltel2;
     private javax.swing.JLabel ltitulo;
     private javax.swing.JPanel superdatos;
     private javax.swing.JPanel superiologo;
     private javax.swing.JPanel superior;
+    private javax.swing.JPanel superiortareas;
     private javax.swing.JPanel superlogosolo;
+    private javax.swing.JTextArea tacomponentes;
+    private javax.swing.JTextArea tatareas;
+    private javax.swing.JTextField tfaclaracion;
     private javax.swing.JTextField tfdependencia;
     private javax.swing.JTextField tffecha;
+    private javax.swing.JTextField tffirma;
+    private javax.swing.JTextField tfpatrimonio;
+    private javax.swing.JTextField tftecnico;
     // End of variables declaration//GEN-END:variables
 }
