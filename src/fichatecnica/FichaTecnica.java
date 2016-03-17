@@ -5,6 +5,8 @@
  */
 package fichatecnica;
 
+import ventanas.FichaTecnicaImpresion;
+
 /**
  *
  * @author coperalta
@@ -15,7 +17,8 @@ public class FichaTecnica {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        FichaTecnicaImpresion ft=new FichaTecnicaImpresion();
+        ft.setVisible(true);
     }
     
 }
