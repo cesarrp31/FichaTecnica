@@ -5,6 +5,12 @@
  */
 package ventanas;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author jsilva
@@ -16,7 +22,34 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
      */
     public FichaTecnicaImpresion() {
         initComponents();
+        
+        inicializar();
     }
+    
+    private void inicializar() {
+        try {
+            
+            File text = new File("C:/Users/jsilva/Desktop/tareas.csv");
+            
+            //Creating Scanner instnace to read File in Java
+            Scanner scnr = new Scanner(text);
+            
+            //Reading each line of file using Scanner class
+            int lineNumber = 1;
+            while(scnr.hasNextLine()){
+                String line = scnr.nextLine();
+                System.out.println("line " + lineNumber + " :" + line);
+                lineNumber++;   
+                 System.out.println("llega");
+                 
+            }
+            System.out.println ("boom");
+        } catch (FileNotFoundException ex) {
+            System.err.println(ex.getLocalizedMessage());
+        }
+   
+    }   
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -514,4 +547,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private javax.swing.JTextField tfpatrimonio;
     private javax.swing.JTextField tftecnico;
     // End of variables declaration//GEN-END:variables
+
+    
 }
