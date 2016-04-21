@@ -5,11 +5,15 @@
  */
 package ventanas;
 
+import fichatecnica.FichaTecnica;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -28,27 +32,45 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     
     private void inicializar() {
         try {
+            System.out.println(System.getProperty("java.class.path"));
+            String logo= "logo_camara.png", 
+                    valores="tareas.csv";
+
+            File text = new File(this.getClass().getClassLoader().getResource(valores).getFile());
             
-            File text = new File("C:/Users/jsilva/Desktop/tareas.csv");
+            ImageIcon ii= createImageIcon(logo, "");
+                        
+            llogo.setIcon(ii);
+            
+            superlogosolo.add(llogo);
+
             
             //Creating Scanner instnace to read File in Java
             Scanner scnr = new Scanner(text);
             
             //Reading each line of file using Scanner class
-            int lineNumber = 1;
             while(scnr.hasNextLine()){
                 String line = scnr.nextLine();
-                System.out.println("line " + lineNumber + " :" + line);
-                lineNumber++;   
-                 System.out.println("llega");
-                 
+                cbtareas.addItem(line);
             }
-            System.out.println ("boom");
         } catch (FileNotFoundException ex) {
             System.err.println(ex.getLocalizedMessage());
         }
-   
-    }   
+        
+        this.tatareas.setText("");
+    }
+    
+    protected ImageIcon createImageIcon(String path,
+                                           String description) {
+        File img = new File(this.getClass().getClassLoader().getResource(path).getFile());
+        //URL imgURL = getClass().getResource(path);
+        if (img.getAbsolutePath() != null) {
+            return new ImageIcon(img.getAbsolutePath(), description);
+        } else {
+            System.err.println("No se encuentra la imagen: " + path);
+            return null;
+        }
+    }
     
 
     /**
@@ -175,8 +197,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         superior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         superior.setLayout(new java.awt.GridLayout(2, 1));
 
-        llogo.setIcon(new javax.swing.ImageIcon("E:\\Johnny\\sistemas\\FichaTecnica\\resource\\logo_camara.png")); // NOI18N
-
         javax.swing.GroupLayout superlogosoloLayout = new javax.swing.GroupLayout(superlogosolo);
         superlogosolo.setLayout(superlogosoloLayout);
         superlogosoloLayout.setHorizontalGroup(
@@ -185,8 +205,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             .addGroup(superlogosoloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(superlogosoloLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(llogo)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(llogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         superlogosoloLayout.setVerticalGroup(
             superlogosoloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -322,7 +342,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
 
         inferior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        inferior.setLayout(new java.awt.GridLayout());
+        inferior.setLayout(new java.awt.GridLayout(1, 0));
 
         icfirma.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         icfirma.setText("Firma");
@@ -404,7 +424,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         derecha.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        cbtareas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Backup", "Desinfeccion (Virus y Malwares)", "SO xp", "SO w7 x32", "SO w7 x64", " " }));
         cbtareas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbtareasActionPerformed(evt);
@@ -467,7 +486,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
     private void cbtareasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbtareasActionPerformed
         // TODO add your handling code here:
-        this.tatareas.append((String) cbtareas.getSelectedItem()+"-");
+        this.tatareas.append((String) cbtareas.getSelectedItem()+"\n");
     }//GEN-LAST:event_cbtareasActionPerformed
 
     /**

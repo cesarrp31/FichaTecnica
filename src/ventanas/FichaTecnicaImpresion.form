@@ -186,8 +186,8 @@
                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="llogo" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="llogo" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -207,11 +207,6 @@
               </Layout>
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="llogo">
-                  <Properties>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="2" name="E:\Johnny\sistemas\FichaTecnica\resource\logo_camara.png"/>
-                    </Property>
-                  </Properties>
                 </Component>
               </SubComponents>
             </Container>
@@ -563,14 +558,7 @@
         <Component class="javax.swing.JComboBox" name="cbtareas">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
-                <StringItem index="0" value="Backup"/>
-                <StringItem index="1" value="Desinfeccion (Virus y Malwares)"/>
-                <StringItem index="2" value="SO xp"/>
-                <StringItem index="3" value="SO w7 x32"/>
-                <StringItem index="4" value="SO w7 x64"/>
-                <StringItem index="5" value=" "/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
           <Events>
