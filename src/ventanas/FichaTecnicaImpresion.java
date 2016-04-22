@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,30 +36,37 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         try {
             System.out.println(System.getProperty("java.class.path"));
             String logo= "logo_camara.png", 
-                    valores="tareas.csv";
-
-            File text = new File(this.getClass().getClassLoader().getResource(valores).getFile());
+                    valores="tareas.csv", val="componentes.csv";
             
-            ImageIcon ii= createImageIcon(logo, "");
-                        
+            ImageIcon ii= createImageIcon(logo, "");                        
             llogo.setIcon(ii);
-            
             superlogosolo.add(llogo);
 
+            File archTareas = new File(this.getClass().getClassLoader().getResource(valores).getFile());
+            File archComponentes = new File(this.getClass().getClassLoader().getResource(val).getFile());
             
             //Creating Scanner instnace to read File in Java
-            Scanner scnr = new Scanner(text);
+            Scanner scnr = new Scanner(archTareas);
             
             //Reading each line of file using Scanner class
             while(scnr.hasNextLine()){
                 String line = scnr.nextLine();
                 cbtareas.addItem(line);
             }
+            
+            scnr = new Scanner(archComponentes);
+            while(scnr.hasNextLine()){
+                String line = scnr.nextLine();
+                cbComponentes.addItem(line);
+            }
         } catch (FileNotFoundException ex) {
             System.err.println(ex.getLocalizedMessage());
         }
         
         this.tatareas.setText("");
+        this.tacomponentes.setText("");
+        Date actual=new Date();
+        tffecha.setText(new SimpleDateFormat("dd-MM-yyyy").format(actual));
     }
     
     protected ImageIcon createImageIcon(String path,
@@ -122,6 +131,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         cbtareas = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         izquierda = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        cbComponentes = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -141,11 +152,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             .addGroup(superiortareasLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(ltareas)
-                .addContainerGap(1088, Short.MAX_VALUE))
+                .addContainerGap(992, Short.MAX_VALUE))
             .addGroup(superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(superiortareasLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1131, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1035, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         superiortareasLayout.setVerticalGroup(
@@ -177,7 +188,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addGroup(inferiorcomponentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(inferiorcomponentesLayout.createSequentialGroup()
                         .addComponent(lcomponentes)
-                        .addGap(0, 1014, Short.MAX_VALUE))
+                        .addGap(0, 918, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
         );
@@ -423,6 +434,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
         derecha.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        derecha.setPreferredSize(new java.awt.Dimension(150, 185));
 
         cbtareas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -440,7 +452,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, derechaLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(derechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cbtareas, 0, 291, Short.MAX_VALUE)
+                    .addComponent(cbtareas, 0, 116, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -456,15 +468,36 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         getContentPane().add(derecha, java.awt.BorderLayout.LINE_END);
 
+        izquierda.setPreferredSize(new java.awt.Dimension(150, 185));
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("COMPONENTES");
+
+        cbComponentes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbComponentesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout izquierdaLayout = new javax.swing.GroupLayout(izquierda);
         izquierda.setLayout(izquierdaLayout);
         izquierdaLayout.setHorizontalGroup(
             izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(izquierdaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                    .addComponent(cbComponentes, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         izquierdaLayout.setVerticalGroup(
             izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(izquierdaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(cbComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         getContentPane().add(izquierda, java.awt.BorderLayout.LINE_START);
@@ -486,8 +519,13 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
     private void cbtareasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbtareasActionPerformed
         // TODO add your handling code here:
-        this.tatareas.append((String) cbtareas.getSelectedItem()+"\n");
+        this.tatareas.append((String) cbtareas.getSelectedItem()+" -");
     }//GEN-LAST:event_cbtareasActionPerformed
+
+    private void cbComponentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbComponentesActionPerformed
+        // TODO add your handling code here:
+         this.tacomponentes.append((String) cbComponentes.getSelectedItem()+" -");
+    }//GEN-LAST:event_cbComponentesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -525,6 +563,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cbComponentes;
     private javax.swing.JComboBox<String> cbtareas;
     private javax.swing.JPanel centro;
     private javax.swing.JPanel derecha;
@@ -539,6 +578,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private javax.swing.JPanel inferiorcomponentes;
     private javax.swing.JPanel izquierda;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
