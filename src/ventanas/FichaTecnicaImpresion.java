@@ -36,7 +36,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         try {
             System.out.println(System.getProperty("java.class.path"));
             String logo= "logo_camara.png", 
-                    valores="tareas.csv", val="componentes.csv";
+                    valores="tareas.csv", val="componentes.csv",datin="dependencias.txt";
             
             ImageIcon ii= createImageIcon(logo, "");                        
             llogo.setIcon(ii);
@@ -113,10 +113,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         ltitulo = new javax.swing.JLabel();
         ldependencia = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        tfdependencia = new javax.swing.JTextField();
         tffecha = new javax.swing.JTextField();
         lpatrimonio = new javax.swing.JLabel();
         tfpatrimonio = new javax.swing.JTextField();
+        cbdependencia = new javax.swing.JComboBox<>();
         inferior = new javax.swing.JPanel();
         iizq = new javax.swing.JPanel();
         iitecnico = new javax.swing.JLabel();
@@ -163,12 +163,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(superiortareasLayout.createSequentialGroup()
                 .addComponent(ltareas)
-                .addContainerGap(138, Short.MAX_VALUE))
+                .addContainerGap(144, Short.MAX_VALUE))
             .addGroup(superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(superiortareasLayout.createSequentialGroup()
-                    .addGap(10, 10, 10)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                    .addGap(21, 21, 21)))
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, superiortareasLayout.createSequentialGroup()
+                    .addContainerGap(25, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
         );
 
         centro.add(superiortareas);
@@ -197,7 +197,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             .addGroup(inferiorcomponentesLayout.createSequentialGroup()
                 .addComponent(lcomponentes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
                 .addGap(6, 6, 6))
         );
 
@@ -282,12 +282,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         jLabel3.setText("Fecha:");
 
-        tfdependencia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfdependenciaActionPerformed(evt);
-            }
-        });
-
         tffecha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tffechaActionPerformed(evt);
@@ -299,6 +293,13 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         tfpatrimonio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfpatrimonioActionPerformed(evt);
+            }
+        });
+
+        cbdependencia.setName(""); // NOI18N
+        cbdependencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbdependenciaActionPerformed(evt);
             }
         });
 
@@ -319,8 +320,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(infdatosLayout.createSequentialGroup()
-                                .addComponent(tfdependencia, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbdependencia, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tffecha, javax.swing.GroupLayout.DEFAULT_SIZE, 848, Short.MAX_VALUE))
@@ -338,14 +339,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ldependencia)
-                    .addComponent(tfdependencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(tffecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tffecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbdependencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lpatrimonio)
                     .addComponent(tfpatrimonio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         superior.add(infdatos);
@@ -454,6 +455,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         getContentPane().add(derecha, java.awt.BorderLayout.LINE_END);
 
+        izquierda.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         izquierda.setPreferredSize(new java.awt.Dimension(150, 185));
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -471,16 +473,20 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         izquierda.setLayout(izquierdaLayout);
         izquierdaLayout.setHorizontalGroup(
             izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, izquierdaLayout.createSequentialGroup()
+            .addGroup(izquierdaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(izquierdaLayout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbComponentes, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(izquierdaLayout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(izquierdaLayout.createSequentialGroup()
+                .addComponent(cbComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         izquierdaLayout.setVerticalGroup(
             izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -489,25 +495,19 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(cbComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
                     .addGroup(izquierdaLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(izquierdaLayout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(38, Short.MAX_VALUE))))
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         getContentPane().add(izquierda, java.awt.BorderLayout.LINE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void tfdependenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfdependenciaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfdependenciaActionPerformed
 
     private void tffechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tffechaActionPerformed
         // TODO add your handling code here:
@@ -537,6 +537,10 @@ dispose();        // TODO add your handling code here:
         correo.setLocationRelativeTo(null);
         correo.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cbdependenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbdependenciaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbdependenciaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -575,6 +579,7 @@ dispose();        // TODO add your handling code here:
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cbComponentes;
+    private javax.swing.JComboBox<String> cbdependencia;
     private javax.swing.JComboBox<String> cbtareas;
     private javax.swing.JPanel centro;
     private javax.swing.JPanel derecha;
@@ -612,7 +617,6 @@ dispose();        // TODO add your handling code here:
     private javax.swing.JPanel superlogosolo;
     private javax.swing.JTextArea tacomponentes;
     private javax.swing.JTextArea tatareas;
-    private javax.swing.JTextField tfdependencia;
     private javax.swing.JTextField tffecha;
     private javax.swing.JTextField tfpatrimonio;
     private javax.swing.JTextField tftecnico;
