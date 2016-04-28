@@ -5,17 +5,20 @@
  */
 package ventanas;
 
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.SortedList;
+import ca.odell.glazedlists.matchers.TextMatcherEditor;
+import ca.odell.glazedlists.swing.AutoCompleteSupport;
+import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
 import fichatecnica.FichaTecnica;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -36,29 +39,47 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         try {
             System.out.println(System.getProperty("java.class.path"));
             String logo= "logo_camara.png", 
-                    valores="tareas.csv", val="componentes.csv",datin="dependencias.txt";
-            
+                    tareas="tareas.csv", componentes="componentes.csv",
+                    dependencias="dependencias.csv";
+            String line;
             ImageIcon ii= createImageIcon(logo, "");                        
             llogo.setIcon(ii);
             superlogosolo.add(llogo);
 
-            File archTareas = new File(this.getClass().getClassLoader().getResource(valores).getFile());
-            File archComponentes = new File(this.getClass().getClassLoader().getResource(val).getFile());
+            File archTareas = new File(this.getClass().getClassLoader().getResource(tareas).getFile());
+            File archComponentes = new File(this.getClass().getClassLoader().getResource(componentes).getFile());
+            File archDependencias = new File(this.getClass().getClassLoader().getResource(dependencias).getFile());
             
-            //Creating Scanner instnace to read File in Java
-            Scanner scnr = new Scanner(archTareas);
-            
-            //Reading each line of file using Scanner class
+            Scanner scnr = new Scanner(archTareas);            
             while(scnr.hasNextLine()){
-                String line = scnr.nextLine();
+                line = scnr.nextLine();
                 cbtareas.addItem(line);
             }
             
             scnr = new Scanner(archComponentes);
             while(scnr.hasNextLine()){
-                String line = scnr.nextLine();
+                line = scnr.nextLine();
                 cbComponentes.addItem(line);
             }
+            
+            SortedList<String> datos = new SortedList<String>(new BasicEventList<String>());
+            scnr = new Scanner(archDependencias);
+            while(scnr.hasNextLine()){
+                line = scnr.nextLine();
+                datos.add(line);
+            }
+            
+            DefaultEventComboBoxModel<String> modelo = new DefaultEventComboBoxModel<String>(datos);
+            cbdependencia.setModel(modelo);
+            
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    AutoCompleteSupport autocomplete = AutoCompleteSupport.install(cbdependencia, datos);
+                    autocomplete.setFilterMode(TextMatcherEditor.CONTAINS);
+                }
+            });            
+            
         } catch (FileNotFoundException ex) {
             System.err.println(ex.getLocalizedMessage());
         }
@@ -68,6 +89,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         Date actual=new Date();
         tffecha.setText(new SimpleDateFormat("dd-MM-yyyy").format(actual));
     }
+    
     
     protected ImageIcon createImageIcon(String path,
                                            String description) {
@@ -163,10 +185,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(superiortareasLayout.createSequentialGroup()
                 .addComponent(ltareas)
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addContainerGap(143, Short.MAX_VALUE))
             .addGroup(superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, superiortareasLayout.createSequentialGroup()
-                    .addContainerGap(25, Short.MAX_VALUE)
+                    .addContainerGap(24, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap()))
         );
@@ -197,7 +219,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             .addGroup(inferiorcomponentesLayout.createSequentialGroup()
                 .addComponent(lcomponentes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
                 .addGap(6, 6, 6))
         );
 
@@ -293,13 +315,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         tfpatrimonio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfpatrimonioActionPerformed(evt);
-            }
-        });
-
-        cbdependencia.setName(""); // NOI18N
-        cbdependencia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbdependenciaActionPerformed(evt);
             }
         });
 
@@ -497,7 +512,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addComponent(cbComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
                     .addGroup(izquierdaLayout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -532,15 +547,40 @@ dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String salto="\n";
+        StringBuilder sb= new StringBuilder();
+        sb.append("Dependencia: ");
+        sb.append(cbdependencia.getSelectedItem());
+        sb.append(salto);
+        sb.append("Fecha: ");
+        sb.append(tffecha.getText());
+        sb.append(salto);
+        sb.append("Patrimonio/s: ");
+        sb.append(tfpatrimonio.getText());
+        sb.append(salto);
+        sb.append(salto);
+        if(!tatareas.getText().isEmpty()){
+            sb.append("Tareas Realizadas");
+            sb.append(salto);
+            sb.append(tatareas.getText());
+            sb.append(salto);
+            sb.append(salto);
+        }
+        if(!tacomponentes.getText().isEmpty()){
+            sb.append("Componentes Utilizados");
+            sb.append(salto);
+            sb.append(tacomponentes.getText());
+            sb.append(salto);
+            sb.append(salto);
+        }
+        sb.append("Tecnico/s: ");
+        sb.append(tftecnico.getText());
+        
         Mail correo= new Mail(this, true);
+        correo.datos(sb.toString());
         correo.setLocationRelativeTo(null);
         correo.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void cbdependenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbdependenciaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbdependenciaActionPerformed
 
     /**
      * @param args the command line arguments
