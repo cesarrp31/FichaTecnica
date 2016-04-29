@@ -10,12 +10,15 @@ import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
-import fichatecnica.FichaTecnica;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.SwingUtilities;
@@ -25,71 +28,86 @@ import javax.swing.SwingUtilities;
  * @author jsilva
  */
 public class FichaTecnicaImpresion extends javax.swing.JFrame {
-
+    private Mail vtnCorreo;
+    private List<String> lstTareas, lstComponentes, lstDependencias;
+    
     /**
      * Creates new form FichaTecnicaImpresion
      */
-    public FichaTecnicaImpresion() {
+    public FichaTecnicaImpresion() throws FileNotFoundException {
         initComponents();
         
-        inicializar();
+        inicializarValores();
+        inicializarPantalla();
+        
+        cargarValoresComponentes();
     }
     
-    private void inicializar() {
-        try {
-            System.out.println(System.getProperty("java.class.path"));
-            String logo= "logo_camara.png", 
-                    tareas="tareas.csv", componentes="componentes.csv",
-                    dependencias="dependencias.csv";
-            String line;
-            ImageIcon ii= createImageIcon(logo, "");                        
-            llogo.setIcon(ii);
-            superlogosolo.add(llogo);
+    private void inicializarValores() throws FileNotFoundException {
+        String tareas="tareas.csv", componentes="componentes.csv",
+               dependencias="dependencias.csv";
 
-            File archTareas = new File(this.getClass().getClassLoader().getResource(tareas).getFile());
-            File archComponentes = new File(this.getClass().getClassLoader().getResource(componentes).getFile());
-            File archDependencias = new File(this.getClass().getClassLoader().getResource(dependencias).getFile());
-            
-            Scanner scnr = new Scanner(archTareas);            
-            while(scnr.hasNextLine()){
-                line = scnr.nextLine();
-                cbtareas.addItem(line);
-            }
-            
-            scnr = new Scanner(archComponentes);
-            while(scnr.hasNextLine()){
-                line = scnr.nextLine();
-                cbComponentes.addItem(line);
-            }
-            
-            SortedList<String> datos = new SortedList<String>(new BasicEventList<String>());
-            scnr = new Scanner(archDependencias);
-            while(scnr.hasNextLine()){
-                line = scnr.nextLine();
-                datos.add(line);
-            }
-            
-            DefaultEventComboBoxModel<String> modelo = new DefaultEventComboBoxModel<String>(datos);
-            cbdependencia.setModel(modelo);
-            
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    AutoCompleteSupport autocomplete = AutoCompleteSupport.install(cbdependencia, datos);
-                    autocomplete.setFilterMode(TextMatcherEditor.CONTAINS);
-                }
-            });            
-            
-        } catch (FileNotFoundException ex) {
-            System.err.println(ex.getLocalizedMessage());
-        }
+        lstTareas= new ArrayList<>();
+        lstComponentes= new ArrayList<>();
+        lstDependencias= new ArrayList<>();
+
+        cargarLista(lstTareas, tareas);     
+        cargarLista(lstComponentes, componentes);
+        cargarLista(lstDependencias, dependencias);       
+    }
+    
+    private void inicializarPantalla() {
         
+        String logo= "logo_camara.png";
+
+        ImageIcon ii= createImageIcon(logo, "");                        
+        llogo.setIcon(ii);
+        superlogosolo.add(llogo);
+        
+        cbComponentes.setSelectedItem(null);
+        cbtareas.setSelectedItem(null);
+        cbdependencia.setSelectedItem(null);
+        
+        this.tfpatrimonio.setText("");
         this.tatareas.setText("");
         this.tacomponentes.setText("");
         Date actual=new Date();
-        tffecha.setText(new SimpleDateFormat("dd-MM-yyyy").format(actual));
+        tffecha.setText(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(actual));
     }
     
+    private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException{
+        String line;
+        File archivo = new File(this.getClass().getClassLoader().getResource(archivoDatos).getFile());
+        Scanner scnr = new Scanner(archivo);            
+        while(scnr.hasNextLine()){
+            line = scnr.nextLine();
+            lstDatos.add(line);
+        }
+    }
+    
+    private void cargarValoresComponentes(){
+        cargarValores(cbtareas, lstTareas);        
+        cargarValores(cbComponentes, lstComponentes);
+        cargarValores(cbdependencia, lstDependencias);
+    }
+    
+    private void cargarValores(JComboBox cb, List<String> lstDatos){
+        SortedList<String> datos = new SortedList<String>(new BasicEventList<String>());
+        for(String dato: lstDatos){
+            datos.add(dato);
+        }
+        
+        DefaultEventComboBoxModel<String> modelo = new DefaultEventComboBoxModel<String>(datos);
+        cb.setModel(modelo);
+        
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                AutoCompleteSupport autocomplete = AutoCompleteSupport.install(cb, datos);
+                autocomplete.setFilterMode(TextMatcherEditor.CONTAINS);
+            }
+        });
+    }    
     
     protected ImageIcon createImageIcon(String path,
                                            String description) {
@@ -146,6 +164,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        cbnuevo = new javax.swing.JButton();
         derecha = new javax.swing.JPanel();
         cbtareas = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
@@ -390,6 +409,13 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         jButton3.setText("IMPRIMIR");
 
+        cbnuevo.setText("Nuevo");
+        cbnuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbnuevoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout iizqLayout = new javax.swing.GroupLayout(iizq);
         iizq.setLayout(iizqLayout);
         iizqLayout.setHorizontalGroup(
@@ -398,12 +424,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addGroup(iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(iizqLayout.createSequentialGroup()
                         .addComponent(iitecnico, javax.swing.GroupLayout.PREFERRED_SIZE, 1106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                        .addComponent(jButton3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE))
                     .addGroup(iizqLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(tftecnico, javax.swing.GroupLayout.PREFERRED_SIZE, 648, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(206, 206, 206)))
+                        .addGap(123, 123, 123)))
+                .addGroup(iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbnuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -420,7 +448,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addGap(9, 9, 9)
                 .addGroup(iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tftecnico, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(cbnuevo))
                 .addContainerGap())
         );
 
@@ -543,7 +572,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     }//GEN-LAST:event_cbComponentesActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-dispose();        // TODO add your handling code here:
+        dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -576,11 +605,18 @@ dispose();        // TODO add your handling code here:
         sb.append("Tecnico/s: ");
         sb.append(tftecnico.getText());
         
-        Mail correo= new Mail(this, true);
-        correo.datos(sb.toString());
-        correo.setLocationRelativeTo(null);
-        correo.setVisible(true);
+        if(vtnCorreo == null)
+            vtnCorreo= new Mail(this, true);
+        
+        vtnCorreo.asunto("Actualización de estado de: "+tfpatrimonio.getText());
+        vtnCorreo.datos(sb.toString());
+        vtnCorreo.setLocationRelativeTo(null);
+        vtnCorreo.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cbnuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbnuevoActionPerformed
+        inicializarPantalla();
+    }//GEN-LAST:event_cbnuevoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -611,8 +647,13 @@ dispose();        // TODO add your handling code here:
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                new FichaTecnicaImpresion().setVisible(true);
+                try {
+                    new FichaTecnicaImpresion().setVisible(true);
+                } catch (FileNotFoundException ex) {
+                    System.err.println("Error: "+ex.getLocalizedMessage());
+                }
             }
         });
     }
@@ -620,6 +661,7 @@ dispose();        // TODO add your handling code here:
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cbComponentes;
     private javax.swing.JComboBox<String> cbdependencia;
+    private javax.swing.JButton cbnuevo;
     private javax.swing.JComboBox<String> cbtareas;
     private javax.swing.JPanel centro;
     private javax.swing.JPanel derecha;
@@ -662,5 +704,4 @@ dispose();        // TODO add your handling code here:
     private javax.swing.JTextField tftecnico;
     // End of variables declaration//GEN-END:variables
 
-    
 }

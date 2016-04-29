@@ -414,14 +414,17 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="iitecnico" min="-2" pref="1106" max="-2" attributes="0"/>
-                              <EmptySpace pref="45" max="32767" attributes="0"/>
-                              <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="41" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="tftecnico" min="-2" pref="648" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="206" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="123" max="-2" attributes="0"/>
                           </Group>
+                      </Group>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jButton3" max="32767" attributes="0"/>
+                          <Component id="cbnuevo" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -444,6 +447,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="tftecnico" alignment="3" pref="31" max="32767" attributes="0"/>
                           <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbnuevo" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -479,6 +483,14 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="IMPRIMIR"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="cbnuevo">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Nuevo"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbnuevoActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
