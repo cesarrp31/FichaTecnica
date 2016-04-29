@@ -10,6 +10,8 @@ import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
@@ -17,11 +19,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import reporte.Reporte;
 
 /**
  *
@@ -33,14 +38,56 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     
     /**
      * Creates new form FichaTecnicaImpresion
+     * @throws java.io.FileNotFoundException
      */
     public FichaTecnicaImpresion() throws FileNotFoundException {
         initComponents();
         
+        inicializarMenu();
         inicializarValores();
         inicializarPantalla();
         
         cargarValoresComponentes();
+    }
+    
+    private void inicializarMenu(){
+        JMenuBar mb= new JMenuBar();
+        
+        JMenu archivo= new JMenu("Archivo"),
+              acciones= new JMenu("Acciones"),
+              ayuda= new JMenu("Ayuda");
+        mb.add(archivo);
+        mb.add(acciones);
+        mb.add(ayuda);
+        
+        JMenuItem salir= new JMenuItem("Salir"),
+                nuevo= new JMenuItem("Nueva Ficha"),
+                imprimir= new JMenuItem("Imprimir"),
+                enviar= new JMenuItem("Enviar"),
+                acercaDe=new JMenuItem("Acerca de...");
+        
+        acercaDe.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Hecho por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar", 
+                        "Acerca de:", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        
+        salir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                salir();
+            }
+        });
+        
+        archivo.add(nuevo);
+        archivo.add(imprimir);
+        acciones.add(enviar);
+        archivo.add(salir);
+        ayuda.add(acercaDe);
+        
+        this.setJMenuBar(mb);
     }
     
     private void inicializarValores() throws FileNotFoundException {
@@ -58,11 +105,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     
     private void inicializarPantalla() {
         
-        String logo= "logo_camara.png";
+        String logo= "logo_camara.png", ic="iconoApp.png";
 
         ImageIcon ii= createImageIcon(logo, "");                        
         llogo.setIcon(ii);
         superlogosolo.add(llogo);
+        
+        ii= createImageIcon(ic, "");
+        setIconImage(ii.getImage());
         
         cbComponentes.setSelectedItem(null);
         cbtareas.setSelectedItem(null);
@@ -121,7 +171,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         }
     }
     
-
+    private void salir(){
+        this.dispose();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -408,6 +461,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         });
 
         jButton3.setText("IMPRIMIR");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         cbnuevo.setText("Nuevo");
         cbnuevo.addActionListener(new java.awt.event.ActionListener() {
@@ -572,7 +630,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     }//GEN-LAST:event_cbComponentesActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        dispose();
+        salir();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -617,6 +675,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private void cbnuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbnuevoActionPerformed
         inicializarPantalla();
     }//GEN-LAST:event_cbnuevoActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        Object dep= cbdependencia.getSelectedItem();
+        Reporte.crearReporte(tatareas.getText(), tacomponentes.getText(), (dep==null?"":dep.toString()), 
+                            tfpatrimonio.getText(), tftecnico.getText(), tffecha.getText(), this);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

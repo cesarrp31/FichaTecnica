@@ -5,6 +5,9 @@
  */
 package fichatecnica;
 
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import ventanas.FichaTecnicaImpresion;
 
 /**
@@ -17,9 +20,14 @@ public class FichaTecnica {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        FichaTecnicaImpresion ft=new FichaTecnicaImpresion();
-        ft.pack();
-        ft.setVisible(true);
+        try {
+            FichaTecnicaImpresion ft=new FichaTecnicaImpresion();
+            ft.pack();
+            ft.setLocationRelativeTo(null);
+            ft.setVisible(true);
+        } catch (FileNotFoundException ex) {
+            System.err.println("Error: "+ex.getLocalizedMessage());
+        }
     }
     
 }
