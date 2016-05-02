@@ -27,8 +27,7 @@ public class Reporte {
     public static void crearReporte(String trabajos, String componentes, String dependencia, 
                                     String patrimonio, String tecnico, String fecha, JFrame ventana){
             try {
-            //System.out.println(System.getProperty("java.class.path"));
-            
+           
             File archJasper = new File(Reporte.class.getClassLoader().getResource("fichaTecnica.jasper").getFile());
             System.out.println(archJasper.getAbsoluteFile()+" "+archJasper.exists());
             
@@ -44,7 +43,6 @@ public class Reporte {
             parametros.put("fecha", fecha);
                         
             JasperPrint print = JasperFillManager.fillReport(report, parametros, new JREmptyDataSource());
-            //JasperViewer.viewReport(print, false);
             
             JasperViewer jv= new JasperViewer(print, false);
             
@@ -57,7 +55,7 @@ public class Reporte {
             visor.setVisible(true);
             
         } catch (JRException ex) {
-            System.err.println(ex.getMessage());
+            System.err.println(ex.getLocalizedMessage());
             ex.printStackTrace();
         }
     }

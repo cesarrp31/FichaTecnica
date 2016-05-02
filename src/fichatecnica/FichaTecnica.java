@@ -6,8 +6,8 @@
 package fichatecnica;
 
 import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import ventanas.FichaTecnicaImpresion;
 
 /**
@@ -20,6 +20,15 @@ public class FichaTecnica {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        try {
+            // Set System L&F
+        UIManager.setLookAndFeel(
+            UIManager.getSystemLookAndFeelClassName());
+        } 
+        catch (UnsupportedLookAndFeelException e) {}
+        catch (ClassNotFoundException e) {}
+        catch (InstantiationException e) {}
+        catch (IllegalAccessException e) {}
         try {
             FichaTecnicaImpresion ft=new FichaTecnicaImpresion();
             ft.pack();

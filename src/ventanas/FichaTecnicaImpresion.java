@@ -10,6 +10,7 @@ import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -20,11 +21,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import reporte.Reporte;
 
@@ -43,11 +47,13 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     public FichaTecnicaImpresion() throws FileNotFoundException {
         initComponents();
         
-        inicializarMenu();
-        inicializarValores();
-        inicializarPantalla();
+        inicializarMenu();        
+        inicializarValoresDesdeArchivo();
+        inicializarPantallaCarga();        
+        cargarValoresComboBox();        
+        inicializarValoresEstaticos();
         
-        cargarValoresComponentes();
+        inicializarBarraHerramientas();
     }
     
     private void inicializarMenu(){
@@ -64,12 +70,35 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 nuevo= new JMenuItem("Nueva Ficha"),
                 imprimir= new JMenuItem("Imprimir"),
                 enviar= new JMenuItem("Enviar"),
+                abrir= new JMenuItem("Abrir"),
+                guardar= new JMenuItem("Guardar"),
                 acercaDe=new JMenuItem("Acerca de...");
+        
+        nuevo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                inicializarPantallaCarga();
+            }
+        });
+        
+        imprimir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                imprimir();
+            }
+        });
+        
+        enviar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                enviar();
+            }
+        });
         
         acercaDe.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Hecho por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar", 
+                JOptionPane.showMessageDialog(null, "Sistema de Creación de Fichas Técnicas V1.0\nHecho por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar", 
                         "Acerca de:", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -82,7 +111,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         });
         
         archivo.add(nuevo);
+        archivo.addSeparator();
+        archivo.add(abrir);
+        archivo.add(guardar);
+        archivo.addSeparator();
         archivo.add(imprimir);
+        archivo.addSeparator();
         acciones.add(enviar);
         archivo.add(salir);
         ayuda.add(acercaDe);
@@ -90,7 +124,60 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         this.setJMenuBar(mb);
     }
     
-    private void inicializarValores() throws FileNotFoundException {
+    private void inicializarBarraHerramientas(){
+        JToolBar barraHerramientas = new JToolBar();
+        
+        JButton btnEnviar= new JButton("Enviar");
+        JButton btnImprimir= new JButton("Imprimir");
+        JButton btnNuevo= new JButton("Nuevo");
+        
+        btnEnviar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                enviar();
+            }
+        });
+        
+        btnImprimir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                imprimir();
+            }
+        });
+        
+        btnNuevo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                inicializarPantallaCarga();
+            }
+        });
+        
+        barraHerramientas.add(btnNuevo);
+        barraHerramientas.add(btnImprimir);
+        barraHerramientas.add(btnEnviar);
+        
+        JPanel pnAnterior= (JPanel) this.getContentPane(),
+               pnNuevo= new JPanel();
+        pnNuevo.setLayout(new BorderLayout());
+        pnNuevo.add(pnAnterior, BorderLayout.CENTER);
+        pnNuevo.add(barraHerramientas, BorderLayout.NORTH);
+        this.setContentPane(pnNuevo);        
+    }
+    
+    private void inicializarValoresEstaticos(){
+        String logo= "logo_camara.png", ic="iconoApp.png";
+
+        ImageIcon ii= createImageIcon(logo, "");                        
+        llogo.setIcon(ii);
+        superlogosolo.add(llogo);
+        
+        ii= createImageIcon(ic, "");
+        setIconImage(ii.getImage());
+        
+        this.tffecha.setEditable(false);
+    }
+    
+    private void inicializarValoresDesdeArchivo() throws FileNotFoundException {
         String tareas="tareas.csv", componentes="componentes.csv",
                dependencias="dependencias.csv";
 
@@ -103,17 +190,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         cargarLista(lstDependencias, dependencias);       
     }
     
-    private void inicializarPantalla() {
-        
-        String logo= "logo_camara.png", ic="iconoApp.png";
-
-        ImageIcon ii= createImageIcon(logo, "");                        
-        llogo.setIcon(ii);
-        superlogosolo.add(llogo);
-        
-        ii= createImageIcon(ic, "");
-        setIconImage(ii.getImage());
-        
+    private void inicializarPantallaCarga() {        
         cbComponentes.setSelectedItem(null);
         cbtareas.setSelectedItem(null);
         cbdependencia.setSelectedItem(null);
@@ -135,7 +212,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         }
     }
     
-    private void cargarValoresComponentes(){
+    private void cargarValoresComboBox(){
         cargarValores(cbtareas, lstTareas);        
         cargarValores(cbComponentes, lstComponentes);
         cargarValores(cbdependencia, lstDependencias);
@@ -157,7 +234,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 autocomplete.setFilterMode(TextMatcherEditor.CONTAINS);
             }
         });
-    }    
+    }   
     
     protected ImageIcon createImageIcon(String path,
                                            String description) {
@@ -173,6 +250,55 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     
     private void salir(){
         this.dispose();
+    }
+    
+    private void imprimir(){
+        Object dep= cbdependencia.getSelectedItem();
+        Reporte.crearReporte(tatareas.getText(), tacomponentes.getText(), (dep==null?"":dep.toString()), 
+                            tfpatrimonio.getText(), tftecnico.getText(), tffecha.getText(), this);
+    }
+    
+    private void enviar(){
+        String salto="\n";
+        StringBuilder sb= new StringBuilder();
+        sb.append("Dependencia: ");
+        sb.append(cbdependencia.getSelectedItem());
+        sb.append(salto);
+        sb.append("Fecha: ");
+        sb.append(tffecha.getText());
+        sb.append(salto);
+        sb.append("Patrimonio/s: ");
+        sb.append(tfpatrimonio.getText());
+        sb.append(salto);
+        sb.append(salto);
+        if(!tatareas.getText().isEmpty()){
+            sb.append("Tareas Realizadas");
+            sb.append(salto);
+            sb.append(tatareas.getText());
+            sb.append(salto);
+            sb.append(salto);
+        }
+        if(!tacomponentes.getText().isEmpty()){
+            sb.append("Componentes Utilizados");
+            sb.append(salto);
+            sb.append(tacomponentes.getText());
+            sb.append(salto);
+            sb.append(salto);
+        }
+        sb.append("Tecnico/s: ");
+        sb.append(tftecnico.getText());
+        
+        if(vtnCorreo == null)
+            vtnCorreo= new Mail(this, true);
+        
+        vtnCorreo.asunto("Actualización de estado de: "+tfpatrimonio.getText());
+        vtnCorreo.datos(sb.toString());
+        vtnCorreo.setLocationRelativeTo(null);
+        vtnCorreo.setVisible(true);
+    }
+    
+    private void nuevo(){
+        inicializarPantallaCarga();
     }
     
     /**
@@ -214,10 +340,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         iizq = new javax.swing.JPanel();
         iitecnico = new javax.swing.JLabel();
         tftecnico = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        cbnuevo = new javax.swing.JButton();
         derecha = new javax.swing.JPanel();
         cbtareas = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
@@ -407,9 +529,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(infdatosLayout.createSequentialGroup()
-                                .addComponent(cbdependencia, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbdependencia, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tffecha, javax.swing.GroupLayout.DEFAULT_SIZE, 848, Short.MAX_VALUE))
                             .addComponent(tfpatrimonio)))
@@ -446,69 +568,23 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         iitecnico.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         iitecnico.setText("Tecnico");
 
-        jButton1.setText("ENVIAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("SALIR");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("IMPRIMIR");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        cbnuevo.setText("Nuevo");
-        cbnuevo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbnuevoActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout iizqLayout = new javax.swing.GroupLayout(iizq);
         iizq.setLayout(iizqLayout);
         iizqLayout.setHorizontalGroup(
             iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(iizqLayout.createSequentialGroup()
-                .addGroup(iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(iizqLayout.createSequentialGroup()
-                        .addComponent(iitecnico, javax.swing.GroupLayout.PREFERRED_SIZE, 1106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE))
-                    .addGroup(iizqLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tftecnico, javax.swing.GroupLayout.PREFERRED_SIZE, 648, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(123, 123, 123)))
-                .addGroup(iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbnuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addGap(82, 82, 82))
+                .addComponent(iitecnico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tftecnico, javax.swing.GroupLayout.DEFAULT_SIZE, 1319, Short.MAX_VALUE)
+                .addContainerGap())
         );
         iizqLayout.setVerticalGroup(
             iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(iizqLayout.createSequentialGroup()
                 .addGroup(iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(iitecnico, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
-                .addGap(9, 9, 9)
-                .addGroup(iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tftecnico, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                    .addComponent(jButton2)
-                    .addComponent(cbnuevo))
-                .addContainerGap())
+                    .addComponent(tftecnico))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         inferior.add(iizq);
@@ -577,18 +653,17 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(izquierdaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(izquierdaLayout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(izquierdaLayout.createSequentialGroup()
+                .addGroup(izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, izquierdaLayout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(izquierdaLayout.createSequentialGroup()
+                        .addGroup(izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(izquierdaLayout.createSequentialGroup()
-                .addComponent(cbComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         izquierdaLayout.setVerticalGroup(
             izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -628,59 +703,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         // TODO add your handling code here:
          this.tacomponentes.append((String) cbComponentes.getSelectedItem()+" -");
     }//GEN-LAST:event_cbComponentesActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        salir();
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String salto="\n";
-        StringBuilder sb= new StringBuilder();
-        sb.append("Dependencia: ");
-        sb.append(cbdependencia.getSelectedItem());
-        sb.append(salto);
-        sb.append("Fecha: ");
-        sb.append(tffecha.getText());
-        sb.append(salto);
-        sb.append("Patrimonio/s: ");
-        sb.append(tfpatrimonio.getText());
-        sb.append(salto);
-        sb.append(salto);
-        if(!tatareas.getText().isEmpty()){
-            sb.append("Tareas Realizadas");
-            sb.append(salto);
-            sb.append(tatareas.getText());
-            sb.append(salto);
-            sb.append(salto);
-        }
-        if(!tacomponentes.getText().isEmpty()){
-            sb.append("Componentes Utilizados");
-            sb.append(salto);
-            sb.append(tacomponentes.getText());
-            sb.append(salto);
-            sb.append(salto);
-        }
-        sb.append("Tecnico/s: ");
-        sb.append(tftecnico.getText());
-        
-        if(vtnCorreo == null)
-            vtnCorreo= new Mail(this, true);
-        
-        vtnCorreo.asunto("Actualización de estado de: "+tfpatrimonio.getText());
-        vtnCorreo.datos(sb.toString());
-        vtnCorreo.setLocationRelativeTo(null);
-        vtnCorreo.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void cbnuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbnuevoActionPerformed
-        inicializarPantalla();
-    }//GEN-LAST:event_cbnuevoActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        Object dep= cbdependencia.getSelectedItem();
-        Reporte.crearReporte(tatareas.getText(), tacomponentes.getText(), (dep==null?"":dep.toString()), 
-                            tfpatrimonio.getText(), tftecnico.getText(), tffecha.getText(), this);
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -725,7 +747,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cbComponentes;
     private javax.swing.JComboBox<String> cbdependencia;
-    private javax.swing.JButton cbnuevo;
     private javax.swing.JComboBox<String> cbtareas;
     private javax.swing.JPanel centro;
     private javax.swing.JPanel derecha;
@@ -735,9 +756,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private javax.swing.JPanel inferior;
     private javax.swing.JPanel inferiorcomponentes;
     private javax.swing.JPanel izquierda;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
