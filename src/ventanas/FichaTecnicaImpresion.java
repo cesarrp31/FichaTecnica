@@ -655,7 +655,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/thumb_COLOURBOX6192513.jpg"))); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon("E:\\Johnny\\sistemas\\FichaTecnica\\images\\hardware.jpg")); // NOI18N
 
         javax.swing.GroupLayout izquierdaLayout = new javax.swing.GroupLayout(izquierda);
         izquierda.setLayout(izquierdaLayout);
