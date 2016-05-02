@@ -410,6 +410,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("SRTI Sistema de Registro de Tareas Informáticas 2016 V1.0");
 
         centro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         centro.setLayout(new java.awt.GridLayout(2, 1));
