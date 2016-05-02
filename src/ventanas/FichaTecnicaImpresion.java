@@ -142,10 +142,20 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     
     private void inicializarBarraHerramientas(){
         JToolBar barraHerramientas = new JToolBar();
+        String e="mail.png", i="printer.png", n="page.png";
         
-        JButton btnEnviar= new JButton("Enviar");
-        JButton btnImprimir= new JButton("Imprimir");
-        JButton btnNuevo= new JButton("Nuevo");
+        JButton btnEnviar= new JButton();
+        JButton btnImprimir= new JButton();
+        JButton btnNuevo= new JButton();
+        
+        ImageIcon ii= createImageIcon(e, "");
+        btnEnviar.setIcon(ii);
+        
+       ii= createImageIcon(i, "");
+       btnImprimir.setIcon(ii);
+        
+        ii= createImageIcon(n, "");
+        btnNuevo.setIcon(ii);
         
         btnEnviar.addActionListener(new ActionListener() {
             @Override
