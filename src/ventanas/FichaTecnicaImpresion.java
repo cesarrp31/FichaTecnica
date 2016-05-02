@@ -114,7 +114,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         acercaDe.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "SRTI Sistema de Registro de Tareas Informáticas 2016 V1.0\nHecho por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar", 
+                JOptionPane.showMessageDialog(null, "SRTI Sistema de Registro de Tareas Informáticas 2016 V1.0\nDesarrollado por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar", 
                         "Acerca de:", JOptionPane.INFORMATION_MESSAGE);
             }
         });
