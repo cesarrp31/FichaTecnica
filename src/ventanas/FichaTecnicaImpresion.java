@@ -23,6 +23,7 @@ import java.util.Scanner;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -30,6 +31,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import reporte.Reporte;
 
 /**
@@ -38,7 +40,7 @@ import reporte.Reporte;
  */
 public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private Mail vtnCorreo;
-    private List<String> lstTareas, lstComponentes, lstDependencias;
+    private List<String> lstTareas, lstComponentes, lstDependencias,lstCampos;
     
     /**
      * Creates new form FichaTecnicaImpresion
@@ -74,6 +76,20 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 guardar= new JMenuItem("Guardar"),
                 acercaDe=new JMenuItem("Acerca de...");
         
+        abrir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrir();
+            }
+        });
+        
+        guardar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guardar();
+            }
+        });
+        
         nuevo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -98,7 +114,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         acercaDe.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Sistema de Creación de Fichas Técnicas V1.0\nHecho por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar", 
+                JOptionPane.showMessageDialog(null, "SRTI Sistema de Registro de Tareas Informáticas 2016 V1.0\nDesarrollado por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar", 
                         "Acerca de:", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -210,6 +226,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         this.tacomponentes.setText("");
         Date actual=new Date();
         tffecha.setText(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(actual));
+        
+        tftecnico.setText(System.getProperty("user.name"));
     }
     
     private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException{
@@ -307,8 +325,38 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         vtnCorreo.setVisible(true);
     }
     
-    private void nuevo(){
-        inicializarPantallaCarga();
+    private void cargarListaCampos(){
+        lstCampos= new ArrayList<>();
+        
+        lstCampos.add(cbdependencia.getSelectedItem().toString());
+        lstCampos.add(tffecha.getText());
+        lstCampos.add(tfpatrimonio.getText());
+        lstCampos.add(tatareas.getText());
+        lstCampos.add(tacomponentes.getText());
+        lstCampos.add(tftecnico.getText());
+    }
+    
+    private void abrir(){
+        JFileChooser fc = getJFileChooser();
+        int returnVal = fc.showOpenDialog(this);
+        if(returnVal == JFileChooser.APPROVE_OPTION){
+            System.out.println("Abrir");
+        }
+    }
+    
+    private void guardar(){
+        JFileChooser fc = getJFileChooser();
+        int returnVal = fc.showSaveDialog(this);
+        if(returnVal == JFileChooser.APPROVE_OPTION){
+            System.out.println("Guardar");
+        }
+    }
+    
+    private JFileChooser getJFileChooser(){
+        JFileChooser fc = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Ficha Técnica", "ft");
+        fc.setFileFilter(filter);
+        return fc;
     }
     
     /**
@@ -350,6 +398,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         iizq = new javax.swing.JPanel();
         iitecnico = new javax.swing.JLabel();
         tftecnico = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
         derecha = new javax.swing.JPanel();
         cbtareas = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
@@ -389,10 +438,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(superiortareasLayout.createSequentialGroup()
                 .addComponent(ltareas)
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(145, Short.MAX_VALUE))
             .addGroup(superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, superiortareasLayout.createSequentialGroup()
-                    .addContainerGap(24, Short.MAX_VALUE)
+                    .addContainerGap(26, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap()))
         );
@@ -423,7 +472,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             .addGroup(inferiorcomponentesLayout.createSequentialGroup()
                 .addComponent(lcomponentes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
                 .addGap(6, 6, 6))
         );
 
@@ -508,19 +557,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         jLabel3.setText("Fecha:");
 
-        tffecha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tffechaActionPerformed(evt);
-            }
-        });
-
         lpatrimonio.setText("Nº Patrimonio");
-
-        tfpatrimonio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfpatrimonioActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout infdatosLayout = new javax.swing.GroupLayout(infdatos);
         infdatos.setLayout(infdatosLayout);
@@ -565,7 +602,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lpatrimonio)
                     .addComponent(tfpatrimonio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         superior.add(infdatos);
@@ -578,6 +615,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         iitecnico.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         iitecnico.setText("Tecnico");
 
+        jLabel7.setText("SRTI Sistema de Registro de Tareas Informáticas 2016");
+
         javax.swing.GroupLayout iizqLayout = new javax.swing.GroupLayout(iizq);
         iizq.setLayout(iizqLayout);
         iizqLayout.setHorizontalGroup(
@@ -585,8 +624,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             .addGroup(iizqLayout.createSequentialGroup()
                 .addComponent(iitecnico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tftecnico, javax.swing.GroupLayout.DEFAULT_SIZE, 1319, Short.MAX_VALUE)
+                .addComponent(tftecnico)
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, iizqLayout.createSequentialGroup()
+                .addGap(0, 586, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addGap(545, 545, 545))
         );
         iizqLayout.setVerticalGroup(
             iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -594,7 +637,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addGroup(iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(iitecnico, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tftecnico))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addContainerGap())
         );
 
         inferior.add(iizq);
@@ -684,7 +729,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addComponent(cbComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
                     .addGroup(izquierdaLayout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -695,14 +740,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void tffechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tffechaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tffechaActionPerformed
-
-    private void tfpatrimonioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfpatrimonioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfpatrimonioActionPerformed
 
     private void cbtareasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbtareasActionPerformed
         // TODO add your handling code here:
@@ -772,6 +809,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lcomponentes;
