@@ -45,6 +45,5 @@ public class FichaTecnica {
         } catch (FileNotFoundException ex) {
             System.err.println("Error: "+ex.getLocalizedMessage());
         }
-    }
-    
+    }    
 }

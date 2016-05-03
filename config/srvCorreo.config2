@@ -1,6 +1,6 @@
-mail.smtp.host=10.2.0.55
+mail.smtp.host=smtp.gmail.com
 mail.smtp.starttls.enable=true
-mail.smtp.port=25
+mail.smtp.port=587
 mail.smtp.user=usuario
 mail.smtp.auth=true
 transport=smtp
