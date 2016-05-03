@@ -5,7 +5,9 @@
  */
 package fichatecnica;
 
+import auxiliar.LeerPropiedades;
 import java.io.FileNotFoundException;
+import java.util.Properties;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import ventanas.FichaTecnicaImpresion;
@@ -15,7 +17,7 @@ import ventanas.FichaTecnicaImpresion;
  * @author coperalta
  */
 public class FichaTecnica {
-
+    public static Properties NOMBRE_ARCHIVOS;
     /**
      * @param args the command line arguments
      */
@@ -29,6 +31,12 @@ public class FichaTecnica {
         catch (ClassNotFoundException e) {}
         catch (InstantiationException e) {}
         catch (IllegalAccessException e) {}
+        
+        try {
+            NOMBRE_ARCHIVOS=LeerPropiedades.Leer("configuaricionInicial.config");
+        }catch(Exception e){
+            throw new RuntimeException("No se puede cargar el archivo de configuracion inicial! "+e.getLocalizedMessage());            
+        }
         try {
             FichaTecnicaImpresion ft=new FichaTecnicaImpresion();
             ft.pack();

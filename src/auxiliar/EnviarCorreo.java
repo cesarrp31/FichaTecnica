@@ -18,30 +18,26 @@ import javax.mail.internet.MimeMessage;
  * @author coperalta
  */
 public class EnviarCorreo {
-    private String servidorCorreo,
-            puerto;
+    private Properties propiedad;
 
-    public EnviarCorreo(String servidorCorreo, String puerto) {
-        this.servidorCorreo = servidorCorreo;
-        this.puerto = puerto;
-    }
-
-    public EnviarCorreo() {
-        this("10.2.0.55","25");
+    public EnviarCorreo(Properties propiedad) {
+        this.propiedad= propiedad;
     }
     
     public void enviar(String usuario, String password, 
             String destino, String asunto, String msg) throws MessagingException{
         // Propiedades de la conexión
-        Properties props = new Properties();
-        props.setProperty("mail.smtp.host", servidorCorreo);
-        props.setProperty("mail.smtp.starttls.enable", "true");
-        props.setProperty("mail.smtp.port", puerto);
-        props.setProperty("mail.smtp.user", usuario);
-        props.setProperty("mail.smtp.auth", "true");
-
+        propiedad.setProperty("mail.smtp.user", usuario);
+        /*
+        Properties propiedad = new Properties();
+        propiedad.setProperty("mail.smtp.host", servidorCorreo);
+        propiedad.setProperty("mail.smtp.starttls.enable", "true");
+        propiedad.setProperty("mail.smtp.port", puerto);
+        propiedad.setProperty("mail.smtp.user", usuario);
+        propiedad.setProperty("mail.smtp.auth", "true");
+        */
         // Preparamos la sesion
-        Session session = Session.getDefaultInstance(props);
+        Session session = Session.getDefaultInstance(propiedad);
 
         // Construimos el mensaje
         MimeMessage message = new MimeMessage(session);
@@ -53,12 +49,11 @@ public class EnviarCorreo {
         message.setText(msg);
 
         // Lo enviamos.
-        Transport transport = session.getTransport("smtp");
+        Transport transport = session.getTransport(propiedad.getProperty("transport"));
         transport.connect(usuario, password);
         transport.sendMessage(message, message.getAllRecipients());
 
         // Cierre.
         transport.close();
     }
-
 }

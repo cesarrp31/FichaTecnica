@@ -10,6 +10,7 @@ import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
+import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +42,7 @@ import reporte.Reporte;
 public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private Mail vtnCorreo;
     private List<String> lstTareas, lstComponentes, lstDependencias,lstCampos;
-    
+    private String separadorCampos="$%&-";
     /**
      * Creates new form FichaTecnicaImpresion
      * @throws java.io.FileNotFoundException
@@ -142,19 +143,21 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     
     private void inicializarBarraHerramientas(){
         JToolBar barraHerramientas = new JToolBar();
-        String e="mail.png", i="printer.png", n="page.png";
+        String e=NOMBRE_ARCHIVOS.getProperty("enviar"), 
+               i=NOMBRE_ARCHIVOS.getProperty("imprimir"), 
+               n=NOMBRE_ARCHIVOS.getProperty("nuevo");
         
         JButton btnEnviar= new JButton();
         JButton btnImprimir= new JButton();
         JButton btnNuevo= new JButton();
         
-        ImageIcon ii= createImageIcon(e, "");
+        ImageIcon ii= crearImageIcon(e, "");
         btnEnviar.setIcon(ii);
         
-       ii= createImageIcon(i, "");
+       ii= crearImageIcon(i, "");
        btnImprimir.setIcon(ii);
         
-        ii= createImageIcon(n, "");
+        ii= crearImageIcon(n, "");
         btnNuevo.setIcon(ii);
         
         btnEnviar.addActionListener(new ActionListener() {
@@ -191,21 +194,21 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     }
     
     private void inicializarValoresEstaticos(){
-        String logo= "logo_camara.png", ic="iconoApp.png";
+        String logo= NOMBRE_ARCHIVOS.getProperty("logoApp"), 
+               ic=NOMBRE_ARCHIVOS.getProperty("iconoApp");
 
-        ImageIcon ii= createImageIcon(logo, "");                        
-        llogo.setIcon(ii);
+        llogo.setIcon(crearImageIcon(logo, ""));
         superlogosolo.add(llogo);
-        
-        ii= createImageIcon(ic, "");
-        setIconImage(ii.getImage());
+                       
+        setIconImage(crearImageIcon(ic, "").getImage());
         
         this.tffecha.setEditable(false);
     }
     
     private void inicializarValoresDesdeArchivo() throws FileNotFoundException {
-        String tareas="tareas.csv", componentes="componentes.csv",
-               dependencias="dependencias.csv";
+        String tareas=NOMBRE_ARCHIVOS.getProperty("tareas"), 
+               componentes=NOMBRE_ARCHIVOS.getProperty("componentes"),
+               dependencias=NOMBRE_ARCHIVOS.getProperty("dependencias");
 
         lstTareas= new ArrayList<>();
         lstComponentes= new ArrayList<>();
@@ -225,7 +228,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         this.tatareas.setText("");
         this.tacomponentes.setText("");
         Date actual=new Date();
-        tffecha.setText(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(actual));
+        tffecha.setText(new SimpleDateFormat(NOMBRE_ARCHIVOS.getProperty("formatoFecha")).format(actual));
         
         tftecnico.setText(System.getProperty("user.name"));
     }
@@ -233,7 +236,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException{
         String line;
         File archivo = new File(this.getClass().getClassLoader().getResource(archivoDatos).getFile());
-        Scanner scnr = new Scanner(archivo);            
+        Scanner scnr = new Scanner(archivo);
         while(scnr.hasNextLine()){
             line = scnr.nextLine();
             lstDatos.add(line);
@@ -264,7 +267,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         });
     }   
     
-    protected ImageIcon createImageIcon(String path,
+    protected ImageIcon crearImageIcon(String path,
                                            String description) {
         File img = new File(this.getClass().getClassLoader().getResource(path).getFile());
         //URL imgURL = getClass().getResource(path);
@@ -316,6 +319,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         sb.append("Tecnico/s: ");
         sb.append(tftecnico.getText());
         
+        try{
         if(vtnCorreo == null)
             vtnCorreo= new Mail(this, true);
         
@@ -323,6 +327,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         vtnCorreo.datos(sb.toString());
         vtnCorreo.setLocationRelativeTo(null);
         vtnCorreo.setVisible(true);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Se ha producido un error en el envio de archivo: "+e.getLocalizedMessage(), 
+                        "ERROR!", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     private void cargarListaCampos(){
@@ -334,6 +342,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         lstCampos.add(tatareas.getText());
         lstCampos.add(tacomponentes.getText());
         lstCampos.add(tftecnico.getText());
+        lstCampos.add(separadorCampos);
     }
     
     private void abrir(){
@@ -370,10 +379,16 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         centro = new javax.swing.JPanel();
         superiortareas = new javax.swing.JPanel();
+        pnlTareasDisponibles = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        cbtareas = new javax.swing.JComboBox<>();
         ltareas = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tatareas = new javax.swing.JTextArea();
         inferiorcomponentes = new javax.swing.JPanel();
+        pnlComponentes = new javax.swing.JPanel();
+        cbComponentes = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
         lcomponentes = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tacomponentes = new javax.swing.JTextArea();
@@ -398,22 +413,49 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         iizq = new javax.swing.JPanel();
         iitecnico = new javax.swing.JLabel();
         tftecnico = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        derecha = new javax.swing.JPanel();
-        cbtareas = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        izquierda = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        cbComponentes = new javax.swing.JComboBox<>();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SRTI Sistema de Registro de Tareas Informáticas 2016 V1.0");
 
         centro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        centro.setPreferredSize(new java.awt.Dimension(990, 342));
         centro.setLayout(new java.awt.GridLayout(2, 1));
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("TRABAJO REALIZADO");
+
+        cbtareas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbtareasActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlTareasDisponiblesLayout = new javax.swing.GroupLayout(pnlTareasDisponibles);
+        pnlTareasDisponibles.setLayout(pnlTareasDisponiblesLayout);
+        pnlTareasDisponiblesLayout.setHorizontalGroup(
+            pnlTareasDisponiblesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTareasDisponiblesLayout.createSequentialGroup()
+                .addContainerGap(124, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(pnlTareasDisponiblesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTareasDisponiblesLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(cbtareas, 0, 228, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        pnlTareasDisponiblesLayout.setVerticalGroup(
+            pnlTareasDisponiblesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTareasDisponiblesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(122, Short.MAX_VALUE))
+            .addGroup(pnlTareasDisponiblesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlTareasDisponiblesLayout.createSequentialGroup()
+                    .addGap(40, 40, 40)
+                    .addComponent(cbtareas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(87, Short.MAX_VALUE)))
+        );
 
         ltareas.setText("Se Realizo:");
 
@@ -428,26 +470,65 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             .addGroup(superiortareasLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(ltareas)
-                .addContainerGap(930, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1072, Short.MAX_VALUE)
+                .addComponent(pnlTareasDisponibles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(superiortareasLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 973, Short.MAX_VALUE)
-                    .addContainerGap()))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1120, Short.MAX_VALUE)
+                    .addGap(263, 263, 263)))
         );
         superiortareasLayout.setVerticalGroup(
             superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(superiortareasLayout.createSequentialGroup()
-                .addComponent(ltareas)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addGroup(superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(superiortareasLayout.createSequentialGroup()
+                        .addComponent(ltareas)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(superiortareasLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pnlTareasDisponibles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
             .addGroup(superiortareasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, superiortareasLayout.createSequentialGroup()
-                    .addContainerGap(26, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(21, 21, 21)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
         centro.add(superiortareas);
+
+        cbComponentes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbComponentesActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("COMPONENTES");
+
+        javax.swing.GroupLayout pnlComponentesLayout = new javax.swing.GroupLayout(pnlComponentes);
+        pnlComponentes.setLayout(pnlComponentesLayout);
+        pnlComponentesLayout.setHorizontalGroup(
+            pnlComponentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlComponentesLayout.createSequentialGroup()
+                .addGap(0, 171, Short.MAX_VALUE)
+                .addComponent(jLabel2))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlComponentesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cbComponentes, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        pnlComponentesLayout.setVerticalGroup(
+            pnlComponentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlComponentesLayout.createSequentialGroup()
+                .addGap(9, 9, 9)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         lcomponentes.setText("Componentes utilizados:");
 
@@ -464,16 +545,23 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addGroup(inferiorcomponentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(inferiorcomponentesLayout.createSequentialGroup()
                         .addComponent(lcomponentes)
-                        .addGap(0, 856, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1121, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         inferiorcomponentesLayout.setVerticalGroup(
             inferiorcomponentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(inferiorcomponentesLayout.createSequentialGroup()
-                .addComponent(lcomponentes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inferiorcomponentesLayout.createSequentialGroup()
+                .addGroup(inferiorcomponentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(inferiorcomponentesLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pnlComponentes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(inferiorcomponentesLayout.createSequentialGroup()
+                        .addComponent(lcomponentes)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)))
                 .addGap(6, 6, 6))
         );
 
@@ -520,20 +608,25 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         superdatos.setLayout(superdatosLayout);
         superdatosLayout.setHorizontalGroup(
             superdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 211, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, superdatosLayout.createSequentialGroup()
+                .addContainerGap(113, Short.MAX_VALUE)
+                .addComponent(ltel2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(superdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(superdatosLayout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(superdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(lnombre, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(ldir, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(ltel, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(ltel2, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(ltel, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         superdatosLayout.setVerticalGroup(
             superdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 106, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, superdatosLayout.createSequentialGroup()
+                .addContainerGap(61, Short.MAX_VALUE)
+                .addComponent(ltel2)
+                .addGap(31, 31, 31))
             .addGroup(superdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(superdatosLayout.createSequentialGroup()
                     .addGap(5, 5, 5)
@@ -542,9 +635,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                     .addComponent(ldir)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(ltel)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(ltel2)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap(31, Short.MAX_VALUE)))
         );
 
         superiologo.add(superdatos);
@@ -552,6 +643,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         superior.add(superiologo);
 
         ltitulo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        ltitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ltitulo.setText("SOPORTE TECNICO");
 
         ldependencia.setText("Dependencia:");
@@ -577,23 +669,23 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(infdatosLayout.createSequentialGroup()
-                                .addComponent(cbdependencia, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbdependencia, 0, 1073, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tffecha, javax.swing.GroupLayout.DEFAULT_SIZE, 848, Short.MAX_VALUE))
+                                .addComponent(tffecha, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(tfpatrimonio)))
                     .addGroup(infdatosLayout.createSequentialGroup()
-                        .addGap(417, 417, 417)
-                        .addComponent(ltitulo)))
+                        .addContainerGap()
+                        .addComponent(ltitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         infdatosLayout.setVerticalGroup(
             infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(infdatosLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addContainerGap()
                 .addComponent(ltitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(10, 10, 10)
                 .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ldependencia)
                     .addComponent(jLabel3)
@@ -603,7 +695,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addGroup(infdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lpatrimonio)
                     .addComponent(tfpatrimonio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         superior.add(infdatos);
@@ -616,8 +708,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         iitecnico.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         iitecnico.setText("Tecnico");
 
-        jLabel7.setText("SRTI Sistema de Registro de Tareas Informáticas 2016");
-
         javax.swing.GroupLayout iizqLayout = new javax.swing.GroupLayout(iizq);
         iizq.setLayout(iizqLayout);
         iizqLayout.setHorizontalGroup(
@@ -625,12 +715,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             .addGroup(iizqLayout.createSequentialGroup()
                 .addComponent(iitecnico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tftecnico)
+                .addComponent(tftecnico, javax.swing.GroupLayout.DEFAULT_SIZE, 1319, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, iizqLayout.createSequentialGroup()
-                .addGap(0, 586, Short.MAX_VALUE)
-                .addComponent(jLabel7)
-                .addGap(545, 545, 545))
         );
         iizqLayout.setVerticalGroup(
             iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -638,106 +724,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 .addGroup(iizqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(iitecnico, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tftecnico))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel7)
                 .addContainerGap())
         );
 
         inferior.add(iizq);
 
         getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
-
-        derecha.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        derecha.setPreferredSize(new java.awt.Dimension(250, 185));
-        derecha.setVerifyInputWhenFocusTarget(false);
-
-        cbtareas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbtareasActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("TRABAJO REALIZADO");
-
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/índice.png"))); // NOI18N
-
-        javax.swing.GroupLayout derechaLayout = new javax.swing.GroupLayout(derecha);
-        derecha.setLayout(derechaLayout);
-        derechaLayout.setHorizontalGroup(
-            derechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, derechaLayout.createSequentialGroup()
-                .addGroup(derechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, derechaLayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
-                    .addComponent(cbtareas, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        derechaLayout.setVerticalGroup(
-            derechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(derechaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(cbtareas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        getContentPane().add(derecha, java.awt.BorderLayout.LINE_END);
-
-        izquierda.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        izquierda.setPreferredSize(new java.awt.Dimension(150, 185));
-
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("COMPONENTES");
-
-        cbComponentes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbComponentesActionPerformed(evt);
-            }
-        });
-
-        jLabel6.setIcon(new javax.swing.ImageIcon("E:\\Johnny\\sistemas\\FichaTecnica\\images\\hardware.jpg")); // NOI18N
-
-        javax.swing.GroupLayout izquierdaLayout = new javax.swing.GroupLayout(izquierda);
-        izquierda.setLayout(izquierdaLayout);
-        izquierdaLayout.setHorizontalGroup(
-            izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(izquierdaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, izquierdaLayout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(izquierdaLayout.createSequentialGroup()
-                        .addGroup(izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        izquierdaLayout.setVerticalGroup(
-            izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(izquierdaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(cbComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(izquierdaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                    .addGroup(izquierdaLayout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-
-        getContentPane().add(izquierda, java.awt.BorderLayout.LINE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -797,20 +789,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbdependencia;
     private javax.swing.JComboBox<String> cbtareas;
     private javax.swing.JPanel centro;
-    private javax.swing.JPanel derecha;
     private javax.swing.JLabel iitecnico;
     private javax.swing.JPanel iizq;
     private javax.swing.JPanel infdatos;
     private javax.swing.JPanel inferior;
     private javax.swing.JPanel inferiorcomponentes;
-    private javax.swing.JPanel izquierda;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lcomponentes;
@@ -823,6 +809,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private javax.swing.JLabel ltel;
     private javax.swing.JLabel ltel2;
     private javax.swing.JLabel ltitulo;
+    private javax.swing.JPanel pnlComponentes;
+    private javax.swing.JPanel pnlTareasDisponibles;
     private javax.swing.JPanel superdatos;
     private javax.swing.JPanel superiologo;
     private javax.swing.JPanel superior;

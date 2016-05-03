@@ -6,6 +6,10 @@
 package ventanas;
 
 import auxiliar.EnviarCorreo;
+import auxiliar.LeerPropiedades;
+import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
+import java.io.IOException;
+import java.util.Properties;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -18,12 +22,24 @@ public class Mail extends JDialog {
     private EnviarCorreo ec;
     /**
      * Creates new form Mail
+     * @param parent
+     * @param modal
+     * @throws java.io.IOException
      */
-    public Mail(JFrame parent, boolean modal) {
+    public Mail(JFrame parent, boolean modal) throws NullPointerException, IOException {
         super(parent, modal);
         initComponents();
         
-        ec= new EnviarCorreo("10.2.0.55","25");
+        String nomArc= NOMBRE_ARCHIVOS.getProperty("cnfCorreo");
+        Properties propiedad = LeerPropiedades.Leer(nomArc);
+        
+        ec= new EnviarCorreo(propiedad);
+        boolean defaultUsuario = Boolean.valueOf(propiedad.getProperty("default.correo.deSistema"));
+        if(defaultUsuario){
+            tfDe.setText(propiedad.getProperty("default.correo.de"));
+        }else{
+            tfDe.setText(System.getProperty("user.name"));
+        }        
     }
 
     public void datos(String msg){
@@ -204,10 +220,10 @@ public class Mail extends JDialog {
 
     private void btEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEnviarActionPerformed
         try {
-            char[] p= pass.getPassword();
+            char[] password= pass.getPassword();
             if(tfDe.getText().isEmpty()) throw new RuntimeException("No esta cargado el campo \"De\"");
             if(tfDestino.getText().isEmpty()) throw new RuntimeException("No esta cargado el campo \"A\"");
-            ec.enviar(tfDe.getText(), new String(p),
+            ec.enviar(tfDe.getText(), new String(password),
                     tfDestino.getText(), tfAsunto.getText(), tfMsg.getText());
             JOptionPane.showMessageDialog(null, "Se envió correctamente el correo!", "Confirmación de envio", JOptionPane.INFORMATION_MESSAGE);
             this.setVisible(false);
@@ -247,14 +263,18 @@ public class Mail extends JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Mail dialog = new Mail(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+                try {
+                    Mail dialog = new Mail(new javax.swing.JFrame(), true);
+                    dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosing(java.awt.event.WindowEvent e) {
+                            System.exit(0);
+                        }
+                    });
+                    dialog.setVisible(true);
+                } catch (Exception ex) {
+                    System.err.println(ex.getLocalizedMessage());
+                }
             }
         });
     }
