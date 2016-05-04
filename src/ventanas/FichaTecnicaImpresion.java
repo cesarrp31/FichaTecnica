@@ -11,6 +11,7 @@ import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
+import static fichatecnica.FichaTecnica.NOMBRE_APP;
 import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -46,7 +47,7 @@ import reporte.Reporte;
 public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private Mail vtnCorreo;
     private List<String> lstTareas, lstComponentes, lstDependencias,lstCampos;
-    private String separadorCampos=NOMBRE_ARCHIVOS.getProperty("separadorCampos");
+    private final String separadorCampos=NOMBRE_ARCHIVOS.getProperty("separadorCampos");
     /**
      * Creates new form FichaTecnicaImpresion
      * @throws java.io.FileNotFoundException
@@ -68,11 +69,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         
         JMenu archivo= new JMenu("Archivo"),
               acciones= new JMenu("Acciones"),
-              configuraciones= new JMenu("Configuraciones"),
+              //configuraciones= new JMenu("Configuraciones"),
               ayuda= new JMenu("Ayuda");
         mb.add(archivo);
         mb.add(acciones);
-        mb.add(configuraciones);
+        //mb.add(configuraciones);
         mb.add(ayuda);
         
         JMenuItem salir= new JMenuItem("Salir"),
@@ -81,7 +82,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 enviar= new JMenuItem("Enviar"),
                 abrir= new JMenuItem("Abrir"),
                 guardar= new JMenuItem("Guardar"),
-                configuracion= new JMenuItem("Configuracion"),
+                //configuracion= new JMenuItem("Configuracion"),
                 acercaDe=new JMenuItem("Acerca de...");
         
         abrir.addActionListener(new ActionListener() {
@@ -122,7 +123,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         acercaDe.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "SRTI Sistema de Registro de Tareas Informáticas 2016 V1.0\nDesarrollado por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar", 
+                JOptionPane.showMessageDialog(null, NOMBRE_APP+"\nDesarrollado por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar", 
                         "Acerca de:", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -133,13 +134,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 salir();
             }
         });
-        
+        /*
         configuracion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 crearVentanaConfiguraciones();
             }
         });
+        configuraciones.add(configuracion);*/
         
         archivo.add(nuevo);
         archivo.addSeparator();
@@ -150,8 +152,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         archivo.addSeparator();
         acciones.add(enviar);
         archivo.add(salir);
-        ayuda.add(acercaDe);
-        configuraciones.add(configuracion);
+        ayuda.add(acercaDe);      
         
         this.setJMenuBar(mb);
     }
@@ -225,7 +226,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             System.err.println(e.getLocalizedMessage());
             maxChars= 100;
         }
-        
+        this.setTitle(NOMBRE_APP);
         AbstractDocument pDoc=(AbstractDocument)tatareas.getDocument();        
         pDoc.setDocumentFilter(new DocumentSizeFilter(maxChars));
         
@@ -351,7 +352,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         if(vtnCorreo == null)
             vtnCorreo= new Mail(this, true);
         
-        vtnCorreo.asunto("Actualización de estado de: "+tfpatrimonio.getText());
+        vtnCorreo.asunto(tfpatrimonio.getText());
         vtnCorreo.datos(sb.toString());
         vtnCorreo.setLocationRelativeTo(null);
         vtnCorreo.setVisible(true);
@@ -364,7 +365,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private StringBuilder cargarListaCampos(){
         StringBuilder sb= new StringBuilder();
         
-        sb.append(cbdependencia.getSelectedItem().toString());
+        String aux= cbdependencia.getSelectedItem()==null?"":cbdependencia.getSelectedItem().toString();
+        sb.append(aux);
         sb.append(separadorCampos);
         sb.append(tffecha.getText());
         sb.append(separadorCampos);
@@ -494,7 +496,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         tftecnico = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("SRTI Sistema de Registro de Tareas Informáticas 2016 V1.0");
 
         centro.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         centro.setPreferredSize(new java.awt.Dimension(990, 342));

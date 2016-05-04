@@ -18,6 +18,7 @@ import ventanas.FichaTecnicaImpresion;
  */
 public class FichaTecnica {
     public static Properties NOMBRE_ARCHIVOS;
+    public static String NOMBRE_APP="SRTI Sistema de Registro de Tareas Informáticas 2016 v1.0";
     /**
      * @param args the command line arguments
      */
