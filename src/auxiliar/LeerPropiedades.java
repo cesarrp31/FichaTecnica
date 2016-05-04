@@ -21,47 +21,11 @@ public class LeerPropiedades {
     
     public static Properties Leer(String nombreArchivo) throws FileNotFoundException, IOException, NullPointerException{
         if((nombreArchivo==null)||(nombreArchivo.isEmpty())){
-            throw new RuntimeException("Nombre de archivo de propiedades inválido!: "+nombreArchivo);
+            throw new RuntimeException("Nombre de archivo de propiedades inválido!: ");
         }
         Properties propiedad = new Properties();
-        File archivo= buscarArchivo(nombreArchivo);
-
+        File archivo= GestorArchivo.cargarArchivo(nombreArchivo, SEPARADOR);
         propiedad.load(new FileInputStream(archivo));
-
         return propiedad;   
-    }
-    
-    protected static File buscarArchivo(String path) throws FileNotFoundException {
-        if(!path.startsWith(SEPARADOR)){
-            path= SEPARADOR+path;
-        }
-        File file = new File(new Properties().getClass().getResource(path).getPath());
-        if (file.getAbsolutePath() != null) {
-            return file;
-        } else {
-            throw new NullPointerException("No se encuentra el archivo: " + path);
-        }
-    }
-    
-    public static void test(){
-        String nomArc= "srvCorreo.config";
-        System.out.println(System.getProperty("java.class.path"));
-        System.out.println((new File(nomArc)).exists());
-        try {
-            Properties propiedad = LeerPropiedades.Leer(nomArc);
-            
-            System.out.println(propiedad.getProperty("mail.smtp.host"));
-            System.out.println(propiedad.getProperty("mail.smtp.starttls.enable"));
-            System.out.println(propiedad.getProperty("mail.smtp.port"));
-            System.out.println(propiedad.getProperty("mail.smtp.user"));
-            System.out.println(propiedad.getProperty("mail.smtp.auth"));
-        } catch (Exception ex) {
-            System.err.println(ex.getLocalizedMessage());
-            ex.printStackTrace();
-        }
-    }
-    
-    public static void main(String[] args) {
-        LeerPropiedades.test();
     }
 }

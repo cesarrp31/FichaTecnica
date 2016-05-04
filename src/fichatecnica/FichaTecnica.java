@@ -35,8 +35,11 @@ public class FichaTecnica {
         
         try {
             NOMBRE_ARCHIVOS=LeerPropiedades.Leer("configuaricionInicial.config");
+            System.out.println("Cargado correctamente el archivo de configuración inicial!");
         }catch(Exception e){
-            throw new RuntimeException("No se puede cargar el archivo de configuracion inicial! "+e.getLocalizedMessage());            
+            System.err.println("No se puede cargar el archivo de configuracion inicial! "+e.getLocalizedMessage());
+            e.printStackTrace();
+            return;
         }
         try {
             FichaTecnicaImpresion ft=new FichaTecnicaImpresion();
@@ -45,6 +48,7 @@ public class FichaTecnica {
             ft.setVisible(true);
         } catch (FileNotFoundException ex) {
             System.err.println("Error: "+ex.getLocalizedMessage());
+            ex.printStackTrace();
         }
     }    
 }

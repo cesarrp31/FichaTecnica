@@ -6,6 +6,7 @@
 package ventanas;
 
 import auxiliar.DocumentSizeFilter;
+import auxiliar.GestorArchivo;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
@@ -264,7 +265,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     
     private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException{
         String line;
-        File archivo = new File(this.getClass().getClassLoader().getResource(archivoDatos).getFile());
+        File archivo = GestorArchivo.cargarArchivo(archivoDatos, "/");
         Scanner scnr = new Scanner(archivo);
         while(scnr.hasNextLine()){
             line = scnr.nextLine();
