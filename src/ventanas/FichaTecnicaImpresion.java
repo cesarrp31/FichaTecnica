@@ -46,89 +46,94 @@ import reporte.Reporte;
  * @author jsilva
  */
 public class FichaTecnicaImpresion extends javax.swing.JFrame {
+
     private Mail vtnCorreo;
-    private List<String> lstTareas, lstComponentes, lstDependencias,lstCampos;
-    private final String separadorCampos=NOMBRE_ARCHIVOS.getProperty("separadorCampos");
+    private List<String> lstTareas, lstComponentes, lstDependencias, lstCampos;
+    private final String crpImg = NOMBRE_ARCHIVOS.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
+            crpRec = NOMBRE_ARCHIVOS.getProperty("crp.recursos") + GestorArchivo.SEPARADOR,
+            separadorCampos = NOMBRE_ARCHIVOS.getProperty("separadorCampos");
+
     /**
      * Creates new form FichaTecnicaImpresion
+     *
      * @throws java.io.FileNotFoundException
      */
     public FichaTecnicaImpresion() throws FileNotFoundException {
         initComponents();
-        
-        inicializarMenu();        
+
+        inicializarMenu();
         inicializarValoresDesdeArchivo();
-        inicializarPantallaCarga();        
-        cargarValoresComboBox();        
+        inicializarPantallaCarga();
+        cargarValoresComboBox();
         inicializarValoresEstaticos();
-        
+
         inicializarBarraHerramientas();
     }
-    
-    private void inicializarMenu(){
-        JMenuBar mb= new JMenuBar();
-        
-        JMenu archivo= new JMenu("Archivo"),
-              acciones= new JMenu("Acciones"),
-              //configuraciones= new JMenu("Configuraciones"),
-              ayuda= new JMenu("Ayuda");
+
+    private void inicializarMenu() {
+        JMenuBar mb = new JMenuBar();
+
+        JMenu archivo = new JMenu("Archivo"),
+                acciones = new JMenu("Acciones"),
+                //configuraciones= new JMenu("Configuraciones"),
+                ayuda = new JMenu("Ayuda");
         mb.add(archivo);
         mb.add(acciones);
         //mb.add(configuraciones);
         mb.add(ayuda);
-        
-        JMenuItem salir= new JMenuItem("Salir"),
-                nuevo= new JMenuItem("Nueva Ficha"),
-                imprimir= new JMenuItem("Imprimir"),
-                enviar= new JMenuItem("Enviar"),
-                abrir= new JMenuItem("Abrir"),
-                guardar= new JMenuItem("Guardar"),
+
+        JMenuItem salir = new JMenuItem("Salir"),
+                nuevo = new JMenuItem("Nueva Ficha"),
+                imprimir = new JMenuItem("Imprimir"),
+                enviar = new JMenuItem("Enviar"),
+                abrir = new JMenuItem("Abrir"),
+                guardar = new JMenuItem("Guardar"),
                 //configuracion= new JMenuItem("Configuracion"),
-                acercaDe=new JMenuItem("Acerca de...");
-        
+                acercaDe = new JMenuItem("Acerca de...");
+
         abrir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 abrir();
             }
         });
-        
+
         guardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 guardar();
             }
         });
-        
+
         nuevo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 inicializarPantallaCarga();
             }
         });
-        
+
         imprimir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 imprimir();
             }
         });
-        
+
         enviar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 enviar();
             }
         });
-        
+
         acercaDe.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, NOMBRE_APP+"\nDesarrollado por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar", 
+                JOptionPane.showMessageDialog(null, NOMBRE_APP + "\nDesarrollado por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar",
                         "Acerca de:", JOptionPane.INFORMATION_MESSAGE);
             }
         });
-        
+
         salir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -143,7 +148,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             }
         });
         configuraciones.add(configuracion);*/
-        
+
         archivo.add(nuevo);
         archivo.addSeparator();
         archivo.add(abrir);
@@ -153,44 +158,54 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         archivo.addSeparator();
         acciones.add(enviar);
         archivo.add(salir);
-        ayuda.add(acercaDe);      
-        
+        ayuda.add(acercaDe);
+
         this.setJMenuBar(mb);
     }
-    
-    private void inicializarBarraHerramientas(){
+
+    private void inicializarBarraHerramientas() throws FileNotFoundException {
         JToolBar barraHerramientas = new JToolBar();
-        String e=NOMBRE_ARCHIVOS.getProperty("enviar"), 
-               i=NOMBRE_ARCHIVOS.getProperty("imprimir"), 
-               n=NOMBRE_ARCHIVOS.getProperty("nuevo");
-        
-        JButton btnEnviar= new JButton();
-        JButton btnImprimir= new JButton();
-        JButton btnNuevo= new JButton();
-        
-        ImageIcon ii= crearImageIcon(e, "");
+        String e = crpImg + NOMBRE_ARCHIVOS.getProperty("enviar"),
+                i = crpImg + NOMBRE_ARCHIVOS.getProperty("imprimir"),
+                n = crpImg + NOMBRE_ARCHIVOS.getProperty("nuevo"),
+                g = crpImg + NOMBRE_ARCHIVOS.getProperty("guardar"),
+                a = crpImg + NOMBRE_ARCHIVOS.getProperty("abrir");
+
+        JButton btnEnviar = new JButton(),
+                btnImprimir = new JButton(),
+                btnNuevo = new JButton(),
+                btnGuardar = new JButton(),
+                btnAbrir = new JButton();
+
+        ImageIcon ii = GestorArchivo.crearImageIcon(e, "");
         btnEnviar.setIcon(ii);
-        
-       ii= crearImageIcon(i, "");
-       btnImprimir.setIcon(ii);
-        
-        ii= crearImageIcon(n, "");
+
+        ii = GestorArchivo.crearImageIcon(i, "");
+        btnImprimir.setIcon(ii);
+
+        ii = GestorArchivo.crearImageIcon(n, "");
         btnNuevo.setIcon(ii);
         
+        ii = GestorArchivo.crearImageIcon(a, "");
+        btnAbrir.setIcon(ii);
+        
+        ii = GestorArchivo.crearImageIcon(g, "");
+        btnGuardar.setIcon(ii);
+
         btnEnviar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 enviar();
             }
         });
-        
+
         btnImprimir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 imprimir();
             }
         });
-        
+
         btnNuevo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -198,96 +213,115 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
             }
         });
         
-        barraHerramientas.add(btnNuevo);
-        barraHerramientas.add(btnImprimir);
-        barraHerramientas.add(btnEnviar);
+        btnAbrir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrir();
+            }
+        });
         
-        JPanel pnAnterior= (JPanel) this.getContentPane(),
-               pnNuevo= new JPanel();
+        btnGuardar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guardar();
+            }
+        });
+
+        barraHerramientas.add(btnNuevo);
+        barraHerramientas.add(btnAbrir);
+        barraHerramientas.addSeparator();
+        barraHerramientas.add(btnGuardar);
+        barraHerramientas.add(btnImprimir);
+        barraHerramientas.addSeparator();
+        barraHerramientas.add(btnEnviar);
+
+        JPanel pnAnterior = (JPanel) this.getContentPane(),
+                pnNuevo = new JPanel();
         pnNuevo.setLayout(new BorderLayout());
         pnNuevo.add(pnAnterior, BorderLayout.CENTER);
         pnNuevo.add(barraHerramientas, BorderLayout.NORTH);
-        this.setContentPane(pnNuevo);        
+        this.setContentPane(pnNuevo);
     }
-    
-    private void inicializarValoresEstaticos(){
-        String logo= NOMBRE_ARCHIVOS.getProperty("logoApp"), 
-               ic=NOMBRE_ARCHIVOS.getProperty("iconoApp");
 
-        llogo.setIcon(crearImageIcon(logo, ""));
+    private void inicializarValoresEstaticos() throws FileNotFoundException {
+        String logo = crpImg + NOMBRE_ARCHIVOS.getProperty("logoApp"),
+                ic = crpImg + NOMBRE_ARCHIVOS.getProperty("iconoApp");
+
+        llogo.setIcon(GestorArchivo.crearImageIcon(logo, ""));
         superlogosolo.add(llogo);
-                       
-        setIconImage(crearImageIcon(ic, "").getImage());
-        
+
+        setIconImage(GestorArchivo.crearImageIcon(ic, "").getImage());
+
         this.tffecha.setEditable(false);
-        int maxChars;        
-        try{
+        int maxChars;
+        try {
             maxChars = Integer.valueOf(NOMBRE_ARCHIVOS.getProperty("cantCaracteresComboBox"));
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.err.println(e.getLocalizedMessage());
-            maxChars= 100;
+            maxChars = 100;
         }
         this.setTitle(NOMBRE_APP);
-        AbstractDocument pDoc=(AbstractDocument)tatareas.getDocument();        
+        AbstractDocument pDoc = (AbstractDocument) tatareas.getDocument();
         pDoc.setDocumentFilter(new DocumentSizeFilter(maxChars));
-        
-        pDoc=(AbstractDocument)tacomponentes.getDocument();        
+
+        pDoc = (AbstractDocument) tacomponentes.getDocument();
         pDoc.setDocumentFilter(new DocumentSizeFilter(maxChars));
     }
-    
+
     private void inicializarValoresDesdeArchivo() throws FileNotFoundException {
-        String tareas=NOMBRE_ARCHIVOS.getProperty("tareas"), 
-               componentes=NOMBRE_ARCHIVOS.getProperty("componentes"),
-               dependencias=NOMBRE_ARCHIVOS.getProperty("dependencias");
+        String tareas = NOMBRE_ARCHIVOS.getProperty("tareas"),
+                componentes = NOMBRE_ARCHIVOS.getProperty("componentes"),
+                dependencias = NOMBRE_ARCHIVOS.getProperty("dependencias");
 
-        lstTareas= new ArrayList<>();
-        lstComponentes= new ArrayList<>();
-        lstDependencias= new ArrayList<>();
+        lstTareas = new ArrayList<>();
+        lstComponentes = new ArrayList<>();
+        lstDependencias = new ArrayList<>();
 
-        cargarLista(lstTareas, tareas);     
+        cargarLista(lstTareas, tareas);
         cargarLista(lstComponentes, componentes);
-        cargarLista(lstDependencias, dependencias);       
+        cargarLista(lstDependencias, dependencias);
     }
-    
-    private void inicializarPantallaCarga() {        
+
+    private void inicializarPantallaCarga() {
         cbComponentes.setSelectedItem(null);
         cbtareas.setSelectedItem(null);
         cbdependencia.setSelectedItem(null);
-        
+
         this.tfpatrimonio.setText("");
         this.tatareas.setText("");
         this.tacomponentes.setText("");
-        Date actual=new Date();
+        Date actual = new Date();
         tffecha.setText(new SimpleDateFormat(NOMBRE_ARCHIVOS.getProperty("formatoFecha")).format(actual));
-        
+
         tftecnico.setText(System.getProperty("user.name"));
     }
-    
-    private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException{
+
+    private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException {
         String line;
-        File archivo = GestorArchivo.cargarArchivo(archivoDatos, "/");
+        String pathCompleto = NOMBRE_ARCHIVOS.getProperty("crp.recursos") + GestorArchivo.SEPARADOR + archivoDatos;
+        File archivo = GestorArchivo.cargarArchivo(pathCompleto);
         Scanner scnr = new Scanner(archivo);
-        while(scnr.hasNextLine()){
+        while (scnr.hasNextLine()) {
             line = scnr.nextLine();
             lstDatos.add(line);
         }
     }
-    
-    private void cargarValoresComboBox(){
-        cargarValores(cbtareas, lstTareas);        
+
+    private void cargarValoresComboBox() {
+        cargarValores(cbtareas, lstTareas);
         cargarValores(cbComponentes, lstComponentes);
         cargarValores(cbdependencia, lstDependencias);
     }
-    
-    private void cargarValores(JComboBox cb, List<String> lstDatos){
+
+    private void cargarValores(JComboBox cb, List<String> lstDatos) {
         SortedList<String> datos = new SortedList<String>(new BasicEventList<String>());
-        for(String dato: lstDatos){
+        for (String dato : lstDatos) {
             datos.add(dato);
         }
-        
+
         DefaultEventComboBoxModel<String> modelo = new DefaultEventComboBoxModel<String>(datos);
         cb.setModel(modelo);
-        
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -295,33 +329,21 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 autocomplete.setFilterMode(TextMatcherEditor.CONTAINS);
             }
         });
-    }   
-    
-    protected ImageIcon crearImageIcon(String path,
-                                           String description) {
-        File img = new File(this.getClass().getClassLoader().getResource(path).getFile());
-        //URL imgURL = getClass().getResource(path);
-        if (img.getAbsolutePath() != null) {
-            return new ImageIcon(img.getAbsolutePath(), description);
-        } else {
-            System.err.println("No se encuentra la imagen: " + path);
-            return null;
-        }
     }
-    
-    private void salir(){
+
+    private void salir() {
         this.dispose();
     }
-    
-    private void imprimir(){
-        Object dep= cbdependencia.getSelectedItem();
-        Reporte.crearReporte(tatareas.getText(), tacomponentes.getText(), (dep==null?"":dep.toString()), 
-                            tfpatrimonio.getText(), tftecnico.getText(), tffecha.getText(), this);
+
+    private void imprimir() {
+        Object dep = cbdependencia.getSelectedItem();
+        Reporte.crearReporte(tatareas.getText(), tacomponentes.getText(), (dep == null ? "" : dep.toString()),
+                tfpatrimonio.getText(), tftecnico.getText(), tffecha.getText(), this);
     }
-    
-    private void enviar(){
-        String salto="\n";
-        StringBuilder sb= new StringBuilder();
+
+    private void enviar() {
+        String salto = "\n";
+        StringBuilder sb = new StringBuilder();
         sb.append("Dependencia: ");
         sb.append(cbdependencia.getSelectedItem());
         sb.append(salto);
@@ -332,14 +354,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         sb.append(tfpatrimonio.getText());
         sb.append(salto);
         sb.append(salto);
-        if(!tatareas.getText().isEmpty()){
+        if (!tatareas.getText().isEmpty()) {
             sb.append("Tareas Realizadas");
             sb.append(salto);
             sb.append(tatareas.getText());
             sb.append(salto);
             sb.append(salto);
         }
-        if(!tacomponentes.getText().isEmpty()){
+        if (!tacomponentes.getText().isEmpty()) {
             sb.append("Componentes Utilizados");
             sb.append(salto);
             sb.append(tacomponentes.getText());
@@ -348,25 +370,27 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         }
         sb.append("Tecnico/s: ");
         sb.append(tftecnico.getText());
-        
-        try{
-        if(vtnCorreo == null)
-            vtnCorreo= new Mail(this, true);
-        
-        vtnCorreo.asunto(tfpatrimonio.getText());
-        vtnCorreo.datos(sb.toString());
-        vtnCorreo.setLocationRelativeTo(null);
-        vtnCorreo.setVisible(true);
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Se ha producido un error en el envio de archivo: "+e.getLocalizedMessage(), 
-                        "ERROR!", JOptionPane.ERROR_MESSAGE);
+
+        try {
+            if (vtnCorreo == null) {
+                vtnCorreo = new Mail(this, true);
+            }
+
+            vtnCorreo.asunto(tfpatrimonio.getText());
+            vtnCorreo.datos(sb.toString());
+            vtnCorreo.setLocationRelativeTo(null);
+            vtnCorreo.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Se ha producido un error en el envio de archivo: " + e.getLocalizedMessage(),
+                    "ERROR!", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-    private StringBuilder cargarListaCampos(){
-        StringBuilder sb= new StringBuilder();
-        
-        String aux= cbdependencia.getSelectedItem()==null?"":cbdependencia.getSelectedItem().toString();
+
+    private StringBuilder cargarListaCampos() {
+        StringBuilder sb = new StringBuilder();
+
+        String aux = cbdependencia.getSelectedItem() == null ? "" : cbdependencia.getSelectedItem().toString();
         sb.append(aux);
         sb.append(separadorCampos);
         sb.append(tffecha.getText());
@@ -379,24 +403,24 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         sb.append(separadorCampos);
         sb.append(tftecnico.getText());
         sb.append(separadorCampos);
-        
+
         return sb;
     }
-    
-    private void abrir(){
+
+    private void abrir() {
         JFileChooser fc = getJFileChooser();
         int returnVal = fc.showOpenDialog(this);
-        if(returnVal == JFileChooser.APPROVE_OPTION){
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             File fichero = fc.getSelectedFile();
-            System.out.println("Abrir: "+fichero);
-            try{
+            System.out.println("Abrir: " + fichero);
+            try {
                 String aux;
-                String [] aux2;
+                String[] aux2;
                 Scanner scnr = new Scanner(fichero);
-                while(scnr.hasNextLine()){
-                    aux= scnr.nextLine();
+                while (scnr.hasNextLine()) {
+                    aux = scnr.nextLine();
                     System.out.println(aux);
-                    aux2= aux.split(separadorCampos);
+                    aux2 = aux.split(separadorCampos);
                     cbdependencia.setSelectedItem(aux2[0]);
                     tffecha.setText(aux2[1]);
                     tfpatrimonio.setText(aux2[2]);
@@ -404,52 +428,52 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                     tacomponentes.setText(aux2[4]);
                     tftecnico.setText(aux2[5]);
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 System.err.println(e.getLocalizedMessage());
                 e.printStackTrace();
             }
-            
+
         }
     }
-    
-    private void guardar(){
+
+    private void guardar() {
         JFileChooser fc = getJFileChooser();
         int returnVal = fc.showSaveDialog(this);
-        if(returnVal == JFileChooser.APPROVE_OPTION){
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             File fichero = fc.getSelectedFile();
-            System.out.println("Guardar: "+fichero);
+            System.out.println("Guardar: " + fichero);
             BufferedWriter bw;
-            String ext= NOMBRE_ARCHIVOS.getProperty("extArchivoFichaTecnica");
-            try{
-                if(fichero.getAbsolutePath().endsWith(ext)){
+            String ext = NOMBRE_ARCHIVOS.getProperty("extArchivoFichaTecnica");
+            try {
+                if (fichero.getAbsolutePath().endsWith(ext)) {
                     bw = new BufferedWriter(new FileWriter(fichero));
-                }else{
-                    bw = new BufferedWriter(new FileWriter(fichero+"."+ext));
-                }                
+                } else {
+                    bw = new BufferedWriter(new FileWriter(fichero + "." + ext));
+                }
                 bw.write(cargarListaCampos().toString());
                 bw.close();
-            }catch(Exception e){
+            } catch (Exception e) {
                 System.err.println(e.getLocalizedMessage());
                 e.printStackTrace();
-            }            
+            }
         }
     }
-    
-    private void crearVentanaConfiguraciones(){
-        Configuraciones c= new Configuraciones(this, true);
+
+    private void crearVentanaConfiguraciones() {
+        Configuraciones c = new Configuraciones(this, true);
         c.setVisible(true);
     }
-    
-    private JFileChooser getJFileChooser(){
+
+    private JFileChooser getJFileChooser() {
         JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                NOMBRE_ARCHIVOS.getProperty("descArchivoFichaTecnica"), 
+                NOMBRE_ARCHIVOS.getProperty("descArchivoFichaTecnica"),
                 NOMBRE_ARCHIVOS.getProperty("extArchivoFichaTecnica"));
         fc.setFileFilter(filter);
         return fc;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -679,7 +703,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         superiologo.add(superlogosolo);
 
         lnombre.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lnombre.setText("Direccion de Comunicaciones");
+        lnombre.setText("Dirección de Comunicaciones");
 
         ltel.setText("Tel: (0362) 4428149");
 
@@ -819,12 +843,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
     private void cbtareasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbtareasActionPerformed
         // TODO add your handling code here:
-        this.tatareas.append((String) cbtareas.getSelectedItem()+" -");
+        this.tatareas.append((String) cbtareas.getSelectedItem() + " -");
     }//GEN-LAST:event_cbtareasActionPerformed
 
     private void cbComponentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbComponentesActionPerformed
         // TODO add your handling code here:
-         this.tacomponentes.append((String) cbComponentes.getSelectedItem()+" -");
+        this.tacomponentes.append((String) cbComponentes.getSelectedItem() + " -");
     }//GEN-LAST:event_cbComponentesActionPerformed
 
     /**
@@ -861,7 +885,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 try {
                     new FichaTecnicaImpresion().setVisible(true);
                 } catch (FileNotFoundException ex) {
-                    System.err.println("Error: "+ex.getLocalizedMessage());
+                    System.err.println("Error: " + ex.getLocalizedMessage());
                 }
             }
         });

@@ -6,11 +6,14 @@
 package ventanas;
 
 import auxiliar.EnviarCorreo;
-import auxiliar.LeerPropiedades;
+import auxiliar.GestorArchivo;
 import static fichatecnica.FichaTecnica.NOMBRE_APP;
 import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -31,9 +34,10 @@ public class Mail extends JDialog {
     public Mail(JFrame parent, boolean modal) throws NullPointerException, IOException {
         super(parent, modal);
         initComponents();
-        
-        String nomArc= NOMBRE_ARCHIVOS.getProperty("cnfCorreo");
-        propiedad = LeerPropiedades.Leer(nomArc);
+        this.setTitle(parent.getTitle());
+        String crpCorreo= NOMBRE_ARCHIVOS.getProperty("crp.configCorreo")+GestorArchivo.SEPARADOR;
+        String nomArc= crpCorreo+NOMBRE_ARCHIVOS.getProperty("cnfCorreo");
+        propiedad = GestorArchivo.obtenerPropiedades(nomArc);
         
         ec= new EnviarCorreo(propiedad);
         boolean defaultUsuario = Boolean.valueOf(propiedad.getProperty("default.correo.deSistema"));
@@ -51,7 +55,19 @@ public class Mail extends JDialog {
     }
     
     protected void asunto(String asunto) {
-        tfAsunto.setText(propiedad.getProperty("default.correo.a")+asunto);
+        
+        try {
+            tfAsunto.setText(charsetUTF8(propiedad.getProperty("default.correo.asunto")+asunto));
+        } catch (UnsupportedEncodingException ex) {
+            tfAsunto.setText(propiedad.getProperty("default.correo.asunto")+asunto);
+        }
+        
+        //tfAsunto.setText(propiedad.getProperty("default.correo.asunto")+asunto);
+    }
+    
+    private String charsetUTF8(String in) throws UnsupportedEncodingException{
+        byte[] utf8 = in.getBytes("cp1252");
+        return new String(utf8);
     }
     /**
      * This method is called from within the constructor to initialize the form.

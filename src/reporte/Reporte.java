@@ -28,10 +28,11 @@ public class Reporte {
     public static void crearReporte(String trabajos, String componentes, String dependencia,
             String patrimonio, String tecnico, String fecha, JFrame ventana) {
         
-        String nombJasper=NOMBRE_ARCHIVOS.getProperty("jasperFichaTecnica");
+        String crpRec= NOMBRE_ARCHIVOS.getProperty("crp.recursos")+GestorArchivo.SEPARADOR,
+                nombJasper=crpRec+NOMBRE_ARCHIVOS.getProperty("jasperFichaTecnica");
         try {
             
-            File archJasper = GestorArchivo.cargarArchivo(nombJasper, "/");
+            File archJasper = GestorArchivo.cargarArchivo(nombJasper);
 
             //JasperReport report = JasperCompileManager.compileReport("z:/fichaTecnica.jrxml");
             JasperReport report = (JasperReport) JRLoader.loadObject(archJasper);
