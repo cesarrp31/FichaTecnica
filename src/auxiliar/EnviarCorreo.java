@@ -28,14 +28,15 @@ public class EnviarCorreo {
             String destino, String asunto, String msg) throws MessagingException{
         // Propiedades de la conexión
         propiedad.setProperty("mail.smtp.user", usuario);
-        /*
-        Properties propiedad = new Properties();
-        propiedad.setProperty("mail.smtp.host", servidorCorreo);
-        propiedad.setProperty("mail.smtp.starttls.enable", "true");
-        propiedad.setProperty("mail.smtp.port", puerto);
-        propiedad.setProperty("mail.smtp.user", usuario);
-        propiedad.setProperty("mail.smtp.auth", "true");
-        */
+        
+        System.out.println("Propiedades de Correo PreConfiguradas Cargadas: ");
+        //Properties propiedad = new Properties();
+        System.out.println(propiedad.getProperty("mail.smtp.host"));
+        System.out.println(propiedad.getProperty("mail.smtp.starttls.enable"));
+        System.out.println(propiedad.getProperty("mail.smtp.port"));
+        System.out.println(propiedad.getProperty("mail.smtp.user"));
+        System.out.println(propiedad.getProperty("mail.smtp.auth"));
+        
         // Preparamos la sesion
         Session session = Session.getDefaultInstance(propiedad);
 
