@@ -33,8 +33,6 @@ public class Reporte {
         try {
             
             File archJasper = GestorArchivo.cargarArchivo(nombJasper);
-
-            //JasperReport report = JasperCompileManager.compileReport("z:/fichaTecnica.jrxml");
             JasperReport report = (JasperReport) JRLoader.loadObject(archJasper);
 
             Map parametros = new HashMap();

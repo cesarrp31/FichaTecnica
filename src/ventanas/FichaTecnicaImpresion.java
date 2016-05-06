@@ -235,6 +235,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         barraHerramientas.addSeparator();
         barraHerramientas.add(btnEnviar);
 
+        btnEnviar.setToolTipText("Enviar por Correo");
+        btnImprimir.setToolTipText("Imprimir");
+        btnNuevo.setToolTipText("Nueva Ficha");
+        btnGuardar.setToolTipText("Guardar Ficha");
+        btnAbrir.setToolTipText("Abrir Ficha");
+        
         JPanel pnAnterior = (JPanel) this.getContentPane(),
                 pnNuevo = new JPanel();
         pnNuevo.setLayout(new BorderLayout());
@@ -336,11 +342,21 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     }
 
     private void imprimir() {
+        generarCodigoQR();
+        
         Object dep = cbdependencia.getSelectedItem();
         Reporte.crearReporte(tatareas.getText(), tacomponentes.getText(), (dep == null ? "" : dep.toString()),
                 tfpatrimonio.getText(), tftecnico.getText(), tffecha.getText(), this);
     }
 
+    private void generarCodigoQR(){
+        String pathCompleto = NOMBRE_ARCHIVOS.getProperty("crp.temp") + 
+                              GestorArchivo.SEPARADOR + 
+                              NOMBRE_ARCHIVOS.getProperty("codigoQR");
+        
+        
+    }
+    
     private void enviar() {
         String salto = "\n";
         StringBuilder sb = new StringBuilder();
@@ -529,6 +545,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("TAREA");
 
+        cbtareas.setToolTipText("Tareas Realizadas");
         cbtareas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbtareasActionPerformed(evt);
@@ -606,6 +623,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         centro.add(superiortareas);
 
+        cbComponentes.setToolTipText("Componentes Utilizados");
         cbComponentes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbComponentesActionPerformed(evt);
