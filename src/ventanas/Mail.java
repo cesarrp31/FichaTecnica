@@ -9,11 +9,12 @@ import auxiliar.EnviarCorreo;
 import auxiliar.GestorArchivo;
 import static fichatecnica.FichaTecnica.NOMBRE_APP;
 import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
+import java.awt.Image;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -25,6 +26,8 @@ import javax.swing.JOptionPane;
 public class Mail extends JDialog {
     private EnviarCorreo ec;
     private Properties propiedad;
+    private String crpImg = NOMBRE_ARCHIVOS.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
+            path= NOMBRE_ARCHIVOS.getProperty("iconoApp");
     /**
      * Creates new form Mail
      * @param parent
@@ -32,9 +35,8 @@ public class Mail extends JDialog {
      * @throws java.io.IOException
      */
     public Mail(JFrame parent, boolean modal) throws NullPointerException, IOException {
-        super(parent, modal);
+        super(parent, parent.getTitle(), modal);
         initComponents();
-        this.setTitle(parent.getTitle());
         String crpCorreo= NOMBRE_ARCHIVOS.getProperty("crp.configCorreo")+GestorArchivo.SEPARADOR;
         String nomArc= crpCorreo+NOMBRE_ARCHIVOS.getProperty("cnfCorreo");
         propiedad = GestorArchivo.obtenerPropiedades(nomArc);
@@ -48,8 +50,24 @@ public class Mail extends JDialog {
         }
         tfDestino.setText(propiedad.getProperty("default.correo.a"));
         this.pack();
+        
+        cargarImagenLogo();
     }
 
+    private void cargarImagenLogo() throws FileNotFoundException{
+        File img= GestorArchivo.cargarArchivo(crpImg+path);
+        System.out.println(img.getPath()+img.exists());
+        
+        epMsg.setText(
+                        "<b>hola</b><br>" + "<i>adios</i><br>" +
+                        "<font face=\"arial\">fuente arial</font><br>" +
+                        "<font face=\"courier\">fuente courier</font><br>" +
+                        "<font size=\"24\">fuente grande</font><br>" +
+                        "<font color=\"red\">color rojo</font><br>" +
+                        "<img src=\"cid:image\"></img>");
+        System.out.println(epMsg.getText());
+    }
+    
     public void datos(String msg){
         this.tfMsg.setText(msg+"\n\n"+NOMBRE_APP);
     }
@@ -90,6 +108,8 @@ public class Mail extends JDialog {
         pnlCentral = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tfMsg = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        epMsg = new javax.swing.JEditorPane();
         pnlSur = new javax.swing.JPanel();
         btEnviar = new javax.swing.JButton();
         btSalir = new javax.swing.JButton();
@@ -163,15 +183,22 @@ public class Mail extends JDialog {
         tfMsg.setRows(5);
         jScrollPane1.setViewportView(tfMsg);
 
+        epMsg.setContentType("text/html"); // NOI18N
+        jScrollPane2.setViewportView(epMsg);
+
         javax.swing.GroupLayout pnlCentralLayout = new javax.swing.GroupLayout(pnlCentral);
         pnlCentral.setLayout(pnlCentralLayout);
         pnlCentralLayout.setHorizontalGroup(
             pnlCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 865, Short.MAX_VALUE)
+            .addComponent(jScrollPane2)
         );
         pnlCentralLayout.setVerticalGroup(
             pnlCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+            .addGroup(pnlCentralLayout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
         );
 
         getContentPane().add(pnlCentral, java.awt.BorderLayout.CENTER);
@@ -203,16 +230,18 @@ public class Mail extends JDialog {
     }//GEN-LAST:event_btSalirActionPerformed
 
     private void btEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEnviarActionPerformed
+        String tipoMensaje= "text/html; charset=utf-8";
         try {
             char[] password= pass.getPassword();
             if(tfDe.getText().isEmpty()) throw new RuntimeException("No esta cargado el campo \"De\"");
             if(tfDestino.getText().isEmpty()) throw new RuntimeException("No esta cargado el campo \"A\"");
-            ec.enviar(tfDe.getText(), new String(password),
-                    tfDestino.getText(), tfAsunto.getText(), tfMsg.getText());
+            ec.enviarCorreoImagen(tfDe.getText(), new String(password),
+                    tfDestino.getText(), tfAsunto.getText(), epMsg.getText(), crpImg+path, tipoMensaje);
             JOptionPane.showMessageDialog(null, "Se envió correctamente el correo!", "Confirmación de envio", JOptionPane.INFORMATION_MESSAGE);
             this.setVisible(false);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getLocalizedMessage(), "Error en el envio de correo", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, ex.getLocalizedMessage(), "Error en el envio de correo", JOptionPane.ERROR_MESSAGE);            
         }
     }//GEN-LAST:event_btEnviarActionPerformed
 
@@ -266,11 +295,13 @@ public class Mail extends JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btEnviar;
     private javax.swing.JButton btSalir;
+    private javax.swing.JEditorPane epMsg;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPasswordField pass;
     private javax.swing.JPanel pnlCentral;
     private javax.swing.JPanel pnlNorte;

@@ -15,6 +15,7 @@ import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
 import static fichatecnica.FichaTecnica.NOMBRE_APP;
 import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -26,16 +27,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.AbstractDocument;
@@ -61,6 +65,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     public FichaTecnicaImpresion() throws FileNotFoundException {
         initComponents();
 
+        inicializarComponentes();
         inicializarMenu();
         inicializarValoresDesdeArchivo();
         inicializarPantallaCarga();
@@ -70,6 +75,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         inicializarBarraHerramientas();
     }
 
+    private void inicializarComponentes(){
+        inicializarComboBox(cbComponentes);
+        inicializarComboBox(cbdependencia);
+        inicializarComboBox(cbtareas);
+    }
+    
     private void inicializarMenu() {
         JMenuBar mb = new JMenuBar();
 
@@ -129,7 +140,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         acercaDe.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, NOMBRE_APP + "\nDesarrollado por:\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar",
+                JOptionPane.showMessageDialog(null, NOMBRE_APP + "\nDiseñado y Desarrollado por:\nT.A.E. Gallo, Mario\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar",
                         "Acerca de:", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -299,7 +310,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         Date actual = new Date();
         tffecha.setText(new SimpleDateFormat(NOMBRE_ARCHIVOS.getProperty("formatoFecha")).format(actual));
 
-        tftecnico.setText(System.getProperty("user.name"));
+        //tftecnico.setText(System.getProperty("user.name"));
+        tftecnico.setText(NOMBRE_ARCHIVOS.getProperty("default.tecnico"));
     }
 
     private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException {
@@ -349,10 +361,30 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 tfpatrimonio.getText(), tftecnico.getText(), tffecha.getText(), this);
     }
 
+    private void inicializarComboBox(JComboBox cb) {        
+        ListCellRenderer comboRenderer = new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list,
+                    Object value, int index, boolean isSelected,
+                    boolean cellHasFocus) {
+                if (value instanceof String) {
+                    setToolTipText(value.toString());
+                    value = value.toString();
+                } else {
+                    setToolTipText(null);
+                }
+                return super.getListCellRendererComponent(list, value, index, isSelected,
+                        cellHasFocus);
+            }
+        };
+        cb.setRenderer(comboRenderer);
+    }
+    
     private void generarCodigoQR(){
         String pathCompleto = NOMBRE_ARCHIVOS.getProperty("crp.temp") + 
                               GestorArchivo.SEPARADOR + 
                               NOMBRE_ARCHIVOS.getProperty("codigoQR");
+        
         
         
     }
@@ -482,6 +514,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
     private JFileChooser getJFileChooser() {
         JFileChooser fc = new JFileChooser();
+        fc.setCurrentDirectory(new File(NOMBRE_ARCHIVOS.getProperty("crp.guardado")));
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 NOMBRE_ARCHIVOS.getProperty("descArchivoFichaTecnica"),
@@ -773,12 +806,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         jLabel3.setText("Fecha:");
 
-        tffecha.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tffechaActionPerformed(evt);
-            }
-        });
-
         lpatrimonio.setText("Nº Patrimonio");
 
         javax.swing.GroupLayout infdatosLayout = new javax.swing.GroupLayout(infdatos);
@@ -874,10 +901,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.tacomponentes.append((String) cbComponentes.getSelectedItem() + " -");
     }//GEN-LAST:event_cbComponentesActionPerformed
-
-    private void tffechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tffechaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tffechaActionPerformed
 
     /**
      * @param args the command line arguments

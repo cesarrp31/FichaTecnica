@@ -5,11 +5,13 @@
  */
 package auxiliar;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 /**
@@ -42,6 +44,11 @@ public class GestorArchivo {
     public static ImageIcon crearImageIcon(String path, String description) throws FileNotFoundException{
         File img = cargarArchivo(path);
         return new ImageIcon(img.getPath(), description);
+    }
+    
+    public static Image crearImage(String path) throws FileNotFoundException, IOException{
+        File img = cargarArchivo(path);
+        return ImageIO.read(img);
     }
 
     public static Properties obtenerPropiedades(String nombreArchivo) throws FileNotFoundException, IOException{

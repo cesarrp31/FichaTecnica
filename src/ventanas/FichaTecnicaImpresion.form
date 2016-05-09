@@ -512,9 +512,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tffecha">
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tffechaActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lpatrimonio">
               <Properties>
