@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -54,7 +57,17 @@ public class GestorArchivo {
     public static Properties obtenerPropiedades(String nombreArchivo) throws FileNotFoundException, IOException{
         Properties propiedad = new Properties();
         File archivo = cargarArchivo(nombreArchivo);
-        propiedad.load(new FileInputStream(archivo));
+        InputStream inputStream= new FileInputStream(archivo);
+        try {
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            try {
+                propiedad.load(reader);
+            } finally {
+                reader.close();
+            }
+} finally {
+   inputStream.close();
+}
         return propiedad;
     }
 }

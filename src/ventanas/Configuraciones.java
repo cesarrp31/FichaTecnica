@@ -6,7 +6,11 @@
 package ventanas;
 
 import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
+import java.awt.Frame;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,21 +20,31 @@ public class Configuraciones extends javax.swing.JDialog {
 
     /**
      * Creates new form Configuraciones
+     * @param parent
+     * @param modal
      */
-    public Configuraciones(java.awt.Frame parent, boolean modal) {
+    public Configuraciones(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         
         Enumeration e= NOMBRE_ARCHIVOS.propertyNames();
-        int i= 0;
-        while(e.hasMoreElements()){
-            tGeneral.getModel().setValueAt(e.nextElement(), i++, 0);
+        List list = Collections.list(e);
+        System.out.println("Total: "+list.size());
+        
+        tGeneral.setModel(new DefaultTableModel(list.size(),3));
+        for(int i= 0; i < list.size(); i++){
+            tGeneral.getModel().setValueAt(i, i, 0);
+            tGeneral.getModel().setValueAt(list.get(i), i, 1);
         }
         
         e= NOMBRE_ARCHIVOS.elements();
-        i= 0;
-        while(e.hasMoreElements()){
-            tGeneral.getModel().setValueAt(e.nextElement(), i++, 1);
+        list = Collections.list(e);
+        for(int i= 0; i < list.size(); i++){
+            tGeneral.getModel().setValueAt(list.get(i), i, 2);
+        }
+        
+        for(int j= 0; j < tGeneral.getModel().getRowCount(); j++){
+            System.out.println(tGeneral.getModel().getValueAt(j, 0)+"//"+tGeneral.getModel().getValueAt(j, 1));
         }
     }
 

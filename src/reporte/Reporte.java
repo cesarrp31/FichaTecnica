@@ -6,6 +6,7 @@
 package reporte;
 
 import auxiliar.GestorArchivo;
+import datos.DatosFichaTecnica;
 import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
 import java.io.File;
 import java.util.HashMap;
@@ -25,9 +26,7 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class Reporte {
 
-    public static void crearReporte(String trabajos, String componentes, String dependencia,
-            String patrimonio, String tecnico, String fecha, JFrame ventana) {
-        
+    public static void crearReporte(DatosFichaTecnica dft, JFrame ventana) {
         String crpRec= NOMBRE_ARCHIVOS.getProperty("crp.recursos")+GestorArchivo.SEPARADOR,
                 nombJasper=crpRec+NOMBRE_ARCHIVOS.getProperty("jasperFichaTecnica");
         try {
@@ -36,12 +35,12 @@ public class Reporte {
             JasperReport report = (JasperReport) JRLoader.loadObject(archJasper);
 
             Map parametros = new HashMap();
-            parametros.put("trabajos", trabajos);
-            parametros.put("componentes", componentes);
-            parametros.put("dependencia", dependencia);
-            parametros.put("patrimonio", patrimonio);
-            parametros.put("tecnico", tecnico);
-            parametros.put("fecha", fecha);
+            parametros.put("trabajos", dft.getTarea());
+            parametros.put("componentes", dft.getComponentes());
+            parametros.put("dependencia", dft.getDependencia());
+            parametros.put("patrimonio", dft.getPatrimonio());
+            parametros.put("tecnico", dft.getTecnico());
+            parametros.put("fecha", dft.getFecha());
 
             JasperPrint print = JasperFillManager.fillReport(report, parametros, new JREmptyDataSource());
 
@@ -56,8 +55,7 @@ public class Reporte {
             visor.setVisible(true);
 
         } catch (Exception ex) {
-            System.err.println("Archivo: "+nombJasper);
-            System.err.println(ex.getLocalizedMessage());
+            System.err.println("Archivo: "+nombJasper+". "+ex.getLocalizedMessage());
             ex.printStackTrace();
         }
     }

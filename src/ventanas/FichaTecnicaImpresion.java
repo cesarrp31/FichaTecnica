@@ -5,6 +5,7 @@
  */
 package ventanas;
 
+import auxiliar.CodigoQR;
 import auxiliar.DocumentSizeFilter;
 import auxiliar.GestorArchivo;
 import ca.odell.glazedlists.BasicEventList;
@@ -12,6 +13,8 @@ import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
+import com.google.zxing.WriterException;
+import datos.DatosFichaTecnica;
 import static fichatecnica.FichaTecnica.NOMBRE_APP;
 import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
 import java.awt.BorderLayout;
@@ -22,11 +25,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -54,8 +60,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     private Mail vtnCorreo;
     private List<String> lstTareas, lstComponentes, lstDependencias, lstCampos;
     private final String crpImg = NOMBRE_ARCHIVOS.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
-            crpRec = NOMBRE_ARCHIVOS.getProperty("crp.recursos") + GestorArchivo.SEPARADOR,
-            separadorCampos = NOMBRE_ARCHIVOS.getProperty("separadorCampos");
+            crpRec = NOMBRE_ARCHIVOS.getProperty("crp.recursos") + GestorArchivo.SEPARADOR;
+    public static final String DELIMITADOR = NOMBRE_ARCHIVOS.getProperty("separadorCampos");
 
     /**
      * Creates new form FichaTecnicaImpresion
@@ -75,22 +81,22 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         inicializarBarraHerramientas();
     }
 
-    private void inicializarComponentes(){
+    private void inicializarComponentes() {
         inicializarComboBox(cbComponentes);
         inicializarComboBox(cbdependencia);
         inicializarComboBox(cbtareas);
     }
-    
+
     private void inicializarMenu() {
         JMenuBar mb = new JMenuBar();
 
         JMenu archivo = new JMenu("Archivo"),
                 acciones = new JMenu("Acciones"),
-                //configuraciones= new JMenu("Configuraciones"),
+                configuraciones= new JMenu("Configuraciones"),
                 ayuda = new JMenu("Ayuda");
         mb.add(archivo);
         mb.add(acciones);
-        //mb.add(configuraciones);
+        mb.add(configuraciones);
         mb.add(ayuda);
 
         JMenuItem salir = new JMenuItem("Salir"),
@@ -99,7 +105,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 enviar = new JMenuItem("Enviar"),
                 abrir = new JMenuItem("Abrir"),
                 guardar = new JMenuItem("Guardar"),
-                //configuracion= new JMenuItem("Configuracion"),
+                configuracion= new JMenuItem("Configuracion"),
                 acercaDe = new JMenuItem("Acerca de...");
 
         abrir.addActionListener(new ActionListener() {
@@ -151,14 +157,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 salir();
             }
         });
-        /*
+        
         configuracion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 crearVentanaConfiguraciones();
             }
         });
-        configuraciones.add(configuracion);*/
+        configuraciones.add(configuracion);
 
         archivo.add(nuevo);
         archivo.addSeparator();
@@ -196,10 +202,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         ii = GestorArchivo.crearImageIcon(n, "");
         btnNuevo.setIcon(ii);
-        
+
         ii = GestorArchivo.crearImageIcon(a, "");
         btnAbrir.setIcon(ii);
-        
+
         ii = GestorArchivo.crearImageIcon(g, "");
         btnGuardar.setIcon(ii);
 
@@ -223,14 +229,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 inicializarPantallaCarga();
             }
         });
-        
+
         btnAbrir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 abrir();
             }
         });
-        
+
         btnGuardar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -251,7 +257,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         btnNuevo.setToolTipText("Nueva Ficha");
         btnGuardar.setToolTipText("Guardar Ficha");
         btnAbrir.setToolTipText("Abrir Ficha");
-        
+
         JPanel pnAnterior = (JPanel) this.getContentPane(),
                 pnNuevo = new JPanel();
         pnNuevo.setLayout(new BorderLayout());
@@ -310,7 +316,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         Date actual = new Date();
         tffecha.setText(new SimpleDateFormat(NOMBRE_ARCHIVOS.getProperty("formatoFecha")).format(actual));
 
-        //tftecnico.setText(System.getProperty("user.name"));
         tftecnico.setText(NOMBRE_ARCHIVOS.getProperty("default.tecnico"));
     }
 
@@ -354,14 +359,16 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     }
 
     private void imprimir() {
-        generarCodigoQR();
-        
-        Object dep = cbdependencia.getSelectedItem();
-        Reporte.crearReporte(tatareas.getText(), tacomponentes.getText(), (dep == null ? "" : dep.toString()),
-                tfpatrimonio.getText(), tftecnico.getText(), tffecha.getText(), this);
+        DatosFichaTecnica dft;
+        if(controlCamposCompletados()){
+            dft= this.getDatosFichaTecnica();
+            generarCodigoQR(dft);
+
+            Reporte.crearReporte(dft, this);
+        }
     }
 
-    private void inicializarComboBox(JComboBox cb) {        
+    private void inicializarComboBox(JComboBox cb) {
         ListCellRenderer comboRenderer = new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list,
@@ -379,60 +386,70 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         };
         cb.setRenderer(comboRenderer);
     }
-    
-    private void generarCodigoQR(){
-        String pathCompleto = NOMBRE_ARCHIVOS.getProperty("crp.temp") + 
-                              GestorArchivo.SEPARADOR + 
-                              NOMBRE_ARCHIVOS.getProperty("codigoQR");
+
+    private void generarCodigoQR(DatosFichaTecnica dft) {
+        String pathCompleto = NOMBRE_ARCHIVOS.getProperty("crp.temp")
+                + GestorArchivo.SEPARADOR
+                + NOMBRE_ARCHIVOS.getProperty("codigoQR");
         
+        dft.setDelimitador(DELIMITADOR);
         
+        CodigoQR qr= new CodigoQR();
+        try {
+            qr.crearCodigoQR(dft.toString(), pathCompleto);            
+            System.out.println("Valor creado: \n"+qr.leerCodigoQR(pathCompleto));
+        } catch (Exception ex) {
+            System.err.println(ex.getLocalizedMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    private void enviar() {
+        if(controlCamposCompletados()){
+            try {
+                if (vtnCorreo == null) {
+                    vtnCorreo = new Mail(this, true);
+                }
+                vtnCorreo.asunto(tfpatrimonio.getText());
+                vtnCorreo.datos(this.getDatosFichaTecnica());
+                vtnCorreo.setLocationRelativeTo(null);
+                vtnCorreo.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Se ha producido un error en el envio de archivo: " + e.getLocalizedMessage(),
+                        "ERROR!", JOptionPane.ERROR_MESSAGE);
+            }
+        }        
+    }
+
+    private boolean controlCamposCompletados(){
+        boolean camposCompletados= true;
+        String msg="";
+        if((this.cbdependencia.getSelectedItem() == null)||
+           (this.cbdependencia.getSelectedItem().toString().isEmpty())){
+            msg= "Escriba una dependencia.\n";
+        }
+        if(this.tfpatrimonio.getText().isEmpty()){
+            msg+="Escriba 1 o varios nro de patrimonios.\n";
+        }
         
+        if(this.tftecnico.getText().isEmpty()){
+            msg+="Escriba 1 o varios nombres de técnicos.\n";
+        }
+        
+        if(!msg.isEmpty()){
+            JOptionPane.showMessageDialog(null, msg,
+                    "Información!", JOptionPane.INFORMATION_MESSAGE);
+            camposCompletados= false;
+        }        
+        return camposCompletados;
     }
     
-    private void enviar() {
-        String salto = "\n";
-        StringBuilder sb = new StringBuilder();
-        sb.append("Dependencia: ");
-        sb.append(cbdependencia.getSelectedItem());
-        sb.append(salto);
-        sb.append("Fecha: ");
-        sb.append(tffecha.getText());
-        sb.append(salto);
-        sb.append("Patrimonio/s: ");
-        sb.append(tfpatrimonio.getText());
-        sb.append(salto);
-        sb.append(salto);
-        if (!tatareas.getText().isEmpty()) {
-            sb.append("Tareas Realizadas");
-            sb.append(salto);
-            sb.append(tatareas.getText());
-            sb.append(salto);
-            sb.append(salto);
-        }
-        if (!tacomponentes.getText().isEmpty()) {
-            sb.append("Componentes Utilizados");
-            sb.append(salto);
-            sb.append(tacomponentes.getText());
-            sb.append(salto);
-            sb.append(salto);
-        }
-        sb.append("Tecnico/s: ");
-        sb.append(tftecnico.getText());
-
-        try {
-            if (vtnCorreo == null) {
-                vtnCorreo = new Mail(this, true);
-            }
-
-            vtnCorreo.asunto(tfpatrimonio.getText());
-            vtnCorreo.datos(sb.toString());
-            vtnCorreo.setLocationRelativeTo(null);
-            vtnCorreo.setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Se ha producido un error en el envio de archivo: " + e.getLocalizedMessage(),
-                    "ERROR!", JOptionPane.ERROR_MESSAGE);
-        }
+    private DatosFichaTecnica getDatosFichaTecnica() {
+        String dep = cbdependencia.getSelectedItem()==null?"":cbdependencia.getSelectedItem().toString();
+        DatosFichaTecnica dft = new DatosFichaTecnica(dep, tffecha.getText(), tfpatrimonio.getText(),
+                tatareas.getText(), tacomponentes.getText(), tftecnico.getText());
+        return dft;
     }
 
     private StringBuilder cargarListaCampos() {
@@ -440,17 +457,17 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
         String aux = cbdependencia.getSelectedItem() == null ? "" : cbdependencia.getSelectedItem().toString();
         sb.append(aux);
-        sb.append(separadorCampos);
+        sb.append(DELIMITADOR);
         sb.append(tffecha.getText());
-        sb.append(separadorCampos);
+        sb.append(DELIMITADOR);
         sb.append(tfpatrimonio.getText());
-        sb.append(separadorCampos);
+        sb.append(DELIMITADOR);
         sb.append(tatareas.getText());
-        sb.append(separadorCampos);
+        sb.append(DELIMITADOR);
         sb.append(tacomponentes.getText());
-        sb.append(separadorCampos);
+        sb.append(DELIMITADOR);
         sb.append(tftecnico.getText());
-        sb.append(separadorCampos);
+        sb.append(DELIMITADOR);
 
         return sb;
     }
@@ -468,7 +485,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 while (scnr.hasNextLine()) {
                     aux = scnr.nextLine();
                     System.out.println(aux);
-                    aux2 = aux.split(separadorCampos);
+                    aux2 = aux.split(DELIMITADOR);
                     cbdependencia.setSelectedItem(aux2[0]);
                     tffecha.setText(aux2[1]);
                     tfpatrimonio.setText(aux2[2]);
@@ -480,7 +497,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
                 System.err.println(e.getLocalizedMessage());
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -894,12 +910,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
     private void cbtareasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbtareasActionPerformed
         // TODO add your handling code here:
-        this.tatareas.append((String) cbtareas.getSelectedItem() + " -");
+        this.tatareas.append((String) cbtareas.getSelectedItem() + ". ");
     }//GEN-LAST:event_cbtareasActionPerformed
 
     private void cbComponentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbComponentesActionPerformed
         // TODO add your handling code here:
-        this.tacomponentes.append((String) cbComponentes.getSelectedItem() + " -");
+        this.tacomponentes.append((String) cbComponentes.getSelectedItem() + ". ");
     }//GEN-LAST:event_cbComponentesActionPerformed
 
     /**

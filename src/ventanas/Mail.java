@@ -7,10 +7,9 @@ package ventanas;
 
 import auxiliar.EnviarCorreo;
 import auxiliar.GestorArchivo;
+import datos.DatosFichaTecnica;
 import static fichatecnica.FichaTecnica.NOMBRE_APP;
 import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
-import java.awt.Image;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -24,10 +23,12 @@ import javax.swing.JOptionPane;
  * @author coperalta
  */
 public class Mail extends JDialog {
-    private EnviarCorreo ec;
-    private Properties propiedad;
-    private String crpImg = NOMBRE_ARCHIVOS.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
-            path= NOMBRE_ARCHIVOS.getProperty("iconoApp");
+    private final EnviarCorreo ec;
+    private final Properties propiedad;
+    private final String crpImg = NOMBRE_ARCHIVOS.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
+            path= NOMBRE_ARCHIVOS.getProperty("iconoAppMail");
+    
+    private String msgMail, msgPantalla;
     /**
      * Creates new form Mail
      * @param parent
@@ -51,25 +52,30 @@ public class Mail extends JDialog {
         tfDestino.setText(propiedad.getProperty("default.correo.a"));
         this.pack();
         
-        cargarImagenLogo();
     }
 
-    private void cargarImagenLogo() throws FileNotFoundException{
-        File img= GestorArchivo.cargarArchivo(crpImg+path);
-        System.out.println(img.getPath()+img.exists());
+    public void datos(DatosFichaTecnica dft) {
+        String tarea, componente;
+        if(dft.getTarea().isEmpty()){
+            tarea= "";
+        }else{
+            tarea= "<b>Tareas Realizadas: </b>" + dft.getTarea() +"<br>";
+        }
+        if(dft.getComponentes().isEmpty()){
+            componente= "";
+        }else{
+            componente= "<b>Componentes Utilizados: </b>" + dft.getComponentes() +"<br>";
+        }        
         
-        epMsg.setText(
-                        "<b>hola</b><br>" + "<i>adios</i><br>" +
-                        "<font face=\"arial\">fuente arial</font><br>" +
-                        "<font face=\"courier\">fuente courier</font><br>" +
-                        "<font size=\"24\">fuente grande</font><br>" +
-                        "<font color=\"red\">color rojo</font><br>" +
-                        "<img src=\"cid:image\"></img>");
-        System.out.println(epMsg.getText());
-    }
-    
-    public void datos(String msg){
-        this.tfMsg.setText(msg+"\n\n"+NOMBRE_APP);
+        String msgComun= "<b>Dependencia: </b>" + dft.getDependencia() +"<br>"+
+                     "<b>Fecha: </b>" + dft.getFecha() +"<br>"+
+                     "<b>Patrimonio/s: </b>" + dft.getPatrimonio() +"<br>"+
+                     tarea + componente +
+                     "<b>Tecnico/s: </b>" + dft.getTecnico() +"<br>";
+        msgPantalla="<head><base href=\"file:"+crpImg+"\"></head>"+msgComun+"<img src=\""+path+"\"></img>";
+        msgMail=msgComun+"<br><br><img src=\"cid:image\"></img>";
+        
+        this.epMsg.setText(msgPantalla);
     }
     
     protected void asunto(String asunto) {
@@ -106,8 +112,6 @@ public class Mail extends JDialog {
         jLabel4 = new javax.swing.JLabel();
         pass = new javax.swing.JPasswordField();
         pnlCentral = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tfMsg = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         epMsg = new javax.swing.JEditorPane();
         pnlSur = new javax.swing.JPanel();
@@ -178,11 +182,6 @@ public class Mail extends JDialog {
 
         pnlCentral.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        tfMsg.setColumns(20);
-        tfMsg.setLineWrap(true);
-        tfMsg.setRows(5);
-        jScrollPane1.setViewportView(tfMsg);
-
         epMsg.setContentType("text/html"); // NOI18N
         jScrollPane2.setViewportView(epMsg);
 
@@ -190,15 +189,11 @@ public class Mail extends JDialog {
         pnlCentral.setLayout(pnlCentralLayout);
         pnlCentralLayout.setHorizontalGroup(
             pnlCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 865, Short.MAX_VALUE)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 865, Short.MAX_VALUE)
         );
         pnlCentralLayout.setVerticalGroup(
             pnlCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlCentralLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
         );
 
         getContentPane().add(pnlCentral, java.awt.BorderLayout.CENTER);
@@ -236,7 +231,7 @@ public class Mail extends JDialog {
             if(tfDe.getText().isEmpty()) throw new RuntimeException("No esta cargado el campo \"De\"");
             if(tfDestino.getText().isEmpty()) throw new RuntimeException("No esta cargado el campo \"A\"");
             ec.enviarCorreoImagen(tfDe.getText(), new String(password),
-                    tfDestino.getText(), tfAsunto.getText(), epMsg.getText(), crpImg+path, tipoMensaje);
+                    tfDestino.getText(), tfAsunto.getText(), msgMail, crpImg+path, tipoMensaje);
             JOptionPane.showMessageDialog(null, "Se envió correctamente el correo!", "Confirmación de envio", JOptionPane.INFORMATION_MESSAGE);
             this.setVisible(false);
         } catch (Exception ex) {
@@ -300,7 +295,6 @@ public class Mail extends JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPasswordField pass;
     private javax.swing.JPanel pnlCentral;
@@ -309,7 +303,6 @@ public class Mail extends JDialog {
     private javax.swing.JTextField tfAsunto;
     private javax.swing.JTextField tfDe;
     private javax.swing.JTextField tfDestino;
-    private javax.swing.JTextArea tfMsg;
     // End of variables declaration//GEN-END:variables
 
 }

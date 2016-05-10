@@ -39,30 +39,16 @@ public final class CodigoQR {
     private String charset;
     private int anchoCodigoQR, altoCodigoQR;
     
-    protected CodigoQR(){
+    public CodigoQR(){
        this(DEFAULT_CHARSET, DEFAULT_ALTO_CODIGO_QR, DEFAULT_ANCHO_CODIGO_QR); 
     }
     
-    protected CodigoQR(String charset, int alto, int ancho){
+    public CodigoQR(String charset, int alto, int ancho){
         this.charset=charset;
         anchoCodigoQR= ancho; 
         altoCodigoQR= alto;
         hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
         hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-    }
-
-    public static void main(String[] args) throws WriterException, IOException,
-            NotFoundException {
-        String qrDatos = "Direccion de Comunicaciones";
-        String pathArchivo = "Z:/QRCodigo25.png";
-        //String charset = "UTF-8"; // or "ISO-8859-1"
-        CodigoQR qr= new CodigoQR();
-
-        qr.crearCodigoQR(qrDatos, pathArchivo);
-        System.out.println("QR Code image created successfully!");
-
-        System.out.println("Data read from QR Code: "
-                + qr.leerCodigoQR(pathArchivo));
     }
 
     public void crearCodigoQR(String datos, String pathArchivo)
@@ -87,5 +73,19 @@ public final class CodigoQR {
         BinaryBitmap bb = new BinaryBitmap(new HybridBinarizer(bils));
         Result qrResultado = new MultiFormatReader().decode(bb,hintMap);
         return qrResultado.getText();
+    }
+    
+    public static void main(String[] args) throws WriterException, IOException,
+            NotFoundException {
+        String qrDatos = "Direccion de Comunicaciones";
+        String pathArchivo = "Z:/QRCodigo25.png";
+        //String charset = "UTF-8"; // or "ISO-8859-1"
+        CodigoQR qr= new CodigoQR();
+
+        qr.crearCodigoQR(qrDatos, pathArchivo);
+        System.out.println("QR Code image created successfully!");
+
+        System.out.println("Data read from QR Code: "
+                + qr.leerCodigoQR(pathArchivo));
     }
 }
