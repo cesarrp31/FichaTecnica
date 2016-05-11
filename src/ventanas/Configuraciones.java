@@ -5,12 +5,15 @@
  */
 package ventanas;
 
-import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
+import static fichatecnica.FichaTecnica.CONFIG_CORREO;
 import java.awt.Frame;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
+import java.util.Properties;
 
 /**
  *
@@ -24,27 +27,28 @@ public class Configuraciones extends javax.swing.JDialog {
      * @param modal
      */
     public Configuraciones(Frame parent, boolean modal) {
-        super(parent, modal);
+        super(parent, parent.getTitle(), modal);
         initComponents();
         
-        Enumeration e= NOMBRE_ARCHIVOS.propertyNames();
+        cargarPropiedades(tGeneral, CONFIG_GENERAL);
+        cargarPropiedades(tCorreo, CONFIG_CORREO);
+    }
+    
+    private void cargarPropiedades(JTable tabla, Properties p){        
+        Enumeration e= p.propertyNames();
         List list = Collections.list(e);
-        System.out.println("Total: "+list.size());
+        System.out.println("Total propiedades: "+list.size());
         
-        tGeneral.setModel(new DefaultTableModel(list.size(),3));
+        tabla.setModel(new DefaultTableModel(list.size(),3));
         for(int i= 0; i < list.size(); i++){
-            tGeneral.getModel().setValueAt(i, i, 0);
-            tGeneral.getModel().setValueAt(list.get(i), i, 1);
+            tabla.getModel().setValueAt(i, i, 0);
+            tabla.getModel().setValueAt(list.get(i), i, 1);
         }
         
-        e= NOMBRE_ARCHIVOS.elements();
+        e= p.elements();
         list = Collections.list(e);
         for(int i= 0; i < list.size(); i++){
-            tGeneral.getModel().setValueAt(list.get(i), i, 2);
-        }
-        
-        for(int j= 0; j < tGeneral.getModel().getRowCount(); j++){
-            System.out.println(tGeneral.getModel().getValueAt(j, 0)+"//"+tGeneral.getModel().getValueAt(j, 1));
+            tabla.getModel().setValueAt(list.get(i), i, 2);
         }
     }
 
@@ -63,7 +67,7 @@ public class Configuraciones extends javax.swing.JDialog {
         tGeneral = new javax.swing.JTable();
         pnlCnfCorreo = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tCorreo = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -112,7 +116,7 @@ public class Configuraciones extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("General", pnlCnfPrincipal);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tCorreo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -136,7 +140,7 @@ public class Configuraciones extends javax.swing.JDialog {
                 return types [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tCorreo);
 
         javax.swing.GroupLayout pnlCnfCorreoLayout = new javax.swing.GroupLayout(pnlCnfCorreo);
         pnlCnfCorreo.setLayout(pnlCnfCorreoLayout);
@@ -217,9 +221,9 @@ public class Configuraciones extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JPanel pnlCnfCorreo;
     private javax.swing.JPanel pnlCnfPrincipal;
+    private javax.swing.JTable tCorreo;
     private javax.swing.JTable tGeneral;
     // End of variables declaration//GEN-END:variables
 }

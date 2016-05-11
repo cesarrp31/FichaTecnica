@@ -6,16 +6,22 @@
 package auxiliar;
 
 import java.awt.Image;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -24,9 +30,9 @@ import javax.swing.ImageIcon;
 public class GestorArchivo {
 
     public static final String PATH_RAIZ_APP = System.getProperty("user.dir"),
-                                SEPARADOR = System.getProperty("file.separator");
+            SEPARADOR = System.getProperty("file.separator");
 
-    public static File cargarArchivo(String nombreArchivo) throws FileNotFoundException{
+    public static File cargarArchivo(String nombreArchivo) throws FileNotFoundException {
         if ((nombreArchivo == null) || (nombreArchivo.isEmpty())) {
             throw new RuntimeException("Nombre de archivo de propiedades inválido!: ");
         }
@@ -40,24 +46,24 @@ public class GestorArchivo {
             return file;
         } else {
             System.out.println(". NO SE PUDO CARGAR!");
-            throw new FileNotFoundException("No se pudede cargar el archivo: "+pathCompleto);
+            throw new FileNotFoundException("No se pudede cargar el archivo: " + pathCompleto);
         }
     }
-    
-    public static ImageIcon crearImageIcon(String path, String description) throws FileNotFoundException{
+
+    public static ImageIcon crearImageIcon(String path, String description) throws FileNotFoundException {
         File img = cargarArchivo(path);
         return new ImageIcon(img.getPath(), description);
     }
-    
-    public static Image crearImage(String path) throws FileNotFoundException, IOException{
+
+    public static Image crearImage(String path) throws FileNotFoundException, IOException {
         File img = cargarArchivo(path);
         return ImageIO.read(img);
     }
 
-    public static Properties obtenerPropiedades(String nombreArchivo) throws FileNotFoundException, IOException{
+    public static Properties obtenerPropiedades(String nombreArchivo) throws FileNotFoundException, IOException {
         Properties propiedad = new Properties();
         File archivo = cargarArchivo(nombreArchivo);
-        InputStream inputStream= new FileInputStream(archivo);
+        InputStream inputStream = new FileInputStream(archivo);
         try {
             Reader reader = new InputStreamReader(inputStream, "UTF-8");
             try {
@@ -65,9 +71,46 @@ public class GestorArchivo {
             } finally {
                 reader.close();
             }
-} finally {
-   inputStream.close();
-}
+        } finally {
+            inputStream.close();
+        }
         return propiedad;
+    }
+    
+    public static void guardarPropiedades(Properties propiedad, String nombreArchivo) throws FileNotFoundException, IOException{
+        OutputStream out = new FileOutputStream(nombreArchivo);
+        propiedad.store(out, null);
+        out.close();
+    }
+    
+    public static void abrirArchivo(IGestionArchivo gestor){
+        JFileChooser fc = getJFileChooser(gestor);
+        int returnVal = fc.showOpenDialog(gestor.ventana());
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File fichero = fc.getSelectedFile();
+            System.out.println("Abrir: " + fichero);
+            gestor.abrir(fichero);
+        }
+    }
+
+    public static void guardar(IGestionArchivo gestor) {
+        JFileChooser fc = getJFileChooser(gestor);
+        int returnVal = fc.showSaveDialog(gestor.ventana());
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File fichero = fc.getSelectedFile();
+            System.out.println("Guardar: " + fichero);
+            gestor.guardar(fichero);
+        }
+    }
+
+    private static JFileChooser getJFileChooser(IGestionArchivo gestor) {
+        JFileChooser fc = new JFileChooser();
+        fc.setCurrentDirectory(new File(gestor.carpetaGuardado()));
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                gestor.descripcionTipoArchivo(),
+                gestor.extensionArchivo());
+        fc.setFileFilter(filter);
+        return fc;
     }
 }

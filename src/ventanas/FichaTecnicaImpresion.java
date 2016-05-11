@@ -13,10 +13,7 @@ import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
 import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
-import com.google.zxing.WriterException;
 import datos.DatosFichaTecnica;
-import static fichatecnica.FichaTecnica.NOMBRE_APP;
-import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -25,14 +22,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -50,18 +44,22 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.AbstractDocument;
 import reporte.Reporte;
+import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
+import static fichatecnica.FichaTecnica.NOMBRE_APP;
+import auxiliar.IGestionArchivo;
+import java.awt.Frame;
 
 /**
  *
  * @author jsilva
  */
-public class FichaTecnicaImpresion extends javax.swing.JFrame {
+public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestionArchivo{
 
     private Mail vtnCorreo;
     private List<String> lstTareas, lstComponentes, lstDependencias, lstCampos;
-    private final String crpImg = NOMBRE_ARCHIVOS.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
-            crpRec = NOMBRE_ARCHIVOS.getProperty("crp.recursos") + GestorArchivo.SEPARADOR;
-    public static final String DELIMITADOR = NOMBRE_ARCHIVOS.getProperty("separadorCampos");
+    private final String crpImg = CONFIG_GENERAL.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
+            crpRec = CONFIG_GENERAL.getProperty("crp.recursos") + GestorArchivo.SEPARADOR;
+    public static final String DELIMITADOR = CONFIG_GENERAL.getProperty("separadorCampos");
 
     /**
      * Creates new form FichaTecnicaImpresion
@@ -182,11 +180,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
 
     private void inicializarBarraHerramientas() throws FileNotFoundException {
         JToolBar barraHerramientas = new JToolBar();
-        String e = crpImg + NOMBRE_ARCHIVOS.getProperty("enviar"),
-                i = crpImg + NOMBRE_ARCHIVOS.getProperty("imprimir"),
-                n = crpImg + NOMBRE_ARCHIVOS.getProperty("nuevo"),
-                g = crpImg + NOMBRE_ARCHIVOS.getProperty("guardar"),
-                a = crpImg + NOMBRE_ARCHIVOS.getProperty("abrir");
+        String e = crpImg + CONFIG_GENERAL.getProperty("enviar"),
+                i = crpImg + CONFIG_GENERAL.getProperty("imprimir"),
+                n = crpImg + CONFIG_GENERAL.getProperty("nuevo"),
+                g = crpImg + CONFIG_GENERAL.getProperty("guardar"),
+                a = crpImg + CONFIG_GENERAL.getProperty("abrir");
 
         JButton btnEnviar = new JButton(),
                 btnImprimir = new JButton(),
@@ -267,8 +265,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     }
 
     private void inicializarValoresEstaticos() throws FileNotFoundException {
-        String logo = crpImg + NOMBRE_ARCHIVOS.getProperty("logoApp"),
-                ic = crpImg + NOMBRE_ARCHIVOS.getProperty("iconoApp");
+        String logo = crpImg + CONFIG_GENERAL.getProperty("logoApp"),
+                ic = crpImg + CONFIG_GENERAL.getProperty("iconoApp");
 
         llogo.setIcon(GestorArchivo.crearImageIcon(logo, ""));
         superlogosolo.add(llogo);
@@ -278,7 +276,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         this.tffecha.setEditable(false);
         int maxChars;
         try {
-            maxChars = Integer.valueOf(NOMBRE_ARCHIVOS.getProperty("cantCaracteresComboBox"));
+            maxChars = Integer.valueOf(CONFIG_GENERAL.getProperty("cantCaracteresComboBox"));
         } catch (NumberFormatException e) {
             System.err.println(e.getLocalizedMessage());
             maxChars = 100;
@@ -292,9 +290,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     }
 
     private void inicializarValoresDesdeArchivo() throws FileNotFoundException {
-        String tareas = NOMBRE_ARCHIVOS.getProperty("tareas"),
-                componentes = NOMBRE_ARCHIVOS.getProperty("componentes"),
-                dependencias = NOMBRE_ARCHIVOS.getProperty("dependencias");
+        String tareas = CONFIG_GENERAL.getProperty("tareas"),
+                componentes = CONFIG_GENERAL.getProperty("componentes"),
+                dependencias = CONFIG_GENERAL.getProperty("dependencias");
 
         lstTareas = new ArrayList<>();
         lstComponentes = new ArrayList<>();
@@ -314,15 +312,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         this.tatareas.setText("");
         this.tacomponentes.setText("");
         Date actual = new Date();
-        tffecha.setText(new SimpleDateFormat(NOMBRE_ARCHIVOS.getProperty("formatoFecha")).format(actual));
+        tffecha.setText(new SimpleDateFormat(CONFIG_GENERAL.getProperty("formatoFecha")).format(actual));
 
-        tftecnico.setText(NOMBRE_ARCHIVOS.getProperty("default.tecnico"));
+        tftecnico.setText(CONFIG_GENERAL.getProperty("default.tecnico"));
     }
 
     private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException {
         String line;
-        String pathCompleto = NOMBRE_ARCHIVOS.getProperty("crp.recursos") + GestorArchivo.SEPARADOR + archivoDatos;
-        File archivo = GestorArchivo.cargarArchivo(pathCompleto);
+        File archivo = GestorArchivo.cargarArchivo(crpRec + archivoDatos);
         Scanner scnr = new Scanner(archivo);
         while (scnr.hasNextLine()) {
             line = scnr.nextLine();
@@ -388,18 +385,16 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     }
 
     private void generarCodigoQR(DatosFichaTecnica dft) {
-        String pathCompleto = NOMBRE_ARCHIVOS.getProperty("crp.temp")
+        String pathCompleto = CONFIG_GENERAL.getProperty("crp.temp")
                 + GestorArchivo.SEPARADOR
-                + NOMBRE_ARCHIVOS.getProperty("codigoQR");
-        
-        dft.setDelimitador(DELIMITADOR);
-        
+                + CONFIG_GENERAL.getProperty("codigoQR");
+             
         CodigoQR qr= new CodigoQR();
         try {
             qr.crearCodigoQR(dft.toString(), pathCompleto);            
             System.out.println("Valor creado: \n"+qr.leerCodigoQR(pathCompleto));
         } catch (Exception ex) {
-            System.err.println(ex.getLocalizedMessage());
+            System.err.println("Error: "+ex.getLocalizedMessage());
             ex.printStackTrace();
         }
     }
@@ -472,71 +467,81 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
         return sb;
     }
 
-    private void abrir() {
-        JFileChooser fc = getJFileChooser();
-        int returnVal = fc.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File fichero = fc.getSelectedFile();
-            System.out.println("Abrir: " + fichero);
-            try {
-                String aux;
-                String[] aux2;
-                Scanner scnr = new Scanner(fichero);
-                while (scnr.hasNextLine()) {
-                    aux = scnr.nextLine();
-                    System.out.println(aux);
-                    aux2 = aux.split(DELIMITADOR);
-                    cbdependencia.setSelectedItem(aux2[0]);
-                    tffecha.setText(aux2[1]);
-                    tfpatrimonio.setText(aux2[2]);
-                    tatareas.setText(aux2[3]);
-                    tacomponentes.setText(aux2[4]);
-                    tftecnico.setText(aux2[5]);
-                }
-            } catch (Exception e) {
-                System.err.println(e.getLocalizedMessage());
-                e.printStackTrace();
+    private void  abrir(){
+        GestorArchivo.abrirArchivo(this);
+    }
+    
+    @Override
+    public void abrir(File fichero) {
+        System.out.println("Abrir: " + fichero);
+        try {
+            String aux;
+            String[] aux2;
+            Scanner scnr = new Scanner(fichero);
+            while (scnr.hasNextLine()) {
+                aux = scnr.nextLine();
+                System.out.println(aux);
+                aux2 = aux.split(DELIMITADOR);
+                cbdependencia.setSelectedItem(aux2[0]);
+                tffecha.setText(aux2[1]);
+                tfpatrimonio.setText(aux2[2]);
+                tatareas.setText(aux2[3]);
+                tacomponentes.setText(aux2[4]);
+                tftecnico.setText(aux2[5]);
             }
-        }
+        } catch (Exception e) {
+            System.err.println(e.getLocalizedMessage());
+            e.printStackTrace();
+        }        
     }
 
-    private void guardar() {
-        JFileChooser fc = getJFileChooser();
-        int returnVal = fc.showSaveDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File fichero = fc.getSelectedFile();
-            System.out.println("Guardar: " + fichero);
-            BufferedWriter bw;
-            String ext = NOMBRE_ARCHIVOS.getProperty("extArchivoFichaTecnica");
-            try {
-                if (fichero.getAbsolutePath().endsWith(ext)) {
-                    bw = new BufferedWriter(new FileWriter(fichero));
-                } else {
-                    bw = new BufferedWriter(new FileWriter(fichero + "." + ext));
-                }
-                bw.write(cargarListaCampos().toString());
-                bw.close();
-            } catch (Exception e) {
-                System.err.println(e.getLocalizedMessage());
-                e.printStackTrace();
-            }
-        }
+    private void guardar(){
+        GestorArchivo.guardar(this);
     }
-
+    
+    @Override
+    public void guardar(File fichero) {        
+        BufferedWriter bw;
+        String ext = CONFIG_GENERAL.getProperty("extArchivoFichaTecnica");
+        try {
+            if (fichero.getPath().endsWith(ext)) {
+                bw = new BufferedWriter(new FileWriter(fichero));
+            } else {
+                bw = new BufferedWriter(new FileWriter(fichero + "." + ext));
+            }
+            bw.write(cargarListaCampos().toString());
+            bw.close();
+        } catch (Exception e) {
+            System.err.println(e.getLocalizedMessage());
+            e.printStackTrace();
+        }        
+    }
+    
+    @Override
+    public Frame ventana(){
+        return this;
+    }
+    
+    @Override
+    public String extensionArchivo(){
+        return CONFIG_GENERAL.getProperty("extArchivoFichaTecnica");
+    }
+    
+    @Override
+    public String descripcionTipoArchivo(){
+        return CONFIG_GENERAL.getProperty("descArchivoFichaTecnica");
+    }
+    
+    @Override
+    public String carpetaGuardado(){
+        return CONFIG_GENERAL.getProperty("crp.guardado");
+    }
+    
     private void crearVentanaConfiguraciones() {
         Configuraciones c = new Configuraciones(this, true);
+        c.setLocationRelativeTo(null);
+        c.pack();
         c.setVisible(true);
-    }
-
-    private JFileChooser getJFileChooser() {
-        JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new File(NOMBRE_ARCHIVOS.getProperty("crp.guardado")));
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                NOMBRE_ARCHIVOS.getProperty("descArchivoFichaTecnica"),
-                NOMBRE_ARCHIVOS.getProperty("extArchivoFichaTecnica"));
-        fc.setFileFilter(filter);
-        return fc;
     }
 
     /**
@@ -909,12 +914,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cbtareasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbtareasActionPerformed
-        // TODO add your handling code here:
         this.tatareas.append((String) cbtareas.getSelectedItem() + ". ");
     }//GEN-LAST:event_cbtareasActionPerformed
 
     private void cbComponentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbComponentesActionPerformed
-        // TODO add your handling code here:
         this.tacomponentes.append((String) cbComponentes.getSelectedItem() + ". ");
     }//GEN-LAST:event_cbComponentesActionPerformed
 

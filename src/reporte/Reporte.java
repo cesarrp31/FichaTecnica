@@ -7,7 +7,6 @@ package reporte;
 
 import auxiliar.GestorArchivo;
 import datos.DatosFichaTecnica;
-import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +18,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
+import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
 
 /**
  *
@@ -27,8 +27,8 @@ import net.sf.jasperreports.view.JasperViewer;
 public class Reporte {
 
     public static void crearReporte(DatosFichaTecnica dft, JFrame ventana) {
-        String crpRec= NOMBRE_ARCHIVOS.getProperty("crp.recursos")+GestorArchivo.SEPARADOR,
-                nombJasper=crpRec+NOMBRE_ARCHIVOS.getProperty("jasperFichaTecnica");
+        String crpRec= CONFIG_GENERAL.getProperty("crp.recursos")+GestorArchivo.SEPARADOR,
+                nombJasper=crpRec+CONFIG_GENERAL.getProperty("jasperFichaTecnica");
         try {
             
             File archJasper = GestorArchivo.cargarArchivo(nombJasper);

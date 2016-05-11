@@ -92,23 +92,20 @@ public class EnviarCorreo {
 
         MimeMultipart multipart = new MimeMultipart();
 
-        // first part (the html)
+        // Texto (html)
         BodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(msg, tipoMensaje);
-        // add it
         multipart.addBodyPart(messageBodyPart);
 
-        // second part (the image)
+        // Imagen
         messageBodyPart = new MimeBodyPart();
         DataSource fds = new FileDataSource(pathImg);
 
         messageBodyPart.setDataHandler(new DataHandler(fds));
         messageBodyPart.setHeader("Content-ID", "<image>");
         messageBodyPart.setFileName(pathImg);
-        // add image to the multipart
         multipart.addBodyPart(messageBodyPart);
 
-        // put everything together
         message.setContent(multipart);
         
         // Lo enviamos.

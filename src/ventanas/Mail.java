@@ -8,8 +8,8 @@ package ventanas;
 import auxiliar.EnviarCorreo;
 import auxiliar.GestorArchivo;
 import datos.DatosFichaTecnica;
+import static fichatecnica.FichaTecnica.CONFIG_CORREO;
 import static fichatecnica.FichaTecnica.NOMBRE_APP;
-import static fichatecnica.FichaTecnica.NOMBRE_ARCHIVOS;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -17,6 +17,7 @@ import java.util.Properties;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
 
 /**
  *
@@ -25,8 +26,8 @@ import javax.swing.JOptionPane;
 public class Mail extends JDialog {
     private final EnviarCorreo ec;
     private final Properties propiedad;
-    private final String crpImg = NOMBRE_ARCHIVOS.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
-            path= NOMBRE_ARCHIVOS.getProperty("iconoAppMail");
+    private final String crpImg = CONFIG_GENERAL.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
+            path= CONFIG_GENERAL.getProperty("iconoAppMail");
     
     private String msgMail, msgPantalla;
     /**
@@ -38,9 +39,7 @@ public class Mail extends JDialog {
     public Mail(JFrame parent, boolean modal) throws NullPointerException, IOException {
         super(parent, parent.getTitle(), modal);
         initComponents();
-        String crpCorreo= NOMBRE_ARCHIVOS.getProperty("crp.configCorreo")+GestorArchivo.SEPARADOR;
-        String nomArc= crpCorreo+NOMBRE_ARCHIVOS.getProperty("cnfCorreo");
-        propiedad = GestorArchivo.obtenerPropiedades(nomArc);
+        propiedad = CONFIG_CORREO;
         
         ec= new EnviarCorreo(propiedad);
         boolean defaultUsuario = Boolean.valueOf(propiedad.getProperty("default.correo.deSistema"));
@@ -79,14 +78,13 @@ public class Mail extends JDialog {
     }
     
     protected void asunto(String asunto) {
-        
+        /*
         try {
             tfAsunto.setText(charsetUTF8(propiedad.getProperty("default.correo.asunto")+asunto));
         } catch (UnsupportedEncodingException ex) {
             tfAsunto.setText(propiedad.getProperty("default.correo.asunto")+asunto);
-        }
-        
-        //tfAsunto.setText(propiedad.getProperty("default.correo.asunto")+asunto);
+        }*/
+        tfAsunto.setText(propiedad.getProperty("default.correo.asunto")+asunto);
     }
     
     private String charsetUTF8(String in) throws UnsupportedEncodingException{

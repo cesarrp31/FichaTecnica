@@ -12,7 +12,7 @@ import java.util.Objects;
  * @author coperalta
  */
 public class DatosFichaTecnica {
-    private String delimitador= ";";
+    private static final String DELIMITADOR= ";";
     private final String dependencia, fecha, patrimonio, tarea, componentes, tecnico;
 
     public DatosFichaTecnica(String dependencia, String fecha, String patrimonio, String tarea, String componentes, String tecnico) {
@@ -22,10 +22,6 @@ public class DatosFichaTecnica {
         this.tarea = tarea;
         this.componentes = componentes;
         this.tecnico = tecnico;
-    }
-
-    public void setDelimitador(String delimitador) {
-        this.delimitador = delimitador;
     }
 
     public String getDependencia() {
@@ -100,8 +96,8 @@ public class DatosFichaTecnica {
     @Override
     public String toString() {
         String separador= "\"";
-        return separador + dependencia + separador + ";" + separador + fecha + separador + ";" + 
-               separador + patrimonio + separador + ";" + separador + tarea + separador + ";" + 
-               separador + componentes + separador + ";" + separador + tecnico + separador+ ";";
+        return separador + dependencia + separador + DELIMITADOR + separador + fecha + separador + DELIMITADOR + 
+               separador + patrimonio + separador + DELIMITADOR + separador + tarea + separador + DELIMITADOR + 
+               separador + componentes + separador + DELIMITADOR + separador + tecnico + separador+ DELIMITADOR;
     }
 }
