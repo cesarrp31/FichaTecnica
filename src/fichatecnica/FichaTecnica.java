@@ -6,11 +6,9 @@
 package fichatecnica;
 
 import auxiliar.GestorArchivo;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import ventanas.FichaTecnicaImpresion;
 
 /**
@@ -45,7 +43,7 @@ public class FichaTecnica {
             ft.pack();
             ft.setLocationRelativeTo(null);
             ft.setVisible(true);
-        } catch (FileNotFoundException ex) {
+        } catch (Exception ex) {
             System.err.println("Error: " + ex.getLocalizedMessage());
             ex.printStackTrace();
         }
@@ -56,7 +54,7 @@ public class FichaTecnica {
         System.out.println("Cargado correctamente el archivo de configuración inicial!");
 
         String crpCorreo = CONFIG_GENERAL.getProperty("crp.configCorreo") + GestorArchivo.SEPARADOR,
-                nomArc = crpCorreo + CONFIG_GENERAL.getProperty("cnfCorreo");
+                nomArc = crpCorreo + CONFIG_GENERAL.getProperty("cnf.Correo");
         CONFIG_CORREO = GestorArchivo.obtenerPropiedades(nomArc);
         System.out.println("Cargado correctamente el archivo de configuración de correo!");
     }

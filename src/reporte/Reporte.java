@@ -28,7 +28,7 @@ public class Reporte {
 
     public static void crearReporte(DatosFichaTecnica dft, JFrame ventana) {
         String crpRec= CONFIG_GENERAL.getProperty("crp.recursos")+GestorArchivo.SEPARADOR,
-                nombJasper=crpRec+CONFIG_GENERAL.getProperty("jasperFichaTecnica");
+                nombJasper=crpRec+CONFIG_GENERAL.getProperty("info.jasper.FichaTecnica");
         try {
             
             File archJasper = GestorArchivo.cargarArchivo(nombJasper);

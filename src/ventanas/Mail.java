@@ -27,7 +27,7 @@ public class Mail extends JDialog {
     private final EnviarCorreo ec;
     private final Properties propiedad;
     private final String crpImg = CONFIG_GENERAL.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
-            path= CONFIG_GENERAL.getProperty("iconoAppMail");
+            path= CONFIG_GENERAL.getProperty("imag.iconoAppMail");
     
     private String msgMail, msgPantalla;
     /**

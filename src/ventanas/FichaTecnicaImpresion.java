@@ -31,7 +31,6 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -41,32 +40,33 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.AbstractDocument;
 import reporte.Reporte;
 import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
 import static fichatecnica.FichaTecnica.NOMBRE_APP;
 import auxiliar.IGestionArchivo;
+import auxiliar.IGestorLectorArchivoTexto;
 import java.awt.Frame;
+import java.io.IOException;
 
 /**
  *
  * @author jsilva
  */
-public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestionArchivo{
+public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestionArchivo, IGestorLectorArchivoTexto{
 
     private Mail vtnCorreo;
-    private List<String> lstTareas, lstComponentes, lstDependencias, lstCampos;
+    private List<String> lstTareas, lstComponentes, lstDependencias, lstTemp;
     private final String crpImg = CONFIG_GENERAL.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
             crpRec = CONFIG_GENERAL.getProperty("crp.recursos") + GestorArchivo.SEPARADOR;
-    public static final String DELIMITADOR = CONFIG_GENERAL.getProperty("separadorCampos");
+    public static final String DELIMITADOR = CONFIG_GENERAL.getProperty("conf.separadorCampos");
 
     /**
      * Creates new form FichaTecnicaImpresion
      *
      * @throws java.io.FileNotFoundException
      */
-    public FichaTecnicaImpresion() throws FileNotFoundException {
+    public FichaTecnicaImpresion() throws FileNotFoundException, IOException {
         initComponents();
 
         inicializarComponentes();
@@ -180,11 +180,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
 
     private void inicializarBarraHerramientas() throws FileNotFoundException {
         JToolBar barraHerramientas = new JToolBar();
-        String e = crpImg + CONFIG_GENERAL.getProperty("enviar"),
-                i = crpImg + CONFIG_GENERAL.getProperty("imprimir"),
-                n = crpImg + CONFIG_GENERAL.getProperty("nuevo"),
-                g = crpImg + CONFIG_GENERAL.getProperty("guardar"),
-                a = crpImg + CONFIG_GENERAL.getProperty("abrir");
+        String e = crpImg + CONFIG_GENERAL.getProperty("btn.imag.enviar"),
+                i = crpImg + CONFIG_GENERAL.getProperty("btn.imag.imprimir"),
+                n = crpImg + CONFIG_GENERAL.getProperty("btn.imag.nuevo"),
+                g = crpImg + CONFIG_GENERAL.getProperty("btn.imag.guardar"),
+                a = crpImg + CONFIG_GENERAL.getProperty("btn.imag.abrir");
 
         JButton btnEnviar = new JButton(),
                 btnImprimir = new JButton(),
@@ -265,8 +265,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
     }
 
     private void inicializarValoresEstaticos() throws FileNotFoundException {
-        String logo = crpImg + CONFIG_GENERAL.getProperty("logoApp"),
-                ic = crpImg + CONFIG_GENERAL.getProperty("iconoApp");
+        String logo = crpImg + CONFIG_GENERAL.getProperty("imag.logoApp"),
+                ic = crpImg + CONFIG_GENERAL.getProperty("imag.iconoApp");
 
         llogo.setIcon(GestorArchivo.crearImageIcon(logo, ""));
         superlogosolo.add(llogo);
@@ -276,7 +276,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
         this.tffecha.setEditable(false);
         int maxChars;
         try {
-            maxChars = Integer.valueOf(CONFIG_GENERAL.getProperty("cantCaracteresComboBox"));
+            maxChars = Integer.valueOf(CONFIG_GENERAL.getProperty("conf.cantCaracteresComboBox"));
         } catch (NumberFormatException e) {
             System.err.println(e.getLocalizedMessage());
             maxChars = 100;
@@ -289,10 +289,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
         pDoc.setDocumentFilter(new DocumentSizeFilter(maxChars));
     }
 
-    private void inicializarValoresDesdeArchivo() throws FileNotFoundException {
-        String tareas = CONFIG_GENERAL.getProperty("tareas"),
-                componentes = CONFIG_GENERAL.getProperty("componentes"),
-                dependencias = CONFIG_GENERAL.getProperty("dependencias");
+    private void inicializarValoresDesdeArchivo() throws FileNotFoundException, IOException {
+        String tareas = CONFIG_GENERAL.getProperty("val.tareas"),
+                componentes = CONFIG_GENERAL.getProperty("val.componentes"),
+                dependencias = CONFIG_GENERAL.getProperty("val.dependencias");
 
         lstTareas = new ArrayList<>();
         lstComponentes = new ArrayList<>();
@@ -312,19 +312,19 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
         this.tatareas.setText("");
         this.tacomponentes.setText("");
         Date actual = new Date();
-        tffecha.setText(new SimpleDateFormat(CONFIG_GENERAL.getProperty("formatoFecha")).format(actual));
+        tffecha.setText(new SimpleDateFormat(CONFIG_GENERAL.getProperty("conf.formatoFecha")).format(actual));
 
-        tftecnico.setText(CONFIG_GENERAL.getProperty("default.tecnico"));
+        tftecnico.setText(CONFIG_GENERAL.getProperty("default.appNom.tecnico"));
     }
 
-    private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException {
-        String line;
-        File archivo = GestorArchivo.cargarArchivo(crpRec + archivoDatos);
-        Scanner scnr = new Scanner(archivo);
-        while (scnr.hasNextLine()) {
-            line = scnr.nextLine();
-            lstDatos.add(line);
-        }
+    private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException, IOException {
+        lstTemp= lstDatos;
+        GestorArchivo.obtenerPropiedades(crpRec + archivoDatos, this);
+    }
+    
+    @Override
+    public void agregarLinea(String linea) {
+        lstTemp.add(linea);
     }
 
     private void cargarValoresComboBox() {
@@ -387,7 +387,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
     private void generarCodigoQR(DatosFichaTecnica dft) {
         String pathCompleto = CONFIG_GENERAL.getProperty("crp.temp")
                 + GestorArchivo.SEPARADOR
-                + CONFIG_GENERAL.getProperty("codigoQR");
+                + CONFIG_GENERAL.getProperty("imag.codigoQR");
              
         CodigoQR qr= new CodigoQR();
         try {
@@ -502,7 +502,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
     @Override
     public void guardar(File fichero) {        
         BufferedWriter bw;
-        String ext = CONFIG_GENERAL.getProperty("extArchivoFichaTecnica");
+        String ext = this.extensionArchivo();
         try {
             if (fichero.getPath().endsWith(ext)) {
                 bw = new BufferedWriter(new FileWriter(fichero));
@@ -524,12 +524,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
     
     @Override
     public String extensionArchivo(){
-        return CONFIG_GENERAL.getProperty("extArchivoFichaTecnica");
+        return CONFIG_GENERAL.getProperty("conf.extArchivoFichaTecnica");
     }
     
     @Override
     public String descripcionTipoArchivo(){
-        return CONFIG_GENERAL.getProperty("descArchivoFichaTecnica");
+        return CONFIG_GENERAL.getProperty("conf.descArchivoFichaTecnica");
     }
     
     @Override
@@ -954,7 +954,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
             public void run() {
                 try {
                     new FichaTecnicaImpresion().setVisible(true);
-                } catch (FileNotFoundException ex) {
+                } catch (Exception ex) {
                     System.err.println("Error: " + ex.getLocalizedMessage());
                 }
             }

@@ -6,18 +6,18 @@
 package auxiliar;
 
 import java.awt.Image;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.util.List;
 import java.util.Properties;
+import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -75,6 +75,16 @@ public class GestorArchivo {
             inputStream.close();
         }
         return propiedad;
+    }
+    
+    public static void obtenerPropiedades(String nombreArchivo, IGestorLectorArchivoTexto gc) throws FileNotFoundException, IOException {
+        String linea;
+        File archivo = cargarArchivo(nombreArchivo);
+        Scanner scnr = new Scanner(archivo);
+        while (scnr.hasNextLine()) {
+            linea = scnr.nextLine();
+            gc.agregarLinea(linea);
+        }
     }
     
     public static void guardarPropiedades(Properties propiedad, String nombreArchivo) throws FileNotFoundException, IOException{
