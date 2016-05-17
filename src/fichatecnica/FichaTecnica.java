@@ -8,6 +8,7 @@ package fichatecnica;
 import auxiliar.GestorArchivo;
 import java.io.IOException;
 import java.util.Properties;
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 import ventanas.FichaTecnicaImpresion;
 
@@ -41,7 +42,8 @@ public class FichaTecnica {
         try {
             FichaTecnicaImpresion ft = new FichaTecnicaImpresion();
             ft.pack();
-            ft.setLocationRelativeTo(null);
+            //ft.setLocationRelativeTo(null);
+            ft.setExtendedState(ft.getExtendedState() | JFrame.MAXIMIZED_BOTH);
             ft.setVisible(true);
         } catch (Exception ex) {
             System.err.println("Error: " + ex.getLocalizedMessage());

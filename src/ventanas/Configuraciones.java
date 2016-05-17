@@ -5,15 +5,16 @@
  */
 package ventanas;
 
+import auxiliar.ModeloTablaConfiguraciones;
 import static fichatecnica.FichaTecnica.CONFIG_CORREO;
 import java.awt.Frame;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
 import java.util.Properties;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -36,10 +37,14 @@ public class Configuraciones extends javax.swing.JDialog {
     
     private void cargarPropiedades(JTable tabla, Properties p){        
         Enumeration e= p.propertyNames();
+        
         List list = Collections.list(e);
         System.out.println("Total propiedades: "+list.size());
-        
-        tabla.setModel(new DefaultTableModel(list.size(),3));
+        String c1= CONFIG_GENERAL.getProperty("val.columna.configuracion1"),
+               c2= CONFIG_GENERAL.getProperty("val.columna.configuracion2"),
+               c3= CONFIG_GENERAL.getProperty("val.columna.configuracion3");
+        String colNom[] = {c1, c2, c3};
+        tabla.setModel(new ModeloTablaConfiguraciones(list.size(),3, colNom));
         for(int i= 0; i < list.size(); i++){
             tabla.getModel().setValueAt(i, i, 0);
             tabla.getModel().setValueAt(list.get(i), i, 1);
@@ -50,6 +55,14 @@ public class Configuraciones extends javax.swing.JDialog {
         for(int i= 0; i < list.size(); i++){
             tabla.getModel().setValueAt(list.get(i), i, 2);
         }
+        
+        int ancho= 40;
+        TableColumn columna = tabla.getColumn(c1);
+        columna.setPreferredWidth(ancho);
+        columna.setMinWidth(ancho);
+        columna.setMaxWidth(ancho);
+        
+        tabla.getTableHeader().setReorderingAllowed(false);  
     }
 
     /**
@@ -61,6 +74,7 @@ public class Configuraciones extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pnlNorte = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         pnlCnfPrincipal = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -68,8 +82,16 @@ public class Configuraciones extends javax.swing.JDialog {
         pnlCnfCorreo = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tCorreo = new javax.swing.JTable();
+        pnlSur = new javax.swing.JPanel();
+        btnGuardar = new javax.swing.JButton();
+        btnCerrar = new javax.swing.JButton();
+        btnDefault = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        pnlNorte.setPreferredSize(new java.awt.Dimension(582, 450));
+
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(559, 400));
 
         tGeneral.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -107,11 +129,11 @@ public class Configuraciones extends javax.swing.JDialog {
         pnlCnfPrincipal.setLayout(pnlCnfPrincipalLayout);
         pnlCnfPrincipalLayout.setHorizontalGroup(
             pnlCnfPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
         );
         pnlCnfPrincipalLayout.setVerticalGroup(
             pnlCnfPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("General", pnlCnfPrincipal);
@@ -146,31 +168,31 @@ public class Configuraciones extends javax.swing.JDialog {
         pnlCnfCorreo.setLayout(pnlCnfCorreoLayout);
         pnlCnfCorreoLayout.setHorizontalGroup(
             pnlCnfCorreoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
         );
         pnlCnfCorreoLayout.setVerticalGroup(
             pnlCnfCorreoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Correo", pnlCnfCorreo);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1)
-                .addContainerGap())
-        );
+        pnlNorte.add(jTabbedPane1);
+
+        getContentPane().add(pnlNorte, java.awt.BorderLayout.CENTER);
+
+        btnGuardar.setText("Guardar");
+        btnGuardar.setPreferredSize(new java.awt.Dimension(91, 23));
+        pnlSur.add(btnGuardar);
+
+        btnCerrar.setText("Cerrar");
+        btnCerrar.setPreferredSize(new java.awt.Dimension(91, 23));
+        pnlSur.add(btnCerrar);
+
+        btnDefault.setText("Por Defecto");
+        pnlSur.add(btnDefault);
+
+        getContentPane().add(pnlSur, java.awt.BorderLayout.SOUTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -218,11 +240,16 @@ public class Configuraciones extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCerrar;
+    private javax.swing.JButton btnDefault;
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel pnlCnfCorreo;
     private javax.swing.JPanel pnlCnfPrincipal;
+    private javax.swing.JPanel pnlNorte;
+    private javax.swing.JPanel pnlSur;
     private javax.swing.JTable tCorreo;
     private javax.swing.JTable tGeneral;
     // End of variables declaration//GEN-END:variables
