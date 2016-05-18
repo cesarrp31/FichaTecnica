@@ -109,7 +109,7 @@ public class EnviarCorreo {
         message.setContent(multipart);
         
         // Lo enviamos.
-        Transport transport = session.getTransport(propiedad.getProperty("transport"));
+        Transport transport = session.getTransport(propiedad.getProperty("conf.transport"));
         transport.connect(usuario, password);
         transport.sendMessage(message, message.getAllRecipients());
 

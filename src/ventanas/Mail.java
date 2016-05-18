@@ -9,8 +9,6 @@ import auxiliar.EnviarCorreo;
 import auxiliar.GestorArchivo;
 import datos.DatosFichaTecnica;
 import static fichatecnica.FichaTecnica.CONFIG_CORREO;
-import static fichatecnica.FichaTecnica.NOMBRE_APP;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
@@ -54,7 +52,7 @@ public class Mail extends JDialog {
     }
 
     public void datos(DatosFichaTecnica dft) {
-        String tarea, componente;
+        String tarea, componente, nota;
         if(dft.getTarea().isEmpty()){
             tarea= "";
         }else{
@@ -65,12 +63,20 @@ public class Mail extends JDialog {
         }else{
             componente= "<b>Componentes Utilizados: </b>" + dft.getComponentes() +"<br>";
         }        
+        if(dft.getNroNota().isEmpty()){
+            nota= "";
+        }else{
+            nota= "<b>Nº Nota: </b>" + dft.getNroNota() +"<br>";
+        }
         
         String msgComun= "<b>Dependencia: </b>" + dft.getDependencia() +"<br>"+
                      "<b>Fecha: </b>" + dft.getFecha() +"<br>"+
+                     nota +
                      "<b>Patrimonio/s: </b>" + dft.getPatrimonio() +"<br>"+
+                     "<b>Ponderación: </b>" + dft.getPonderacion() +"<br>"+
                      tarea + componente +
-                     "<b>Tecnico/s: </b>" + dft.getTecnico() +"<br>";
+                     "<b>Técnico/s: </b>" + dft.getTecnico() +"<br>"+
+                     "<h2><b>Estado del Servicio Técnico: </b>" + dft.getEstado() +"</h2><br>";
         msgPantalla="<head><base href=\"file:"+crpImg+"\"></head>"+msgComun+"<img src=\""+path+"\"></img>";
         msgMail=msgComun+"<br><br><img src=\"cid:image\"></img>";
         

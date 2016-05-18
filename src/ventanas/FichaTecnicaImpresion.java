@@ -50,6 +50,7 @@ import java.awt.Frame;
 import java.io.IOException;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.GroupLayout;
 
 /**
  *
@@ -74,10 +75,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
         inicializarComponentes();
         inicializarMenu();
         inicializarValoresDesdeArchivo();
-        inicializarPantallaCarga();
         cargarValoresComboBox();
+        inicializarPantallaCarga();
         inicializarValoresEstaticos();
-
+        formatearPantalla();
         inicializarBarraHerramientas();
     }
 
@@ -316,6 +317,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
         this.tfpatrimonio.setText("");
         this.tatareas.setText("");
         this.tacomponentes.setText("");
+        this.tfNota.setText("");
+        this.cbEstados.setSelectedIndex(0);
+        this.cbponderacion.setSelectedIndex(0);
         Date actual = new Date();
         tffecha.setText(new SimpleDateFormat(CONFIG_GENERAL.getProperty("conf.formatoFecha")).format(actual));
 
@@ -329,6 +333,72 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
     private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException, IOException {
         lstTemp= lstDatos;
         GestorArchivo.obtenerPropiedades(crpRec + archivoDatos, this);
+    }
+    
+    private void formatearPantalla(){
+        GroupLayout layout = new GroupLayout(pnl2);
+        pnl2.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+        layout.setHorizontalGroup(
+        layout.createSequentialGroup()
+            .addComponent(ldependencia)
+            .addComponent(cbdependencia)
+            .addComponent(lfecha)
+            .addComponent(tffecha)
+            .addComponent(lnota)
+            .addComponent(tfNota)
+        );
+        layout.setVerticalGroup(
+        layout.createSequentialGroup()
+           .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(ldependencia)
+                .addComponent(cbdependencia)
+                .addComponent(lfecha)
+                .addComponent(tffecha)
+                .addComponent(lnota)
+                .addComponent(tfNota))
+        );
+        
+        layout = new GroupLayout(pnl3);
+        pnl3.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+        layout.setHorizontalGroup(
+        layout.createSequentialGroup()
+            .addComponent(lpatrimonio)
+            .addComponent(tfpatrimonio)
+            .addComponent(lponderacion)
+            .addComponent(cbponderacion)
+            .addComponent(lestado)
+            .addComponent(cbEstados)
+        );
+        layout.setVerticalGroup(
+        layout.createSequentialGroup()
+           .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(lpatrimonio)
+                .addComponent(tfpatrimonio)
+                .addComponent(lponderacion)
+                .addComponent(cbponderacion)
+                .addComponent(lestado)
+                .addComponent(cbEstados))
+        );
+        
+        layout = new GroupLayout(inferior);
+        inferior.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+        layout.setHorizontalGroup(
+        layout.createSequentialGroup()
+            .addComponent(ltecnico)
+            .addComponent(tftecnico)
+        );
+        layout.setVerticalGroup(
+        layout.createSequentialGroup()
+           .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(ltecnico)
+                .addComponent(tftecnico))
+        );
     }
     
     @Override
@@ -453,11 +523,13 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
     
     private DatosFichaTecnica getDatosFichaTecnica() {
         String dep = cbdependencia.getSelectedItem()==null?"":cbdependencia.getSelectedItem().toString();
-        DatosFichaTecnica dft = new DatosFichaTecnica(dep, tffecha.getText(), tfpatrimonio.getText(),
-                tatareas.getText(), tacomponentes.getText(), tftecnico.getText());
+        DatosFichaTecnica dft = new DatosFichaTecnica(
+                    dep, tffecha.getText(), tfNota.getText(), 
+                    tfpatrimonio.getText(), cbponderacion.getSelectedItem().toString(), cbEstados.getSelectedItem().toString(),
+                    tatareas.getText(), tacomponentes.getText(), tftecnico.getText());
         return dft;
     }
-
+    /*
     private StringBuilder cargarListaCampos() {
         StringBuilder sb = new StringBuilder();
 
@@ -476,7 +548,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
         sb.append(DELIMITADOR);
 
         return sb;
-    }
+    }*/
 
     private void  abrir(){
         GestorArchivo.abrirArchivo(this);
@@ -491,19 +563,32 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
             Scanner scnr = new Scanner(fichero);
             while (scnr.hasNextLine()) {
                 aux = scnr.nextLine();
-                System.out.println(aux);
-                aux2 = aux.split(DELIMITADOR);
-                cbdependencia.setSelectedItem(aux2[0]);
-                tffecha.setText(aux2[1]);
-                tfpatrimonio.setText(aux2[2]);
-                tatareas.setText(aux2[3]);
-                tacomponentes.setText(aux2[4]);
-                tftecnico.setText(aux2[5]);
+                System.out.println("Valor leido: "+aux);
+                aux2 = aux.split(DatosFichaTecnica.DELIMITADOR);
+                cbdependencia.setSelectedItem(formatearCampoLeido(aux2[0]));
+                tffecha.setText(formatearCampoLeido(aux2[1]));
+                tfNota.setText(formatearCampoLeido(aux2[2]));
+                tfpatrimonio.setText(formatearCampoLeido(aux2[3]));
+                cbponderacion.setSelectedItem(formatearCampoLeido(aux2[4]));
+                tatareas.setText(formatearCampoLeido(aux2[6]));
+                tacomponentes.setText(formatearCampoLeido(aux2[7]));
+                tftecnico.setText(formatearCampoLeido(aux2[8]));
             }
         } catch (Exception e) {
             System.err.println(e.getLocalizedMessage());
             e.printStackTrace();
         }        
+    }
+    
+    private String formatearCampoLeido(String valor){
+        String aux="";
+        if (valor.startsWith(DatosFichaTecnica.SEPARADOR)){
+            aux= valor.substring(1);
+        }
+        if (valor.endsWith(DatosFichaTecnica.SEPARADOR)){
+            aux= aux.substring(0, aux.length()-1);
+        }
+        return aux;
     }
 
     private void guardar(){
@@ -520,7 +605,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
             } else {
                 bw = new BufferedWriter(new FileWriter(fichero + "." + ext));
             }
-            bw.write(cargarListaCampos().toString());
+            bw.write(getDatosFichaTecnica().toString());
             bw.close();
         } catch (Exception e) {
             System.err.println(e.getLocalizedMessage());
@@ -593,19 +678,19 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
         pnl2 = new javax.swing.JPanel();
         ldependencia = new javax.swing.JLabel();
         cbdependencia = new javax.swing.JComboBox<>();
-        jLabel3 = new javax.swing.JLabel();
+        lfecha = new javax.swing.JLabel();
         tffecha = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        lnota = new javax.swing.JLabel();
         tfNota = new javax.swing.JTextField();
-        pn3 = new javax.swing.JPanel();
+        pnl3 = new javax.swing.JPanel();
         lpatrimonio = new javax.swing.JLabel();
         tfpatrimonio = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
+        lponderacion = new javax.swing.JLabel();
+        cbponderacion = new javax.swing.JComboBox<>();
+        lestado = new javax.swing.JLabel();
         cbEstados = new javax.swing.JComboBox<>();
         inferior = new javax.swing.JPanel();
-        iitecnico = new javax.swing.JLabel();
+        ltecnico = new javax.swing.JLabel();
         tftecnico = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -637,11 +722,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 85, Short.MAX_VALUE)
+            .addGap(0, 133, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                     .addGap(13, 13, 13)))
         );
 
@@ -711,7 +796,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
                     .addGap(14, 14, 14)))
         );
 
@@ -837,30 +922,47 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
 
         pnl2.add(cbdependencia);
 
-        jLabel3.setText("Fecha:");
-        pnl2.add(jLabel3);
+        lfecha.setText("Fecha:");
+        pnl2.add(lfecha);
+
+        tffecha.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        tffecha.setMaximumSize(new java.awt.Dimension(150, 20));
+        tffecha.setMinimumSize(new java.awt.Dimension(150, 20));
+        tffecha.setPreferredSize(new java.awt.Dimension(150, 20));
         pnl2.add(tffecha);
 
-        jLabel4.setText("Nº Nota:");
-        pnl2.add(jLabel4);
+        lnota.setText("Nº Nota:");
+        pnl2.add(lnota);
+
+        tfNota.setMaximumSize(new java.awt.Dimension(60, 20));
+        tfNota.setMinimumSize(new java.awt.Dimension(60, 20));
+        tfNota.setPreferredSize(new java.awt.Dimension(60, 20));
         pnl2.add(tfNota);
 
         infdatos.add(pnl2);
 
         lpatrimonio.setText("Nº Patrimonio");
-        pn3.add(lpatrimonio);
-        pn3.add(tfpatrimonio);
+        pnl3.add(lpatrimonio);
+        pnl3.add(tfpatrimonio);
 
-        jLabel5.setText("Ponderación:");
-        pn3.add(jLabel5);
-        pn3.add(jTextField1);
+        lponderacion.setText("Ponderación:");
+        pnl3.add(lponderacion);
 
-        jLabel6.setText("Estado");
-        pn3.add(jLabel6);
+        cbponderacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S/P", "1", "2", "3", "4", "5" }));
+        cbponderacion.setMaximumSize(new java.awt.Dimension(52, 22));
+        cbponderacion.setMinimumSize(new java.awt.Dimension(52, 22));
+        cbponderacion.setPreferredSize(new java.awt.Dimension(52, 22));
+        pnl3.add(cbponderacion);
 
-        pn3.add(cbEstados);
+        lestado.setText("Estado");
+        pnl3.add(lestado);
 
-        infdatos.add(pn3);
+        cbEstados.setMaximumSize(new java.awt.Dimension(200, 22));
+        cbEstados.setMinimumSize(new java.awt.Dimension(200, 22));
+        cbEstados.setPreferredSize(new java.awt.Dimension(200, 22));
+        pnl3.add(cbEstados);
+
+        infdatos.add(pnl3);
 
         superior.add(infdatos);
 
@@ -869,10 +971,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
         inferior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         inferior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        iitecnico.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        iitecnico.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        iitecnico.setText("TECNICO :");
-        inferior.add(iitecnico);
+        ltecnico.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        ltecnico.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        ltecnico.setText("TECNICO :");
+        inferior.add(ltecnico);
         inferior.add(tftecnico);
 
         getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
@@ -932,33 +1034,33 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestio
     private javax.swing.JComboBox<String> cbComponentes;
     private javax.swing.JComboBox<String> cbEstados;
     private javax.swing.JComboBox<String> cbdependencia;
+    private javax.swing.JComboBox<String> cbponderacion;
     private javax.swing.JComboBox<String> cbtareas;
     private javax.swing.JPanel centro;
-    private javax.swing.JLabel iitecnico;
     private javax.swing.JPanel infdatos;
     private javax.swing.JPanel inferior;
     private javax.swing.JPanel inferiorcomponentes;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel ldependencia;
     private javax.swing.JLabel ldir;
+    private javax.swing.JLabel lestado;
+    private javax.swing.JLabel lfecha;
     private javax.swing.JLabel llogo;
     private javax.swing.JLabel lnombre;
+    private javax.swing.JLabel lnota;
     private javax.swing.JLabel lpatrimonio;
+    private javax.swing.JLabel lponderacion;
+    private javax.swing.JLabel ltecnico;
     private javax.swing.JLabel ltel;
     private javax.swing.JLabel ltitulo;
-    private javax.swing.JPanel pn3;
     private javax.swing.JPanel pnl1;
     private javax.swing.JPanel pnl2;
+    private javax.swing.JPanel pnl3;
     private javax.swing.JPanel pnlComponentes;
     private javax.swing.JPanel pnlTareasDisponibles;
     private javax.swing.JPanel superdatos;

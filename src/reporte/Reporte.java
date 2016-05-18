@@ -41,6 +41,9 @@ public class Reporte {
             parametros.put("patrimonio", dft.getPatrimonio());
             parametros.put("tecnico", dft.getTecnico());
             parametros.put("fecha", dft.getFecha());
+            parametros.put("nota", dft.getNroNota());
+            parametros.put("ponderacion", dft.getPonderacion());
+            parametros.put("estado", dft.getEstado());
 
             JasperPrint print = JasperFillManager.fillReport(report, parametros, new JREmptyDataSource());
 
