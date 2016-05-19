@@ -5,7 +5,7 @@
  */
 package auxiliar;
 
-import java.util.Properties;
+import static fichatecnica.FichaTecnica.CONFIG_CORREO;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -25,27 +25,21 @@ import javax.mail.internet.MimeMultipart;
  */
 public class EnviarCorreo {
 
-    private Properties propiedad;
-
-    public EnviarCorreo(Properties propiedad) {
-        this.propiedad = propiedad;
-    }
-
     public void enviarCorreoSimple(String usuario, String password,
             String destino, String asunto, String msg, String tipoMensaje) throws MessagingException {
         // Propiedades de la conexión
-        propiedad.setProperty("mail.smtp.user", usuario);
-
-        System.out.println("Propiedades de Correo PreConfiguradas Cargadas: ");
-        //Properties propiedad = new Properties();
-        System.out.println(propiedad.getProperty("mail.smtp.host"));
-        System.out.println(propiedad.getProperty("mail.smtp.starttls.enable"));
-        System.out.println(propiedad.getProperty("mail.smtp.port"));
-        System.out.println(propiedad.getProperty("mail.smtp.user"));
-        System.out.println(propiedad.getProperty("mail.smtp.auth"));
+        CONFIG_CORREO.setSmtpUser(usuario);
+        String a= ", ";
+        System.out.print("Propiedades de Correo PreConfiguradas Cargadas: ");
+        
+        System.out.print(CONFIG_CORREO.getSmtpHost() + a);
+        System.out.print(CONFIG_CORREO.getSmtpStartTlsEnable() + a);
+        System.out.print(CONFIG_CORREO.getSmtpPort() + a);
+        System.out.print(CONFIG_CORREO.getSmtpUser() + a);
+        System.out.println(CONFIG_CORREO.getSmtpAuth());
 
         // Preparamos la sesion
-        Session session = Session.getDefaultInstance(propiedad);
+        Session session = Session.getDefaultInstance(CONFIG_CORREO.getPropiedad());
 
         // Construimos el mensaje
         MimeMessage message = new MimeMessage(session);
@@ -58,7 +52,7 @@ public class EnviarCorreo {
         message.setContent(msg, tipoMensaje);
 
         // Lo enviamos.
-        Transport transport = session.getTransport(propiedad.getProperty("transport"));
+        Transport transport = session.getTransport(CONFIG_CORREO.getTransport());
         transport.connect(usuario, password);
         transport.sendMessage(message, message.getAllRecipients());
 
@@ -69,18 +63,18 @@ public class EnviarCorreo {
     public void enviarCorreoImagen(String usuario, String password,
             String destino, String asunto, String msg, String pathImg, String tipoMensaje) throws MessagingException {
         // Propiedades de la conexión
-        propiedad.setProperty("mail.smtp.user", usuario);
-
+        CONFIG_CORREO.setSmtpUser(usuario);
+        String a= ", ";
         System.out.println("Propiedades de Correo PreConfiguradas Cargadas: ");
-        //Properties propiedad = new Properties();
-        System.out.println(propiedad.getProperty("mail.smtp.host"));
-        System.out.println(propiedad.getProperty("mail.smtp.starttls.enable"));
-        System.out.println(propiedad.getProperty("mail.smtp.port"));
-        System.out.println(propiedad.getProperty("mail.smtp.user"));
-        System.out.println(propiedad.getProperty("mail.smtp.auth"));
+        
+        System.out.print(CONFIG_CORREO.getSmtpHost() + a);
+        System.out.print(CONFIG_CORREO.getSmtpStartTlsEnable() + a);
+        System.out.print(CONFIG_CORREO.getSmtpPort() + a);
+        System.out.print(CONFIG_CORREO.getSmtpUser() + a);
+        System.out.println(CONFIG_CORREO.getSmtpAuth());
 
         // Preparamos la sesion
-        Session session = Session.getDefaultInstance(propiedad);
+        Session session = Session.getDefaultInstance(CONFIG_CORREO.getPropiedad());
 
         // Construimos el mensaje
         MimeMessage message = new MimeMessage(session);
@@ -109,7 +103,7 @@ public class EnviarCorreo {
         message.setContent(multipart);
         
         // Lo enviamos.
-        Transport transport = session.getTransport(propiedad.getProperty("conf.transport"));
+        Transport transport = session.getTransport(CONFIG_CORREO.getTransport());
         transport.connect(usuario, password);
         transport.sendMessage(message, message.getAllRecipients());
 

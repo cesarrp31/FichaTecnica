@@ -6,8 +6,9 @@
 package fichatecnica;
 
 import auxiliar.GestorArchivo;
+import auxiliar.configuraciones.ConfiguracionCorreo;
+import auxiliar.configuraciones.ConfiguracionGeneral;
 import java.io.IOException;
-import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import ventanas.FichaTecnicaImpresion;
@@ -18,9 +19,10 @@ import ventanas.FichaTecnicaImpresion;
  */
 public class FichaTecnica {
 
-    public static Properties CONFIG_GENERAL, CONFIG_CORREO;
     public static String NOMBRE_APP = "SRTI Sistema de Registro de Tareas Informáticas 2016 v2.0";
-
+    
+    public static ConfiguracionGeneral CONFIG_GENERAL;
+    public static ConfiguracionCorreo CONFIG_CORREO;
     /**
      * @param args the command line arguments
      */
@@ -29,7 +31,10 @@ public class FichaTecnica {
             // Set System L&F
             UIManager.setLookAndFeel(
                     UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            System.err.println(e.getLocalizedMessage());
+            e.printStackTrace();
+        }
 
         try {
             cargarArchivosConfiguraciones();
@@ -52,12 +57,12 @@ public class FichaTecnica {
     }
 
     protected static void cargarArchivosConfiguraciones() throws IOException {
-        CONFIG_GENERAL = GestorArchivo.obtenerPropiedades("config\\configuracionInicial.config");
+        CONFIG_GENERAL = new ConfiguracionGeneral();
         System.out.println("Cargado correctamente el archivo de configuración inicial!");
 
-        String crpCorreo = CONFIG_GENERAL.getProperty("crp.configCorreo") + GestorArchivo.SEPARADOR,
-                nomArc = crpCorreo + CONFIG_GENERAL.getProperty("cnf.Correo");
-        CONFIG_CORREO = GestorArchivo.obtenerPropiedades(nomArc);
+        String crpCorreo = CONFIG_GENERAL.getCarpetaConfiguracionCorreo() + GestorArchivo.SEPARADOR,
+                nomArc = crpCorreo + CONFIG_GENERAL.getArchivoConfiguracionCorreo();
+        CONFIG_CORREO = new ConfiguracionCorreo(nomArc);
         System.out.println("Cargado correctamente el archivo de configuración de correo!");
     }
 }

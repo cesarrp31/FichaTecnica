@@ -27,11 +27,12 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import fichatecnica.FichaTecnica;
+import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 
 public final class CodigoQR {
-    public static final String DEFAULT_CHARSET="UTF-8";// o "ISO-8859-1"
     public static final int DEFAULT_ALTO_CODIGO_QR= 200, 
                             DEFAULT_ANCHO_CODIGO_QR= 200;
     
@@ -40,7 +41,7 @@ public final class CodigoQR {
     private int anchoCodigoQR, altoCodigoQR;
     
     public CodigoQR(){
-       this(DEFAULT_CHARSET, DEFAULT_ALTO_CODIGO_QR, DEFAULT_ANCHO_CODIGO_QR); 
+       this(CONFIG_GENERAL.getConfiguracionCodificacion(), DEFAULT_ALTO_CODIGO_QR, DEFAULT_ANCHO_CODIGO_QR); 
     }
     
     public CodigoQR(String charset, int alto, int ancho){
@@ -79,7 +80,6 @@ public final class CodigoQR {
             NotFoundException {
         String qrDatos = "Direccion de Comunicaciones";
         String pathArchivo = "Z:/QRCodigo25.png";
-        //String charset = "UTF-8"; // or "ISO-8859-1"
         CodigoQR qr= new CodigoQR();
 
         qr.crearCodigoQR(qrDatos, pathArchivo);

@@ -31,8 +31,8 @@ public class Configuraciones extends javax.swing.JDialog {
         super(parent, parent.getTitle(), modal);
         initComponents();
         
-        cargarPropiedades(tGeneral, CONFIG_GENERAL);
-        cargarPropiedades(tCorreo, CONFIG_CORREO);
+        cargarPropiedades(tGeneral, CONFIG_GENERAL.getPropiedad());
+        cargarPropiedades(tCorreo, CONFIG_CORREO.getPropiedad());
     }
     
     private void cargarPropiedades(JTable tabla, Properties p){        
@@ -40,9 +40,9 @@ public class Configuraciones extends javax.swing.JDialog {
         
         List list = Collections.list(e);
         System.out.println("Total propiedades: "+list.size());
-        String c1= CONFIG_GENERAL.getProperty("val.columna.configuracion1"),
-               c2= CONFIG_GENERAL.getProperty("val.columna.configuracion2"),
-               c3= CONFIG_GENERAL.getProperty("val.columna.configuracion3");
+        String c1= CONFIG_GENERAL.getValorColumnaConfiguracion1(),
+               c2= CONFIG_GENERAL.getValorColumnaConfiguracion2(),
+               c3= CONFIG_GENERAL.getValorColumnaConfiguracion3();
         String colNom[] = {c1, c2, c3};
         tabla.setModel(new ModeloTablaConfiguraciones(list.size(),3, colNom));
         for(int i= 0; i < list.size(); i++){

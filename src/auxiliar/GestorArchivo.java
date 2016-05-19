@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
@@ -60,12 +59,12 @@ public class GestorArchivo {
         return ImageIO.read(img);
     }
 
-    public static Properties obtenerPropiedades(String nombreArchivo) throws FileNotFoundException, IOException {
+    public static Properties obtenerPropiedades(String nombreArchivo, String codificacion) throws FileNotFoundException, IOException {
         Properties propiedad = new Properties();
         File archivo = cargarArchivo(nombreArchivo);
         InputStream inputStream = new FileInputStream(archivo);
         try {
-            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            Reader reader = new InputStreamReader(inputStream, codificacion);
             try {
                 propiedad.load(reader);
             } finally {
@@ -77,6 +76,10 @@ public class GestorArchivo {
         return propiedad;
     }
     
+    public static Properties obtenerPropiedades(String nombreArchivo) throws FileNotFoundException, IOException {
+        String codificacion= "UTF-8";
+        return obtenerPropiedades(nombreArchivo, codificacion);
+    }
     public static void obtenerPropiedades(String nombreArchivo, IGestorLectorArchivoTexto gc) throws FileNotFoundException, IOException {
         String linea;
         File archivo = cargarArchivo(nombreArchivo);

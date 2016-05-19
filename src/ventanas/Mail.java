@@ -10,8 +10,6 @@ import auxiliar.GestorArchivo;
 import datos.DatosFichaTecnica;
 import static fichatecnica.FichaTecnica.CONFIG_CORREO;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Properties;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -23,9 +21,8 @@ import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
  */
 public class Mail extends JDialog {
     private final EnviarCorreo ec;
-    private final Properties propiedad;
-    private final String crpImg = CONFIG_GENERAL.getProperty("crp.imagenes") + GestorArchivo.SEPARADOR,
-            path= CONFIG_GENERAL.getProperty("imag.iconoAppMail");
+    private final String crpImg = CONFIG_GENERAL.getCarpetaImagenes() + GestorArchivo.SEPARADOR,
+            path= CONFIG_GENERAL.getImagenCorreoPie();
     
     private String msgMail, msgPantalla;
     /**
@@ -37,18 +34,15 @@ public class Mail extends JDialog {
     public Mail(JFrame parent, boolean modal) throws NullPointerException, IOException {
         super(parent, parent.getTitle(), modal);
         initComponents();
-        propiedad = CONFIG_CORREO;
         
-        ec= new EnviarCorreo(propiedad);
-        boolean defaultUsuario = Boolean.valueOf(propiedad.getProperty("default.correo.deSistema"));
+        ec= new EnviarCorreo();
+        boolean defaultUsuario = Boolean.valueOf(CONFIG_CORREO.getDefaultCorreoUser());
         if(defaultUsuario){
-            tfDe.setText(propiedad.getProperty("default.correo.de"));
+            tfDe.setText(CONFIG_CORREO.getDefaultCorreoEmisor());
         }else{
             tfDe.setText(System.getProperty("user.name"));
         }
-        tfDestino.setText(propiedad.getProperty("default.correo.a"));
-        this.pack();
-        
+        tfDestino.setText(CONFIG_CORREO.getDefaultCorreoDestinatario());        
     }
 
     public void datos(DatosFichaTecnica dft) {
@@ -76,7 +70,7 @@ public class Mail extends JDialog {
                      "<b>Ponderación: </b>" + dft.getPonderacion() +"<br>"+
                      tarea + componente +
                      "<b>Técnico/s: </b>" + dft.getTecnico() +"<br>"+
-                     "<h2><b>Estado del Servicio Técnico: </b>" + dft.getEstado() +"</h2><br>";
+                     "<h3><b>Estado del Servicio Técnico: </b>" + dft.getEstado() +"</h3><br>";
         msgPantalla="<head><base href=\"file:"+crpImg+"\"></head>"+msgComun+"<img src=\""+path+"\"></img>";
         msgMail=msgComun+"<br><br><img src=\"cid:image\"></img>";
         
@@ -90,13 +84,13 @@ public class Mail extends JDialog {
         } catch (UnsupportedEncodingException ex) {
             tfAsunto.setText(propiedad.getProperty("default.correo.asunto")+asunto);
         }*/
-        tfAsunto.setText(propiedad.getProperty("default.correo.asunto")+asunto);
+        tfAsunto.setText(CONFIG_CORREO.getDefaultCorreoAsunto()+asunto);
     }
-    
+    /*
     private String charsetUTF8(String in) throws UnsupportedEncodingException{
         byte[] utf8 = in.getBytes("cp1252");
         return new String(utf8);
-    }
+    }*/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -229,7 +223,8 @@ public class Mail extends JDialog {
     }//GEN-LAST:event_btSalirActionPerformed
 
     private void btEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEnviarActionPerformed
-        String tipoMensaje= "text/html; charset=utf-8";
+        String tipoMensaje= "text/html; charset="+
+               CONFIG_GENERAL.getConfiguracionCodificacion().toLowerCase();
         try {
             char[] password= pass.getPassword();
             if(tfDe.getText().isEmpty()) throw new RuntimeException("No esta cargado el campo \"De\"");

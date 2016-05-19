@@ -25,15 +25,24 @@ import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
  * @author coperalta
  */
 public class Reporte {
+    private static JasperReport report;
+    private static String nombJasper;
+    
+    public static void prepararReporte(){
+        String crpRec= CONFIG_GENERAL.getCarpetaRecursos()+GestorArchivo.SEPARADOR;
+        
+        try{
+            nombJasper=crpRec+CONFIG_GENERAL.getArchivoInforme();
+            File archJasper = GestorArchivo.cargarArchivo(nombJasper);
+            report = (JasperReport) JRLoader.loadObject(archJasper);
+        } catch (Exception ex) {
+            System.err.println("Archivo: "+nombJasper+". "+ex.getLocalizedMessage());
+            ex.printStackTrace();
+        }
+    }
 
     public static void crearReporte(DatosFichaTecnica dft, JFrame ventana) {
-        String crpRec= CONFIG_GENERAL.getProperty("crp.recursos")+GestorArchivo.SEPARADOR,
-                nombJasper=crpRec+CONFIG_GENERAL.getProperty("info.jasper.FichaTecnica");
         try {
-            
-            File archJasper = GestorArchivo.cargarArchivo(nombJasper);
-            JasperReport report = (JasperReport) JRLoader.loadObject(archJasper);
-
             Map parametros = new HashMap();
             parametros.put("trabajos", dft.getTarea());
             parametros.put("componentes", dft.getComponentes());
