@@ -50,8 +50,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.Vector;
+import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -67,7 +70,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
                          lstTemp, lstEstados, lstPonderaciones;
     private final String crpImg = CONFIG_GENERAL.getCarpetaImagenes() + GestorArchivo.SEPARADOR,
             crpRec = CONFIG_GENERAL.getCarpetaRecursos() + GestorArchivo.SEPARADOR;
-    public static final String DELIMITADOR = CONFIG_GENERAL.getConfiguracionSeparadorCampos();
     
     private final GestorArchivoFichaTecnica iga;
 
@@ -100,7 +102,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         inicializarComboBox(cbtareas);     
     }
 
-    private void inicializarMenu() {
+    private void inicializarMenu() throws FileNotFoundException {
         JMenuBar mb = new JMenuBar();
 
         JMenu archivo = new JMenu("Archivo"),
@@ -119,6 +121,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
                 abrir = new JMenuItem("Abrir"),
                 guardar = new JMenuItem("Guardar"),
                 configuracion= new JMenuItem("Configuracion"),
+                //contacto= new JMenuItem("Contacto"),
                 acercaDe = new JMenuItem("Acerca de...");
 
         nuevo.setAccelerator(KeyStroke.getKeyStroke(
@@ -135,7 +138,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
                              KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         acercaDe.setAccelerator(KeyStroke.getKeyStroke(
                              KeyEvent.VK_H, ActionEvent.CTRL_MASK));
-        
+        /*contacto.setAccelerator(KeyStroke.getKeyStroke(
+                             KeyEvent.VK_T, ActionEvent.CTRL_MASK));*/
         abrir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -174,10 +178,20 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         acercaDe.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                vntAcercaDe();
+                /*
                 JOptionPane.showMessageDialog(null, NOMBRE_APP + "\nDiseñado y Desarrollado por:\nT.A.E. Gallo, Mario\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar",
                         "Acerca de:", JOptionPane.INFORMATION_MESSAGE);
+                */
             }
         });
+        /*
+        contacto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vntAcercaDe();
+            }
+        });*/
 
         salir.addActionListener(new ActionListener() {
             @Override
@@ -203,11 +217,46 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         archivo.addSeparator();
         acciones.add(enviar);
         archivo.add(salir);
+        //ayuda.add(contacto);
         ayuda.add(acercaDe);
 
+        String e = crpImg + CONFIG_GENERAL.getImagenBotonEnviar24(),
+                i = crpImg + CONFIG_GENERAL.getImagenBotonImprimir24(),
+                n = crpImg + CONFIG_GENERAL.getImagenBotonNuevo24(),
+                g = crpImg + CONFIG_GENERAL.getImagenBotonGuardar24(),
+                a = crpImg + CONFIG_GENERAL.getImagenBotonAbrir24(),
+                s = crpImg + CONFIG_GENERAL.getImagenBotonSalir24();
+        
+        ImageIcon ii = GestorArchivo.crearImageIcon(e, "");
+        enviar.setIcon(ii);
+        
+        ii = GestorArchivo.crearImageIcon(i, "");
+        imprimir.setIcon(ii);
+
+        ii = GestorArchivo.crearImageIcon(n, "");
+        nuevo.setIcon(ii);
+
+        ii = GestorArchivo.crearImageIcon(a, "");
+        abrir.setIcon(ii);
+
+        ii = GestorArchivo.crearImageIcon(g, "");
+        guardar.setIcon(ii);
+        
+        ii = GestorArchivo.crearImageIcon(s, "");
+        salir.setIcon(ii);
+        
         this.setJMenuBar(mb);
     }
 
+    private void vntAcercaDe(){
+        JDialog v= new JDialog(this, true);
+        v.setTitle(this.getTitle());
+        v.setContentPane(new PnlAcercaDe());
+        v.pack();
+        v.setLocationRelativeTo(null);
+        v.setVisible(true);
+    }
+    
     private void inicializarBarraHerramientas() throws FileNotFoundException {
         JToolBar barraHerramientas = new JToolBar();
         String e = crpImg + CONFIG_GENERAL.getImagenBotonEnviar(),
@@ -279,7 +328,13 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         barraHerramientas.add(btnImprimir);
         barraHerramientas.addSeparator();
         barraHerramientas.add(btnEnviar);
-
+        barraHerramientas.addSeparator();
+        barraHerramientas.add(Box.createHorizontalGlue());
+        
+        String logo = CONFIG_GENERAL.getCarpetaImagenes() + GestorArchivo.SEPARADOR + CONFIG_GENERAL.getImagenLogoBarra();
+        JLabel icono= new JLabel();
+        icono.setIcon(GestorArchivo.crearImageIcon(logo, ""));
+        barraHerramientas.add(icono);
         btnEnviar.setToolTipText("Enviar por Correo");
         btnImprimir.setToolTipText("Imprimir");
         btnNuevo.setToolTipText("Nueva Ficha");
@@ -297,9 +352,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private void inicializarValoresEstaticos() throws FileNotFoundException {
         String logo = crpImg + CONFIG_GENERAL.getImagenLogoApp(),
                 ic = crpImg + CONFIG_GENERAL.getImagenIconoApp();
-
+        /*
         llogo.setIcon(GestorArchivo.crearImageIcon(logo, ""));
-        superlogosolo.add(llogo);
+        superlogosolo.add(llogo);*/
 
         setIconImage(GestorArchivo.crearImageIcon(ic, "").getImage());
 
@@ -319,8 +374,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         pDoc.setDocumentFilter(new DocumentSizeFilter(maxChars));
     }
 
-    private void inicializarValoresDesdeArchivo() throws FileNotFoundException, IOException {
-        
+    private void inicializarValoresDesdeArchivo() throws FileNotFoundException, IOException {        
         lstTareas = new ArrayList<>();
         lstComponentes = new ArrayList<>();
         lstDependencias = new ArrayList<>();
@@ -335,7 +389,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     }
     
     private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException, IOException {
-        //lstDatos= new ArrayList<>();
         lstTemp= lstDatos;
         GestorArchivo.obtenerPropiedades(crpRec + archivoDatos, this);
     }
@@ -638,16 +691,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         pnlComponentes = new javax.swing.JPanel();
         cbComponentes = new javax.swing.JComboBox<>();
         superior = new javax.swing.JPanel();
-        superiologo = new javax.swing.JPanel();
-        superlogosolo = new javax.swing.JPanel();
-        llogo = new javax.swing.JLabel();
-        superdatos = new javax.swing.JPanel();
-        lnombre = new javax.swing.JLabel();
-        ltel = new javax.swing.JLabel();
-        ldir = new javax.swing.JLabel();
-        infdatos = new javax.swing.JPanel();
-        pnl1 = new javax.swing.JPanel();
-        ltitulo = new javax.swing.JLabel();
         pnl2 = new javax.swing.JPanel();
         ldependencia = new javax.swing.JLabel();
         cbdependencia = new javax.swing.JComboBox<>();
@@ -667,6 +710,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         tftecnico = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
         centro.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         centro.setPreferredSize(new java.awt.Dimension(990, 342));
@@ -695,11 +740,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 133, Short.MAX_VALUE)
+            .addGap(0, 227, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                     .addGap(13, 13, 13)))
         );
 
@@ -769,7 +814,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
                     .addGap(14, 14, 14)))
         );
 
@@ -815,80 +860,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         getContentPane().add(centro, java.awt.BorderLayout.CENTER);
 
         superior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        superior.setLayout(new java.awt.GridLayout(2, 1));
-
-        superlogosolo.setPreferredSize(new java.awt.Dimension(1011, 107));
-
-        javax.swing.GroupLayout superlogosoloLayout = new javax.swing.GroupLayout(superlogosolo);
-        superlogosolo.setLayout(superlogosoloLayout);
-        superlogosoloLayout.setHorizontalGroup(
-            superlogosoloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1302, Short.MAX_VALUE)
-            .addGroup(superlogosoloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, superlogosoloLayout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(llogo, javax.swing.GroupLayout.PREFERRED_SIZE, 1282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
-        );
-        superlogosoloLayout.setVerticalGroup(
-            superlogosoloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 107, Short.MAX_VALUE)
-            .addGroup(superlogosoloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(llogo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
-        );
-
-        superiologo.add(superlogosolo);
-
-        superdatos.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        lnombre.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        lnombre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lnombre.setText("soporte@legislaturachaco.gov.ar");
-
-        ltel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        ltel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        ltel.setText("- Tel: (0362) 4428149 -");
-
-        ldir.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        ldir.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        ldir.setText("- José María Paz 170 - 1° Piso -");
-
-        javax.swing.GroupLayout superdatosLayout = new javax.swing.GroupLayout(superdatos);
-        superdatos.setLayout(superdatosLayout);
-        superdatosLayout.setHorizontalGroup(
-            superdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, superdatosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(superdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ltel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ldir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lnombre, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        superdatosLayout.setVerticalGroup(
-            superdatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(superdatosLayout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addComponent(lnombre, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ldir)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ltel)
-                .addContainerGap(21, Short.MAX_VALUE))
-        );
-
-        superiologo.add(superdatos);
-
-        superior.add(superiologo);
-
-        infdatos.setLayout(new java.awt.GridLayout(3, 1));
-
-        ltitulo.setFont(new java.awt.Font("Antique Olive Compact", 1, 24)); // NOI18N
-        ltitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        ltitulo.setText("<<  SERVICIO TECNICO  >>");
-        pnl1.add(ltitulo);
-
-        infdatos.add(pnl1);
+        superior.setLayout(new javax.swing.BoxLayout(superior, javax.swing.BoxLayout.PAGE_AXIS));
 
         ldependencia.setText("Dependencia:");
         pnl2.add(ldependencia);
@@ -912,7 +884,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         tfNota.setPreferredSize(new java.awt.Dimension(60, 20));
         pnl2.add(tfNota);
 
-        infdatos.add(pnl2);
+        superior.add(pnl2);
 
         lpatrimonio.setText("Nº Patrimonio");
         pnl3.add(lpatrimonio);
@@ -934,11 +906,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         cbEstados.setPreferredSize(new java.awt.Dimension(200, 22));
         pnl3.add(cbEstados);
 
-        infdatos.add(pnl3);
+        superior.add(pnl3);
 
-        superior.add(infdatos);
-
-        getContentPane().add(superior, java.awt.BorderLayout.PAGE_START);
+        getContentPane().add(superior, java.awt.BorderLayout.NORTH);
 
         inferior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         inferior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
@@ -1009,7 +979,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private javax.swing.JComboBox<String> cbponderacion;
     private javax.swing.JComboBox<String> cbtareas;
     private javax.swing.JPanel centro;
-    private javax.swing.JPanel infdatos;
     private javax.swing.JPanel inferior;
     private javax.swing.JPanel inferiorcomponentes;
     private javax.swing.JPanel jPanel1;
@@ -1019,27 +988,18 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel ldependencia;
-    private javax.swing.JLabel ldir;
     private javax.swing.JLabel lestado;
     private javax.swing.JLabel lfecha;
-    private javax.swing.JLabel llogo;
-    private javax.swing.JLabel lnombre;
     private javax.swing.JLabel lnota;
     private javax.swing.JLabel lpatrimonio;
     private javax.swing.JLabel lponderacion;
     private javax.swing.JLabel ltecnico;
-    private javax.swing.JLabel ltel;
-    private javax.swing.JLabel ltitulo;
-    private javax.swing.JPanel pnl1;
     private javax.swing.JPanel pnl2;
     private javax.swing.JPanel pnl3;
     private javax.swing.JPanel pnlComponentes;
     private javax.swing.JPanel pnlTareasDisponibles;
-    private javax.swing.JPanel superdatos;
-    private javax.swing.JPanel superiologo;
     private javax.swing.JPanel superior;
     private javax.swing.JPanel superiortareas;
-    private javax.swing.JPanel superlogosolo;
     private javax.swing.JTextArea tacomponentes;
     private javax.swing.JTextArea tatareas;
     private javax.swing.JTextField tfNota;

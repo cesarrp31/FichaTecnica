@@ -47,7 +47,7 @@ public class FichaTecnica {
         try {
             FichaTecnicaImpresion ft = new FichaTecnicaImpresion();
             ft.pack();
-            //ft.setLocationRelativeTo(null);
+            ft.setLocationRelativeTo(null);
             ft.setExtendedState(ft.getExtendedState() | JFrame.MAXIMIZED_BOTH);
             ft.setVisible(true);
         } catch (Exception ex) {

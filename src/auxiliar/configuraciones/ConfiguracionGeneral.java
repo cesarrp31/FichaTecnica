@@ -145,4 +145,31 @@ public class ConfiguracionGeneral extends ConfiguracionAbstracta{
         return this.getPropiedad("default.appNom.tecnico");
     }
 
+    public String getImagenBotonEnviar24(){
+        return this.getPropiedad("btn.imag.enviar24");
+    }
+    
+    public String getImagenBotonImprimir24(){
+        return this.getPropiedad("btn.imag.imprimir24");
+    }
+    
+    public String getImagenBotonNuevo24(){
+        return this.getPropiedad("btn.imag.nuevo24");
+    }
+    
+    public String getImagenBotonAbrir24(){
+        return this.getPropiedad("btn.imag.abrir24");
+    }
+    
+    public String getImagenBotonGuardar24(){
+        return this.getPropiedad("btn.imag.guardar24");
+    }
+    
+    public String getImagenBotonSalir24(){
+        return this.getPropiedad("btn.imag.salir24");
+    }
+    
+    public String getImagenLogoBarra(){
+        return this.getPropiedad("btn.imag.barra");
+    }
 }
