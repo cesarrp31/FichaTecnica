@@ -27,6 +27,7 @@ import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
 public class Reporte {
     private static JasperReport report;
     private static String nombJasper;
+    private JDialog visor;
     
     public static void prepararReporte(){
         String crpRec= CONFIG_GENERAL.getCarpetaRecursos()+GestorArchivo.SEPARADOR;
@@ -35,6 +36,10 @@ public class Reporte {
             nombJasper=crpRec+CONFIG_GENERAL.getArchivoInforme();
             File archJasper = GestorArchivo.cargarArchivo(nombJasper);
             report = (JasperReport) JRLoader.loadObject(archJasper);
+            
+            Map parametros = new HashMap();
+            JasperPrint print = JasperFillManager.fillReport(report, parametros, new JREmptyDataSource());
+            
         } catch (Exception ex) {
             System.err.println("Archivo: "+nombJasper+". "+ex.getLocalizedMessage());
             ex.printStackTrace();
@@ -57,7 +62,6 @@ public class Reporte {
             JasperPrint print = JasperFillManager.fillReport(report, parametros, new JREmptyDataSource());
 
             JasperViewer jv = new JasperViewer(print, false);
-
             JDialog visor = new JDialog(ventana, ventana.getTitle(), true);
             visor.setContentPane(jv.getContentPane());
             visor.setSize(jv.getSize());
@@ -65,7 +69,7 @@ public class Reporte {
             visor.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             visor.setLocationRelativeTo(null);
             visor.setVisible(true);
-
+            
         } catch (Exception ex) {
             System.err.println("Archivo: "+nombJasper+". "+ex.getLocalizedMessage());
             ex.printStackTrace();

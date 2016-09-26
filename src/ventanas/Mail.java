@@ -60,7 +60,7 @@ public class Mail extends JDialog {
         if(dft.getNroNota().isEmpty()){
             nota= "";
         }else{
-            nota= "<b>Nº Nota: </b>" + dft.getNroNota() +"<br>";
+            nota= "<b>A/S: </b>" + dft.getNroNota() +"<br>";
         }
         
         String msgComun= "<b>Dependencia: </b>" + dft.getDependencia() +"<br>"+
@@ -85,6 +85,16 @@ public class Mail extends JDialog {
             tfAsunto.setText(propiedad.getProperty("default.correo.asunto")+asunto);
         }*/
         tfAsunto.setText(CONFIG_CORREO.getDefaultCorreoAsunto()+asunto);
+    }
+    
+    protected void asunto(String asunto, String nroASimple) {
+        String aux= asunto;
+        
+        if(!nroASimple.isEmpty()){
+            aux= aux + " - A/S:" + nroASimple;
+        }
+        
+        tfAsunto.setText(CONFIG_CORREO.getDefaultCorreoAsunto()+aux);
     }
     /*
     private String charsetUTF8(String in) throws UnsupportedEncodingException{

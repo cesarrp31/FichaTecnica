@@ -53,6 +53,7 @@ import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -94,10 +95,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         this.tacomponentes.setWrapStyleWord(true);
         this.tatareas.setWrapStyleWord(true);
         Reporte.prepararReporte();
+        
+        //No se utiliza por ahora ambos paneles
+        pnDescComp.setVisible(false);
+        pnDescTarea.setVisible(false);
     }
 
     private void inicializarComponentes() {
-        inicializarComboBox(cbComponentes);
+        //inicializarComboBox(cbComponentes);
         inicializarComboBox(cbdependencia);
         inicializarComboBox(cbtareas);     
     }
@@ -394,7 +399,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     }
 
     private void inicializarPantallaCarga() {
-        cbComponentes.setSelectedItem(null);
+        //cbComponentes.setSelectedItem(null);
         cbtareas.setSelectedItem(null);
         cbdependencia.setSelectedItem(null);
 
@@ -415,69 +420,73 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     }
 
     private void formatearPantalla(){
-        GroupLayout layout = new GroupLayout(pnl2);
-        pnl2.setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
-        layout.setHorizontalGroup(
-        layout.createSequentialGroup()
-            .addComponent(ldependencia)
-            .addComponent(cbdependencia)
-            .addComponent(lfecha)
-            .addComponent(tffecha)
-            .addComponent(lnota)
-            .addComponent(tfNota)
-        );
-        layout.setVerticalGroup(
-        layout.createSequentialGroup()
-           .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(ldependencia)
-                .addComponent(cbdependencia)
-                .addComponent(lfecha)
-                .addComponent(tffecha)
-                .addComponent(lnota)
-                .addComponent(tfNota))
-        );
+        List<JComponent> componentes= new ArrayList<>();
+        componentes.add(ldependencia);
+        componentes.add(cbdependencia);
+        componentes.add(lfecha);
+        componentes.add(tffecha);
+        componentes.add(lnota);
+        componentes.add(tfNota);
+        crearGrupo(pnl2, componentes);
         
-        layout = new GroupLayout(pnl3);
-        pnl3.setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
-        layout.setHorizontalGroup(
-        layout.createSequentialGroup()
-            .addComponent(lpatrimonio)
-            .addComponent(tfpatrimonio)
-            .addComponent(lponderacion)
-            .addComponent(cbponderacion)
-            .addComponent(lestado)
-            .addComponent(cbEstados)
-        );
-        layout.setVerticalGroup(
-        layout.createSequentialGroup()
-           .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(lpatrimonio)
-                .addComponent(tfpatrimonio)
-                .addComponent(lponderacion)
-                .addComponent(cbponderacion)
-                .addComponent(lestado)
-                .addComponent(cbEstados))
-        );
+        componentes= new ArrayList<>();
+        componentes.add(lpatrimonio);
+        componentes.add(tfpatrimonio);
+        componentes.add(lponderacion);
+        componentes.add(cbponderacion);
+        componentes.add(lestado);
+        componentes.add(cbEstados);
+        crearGrupo(pnl3, componentes);
         
-        layout = new GroupLayout(inferior);
-        inferior.setLayout(layout);
+        componentes= new ArrayList<>();
+        componentes.add(ltecnico);
+        componentes.add(tftecnico);
+        crearGrupo(datosTecnico, componentes);
+                
+        componentes= new ArrayList<>();
+        componentes.add(lUsuario);
+        componentes.add(tfUsuario);
+        componentes.add(lClave);
+        componentes.add(tfClave);
+        crearGrupo(datosUsuario, componentes);
+        
+    }
+    
+    private void crearGrupo(JPanel contenedor, List<JComponent> componentes){
+        GroupLayout layout = new GroupLayout(contenedor);
+        contenedor.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
-        layout.setHorizontalGroup(
-        layout.createSequentialGroup()
-            .addComponent(ltecnico)
-            .addComponent(tftecnico)
-        );
-        layout.setVerticalGroup(
-        layout.createSequentialGroup()
-           .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(ltecnico)
-                .addComponent(tftecnico))
-        );
+        
+        GroupLayout.SequentialGroup hGroup = crearGrupoH(layout, componentes);
+        layout.setHorizontalGroup(hGroup);
+        GroupLayout.SequentialGroup vGroup = crearGrupoV(layout, componentes, GroupLayout.Alignment.BASELINE);
+        layout.setVerticalGroup(vGroup);
+        
+    }
+    
+    private GroupLayout.SequentialGroup crearGrupoH(GroupLayout layout, List<JComponent> componentes){
+        GroupLayout.SequentialGroup grupoSecuencial= layout.createSequentialGroup();
+
+        for(JComponent componente: componentes){
+            grupoSecuencial.addComponent(componente);
+        }
+        return grupoSecuencial;
+    }
+    
+    private GroupLayout.SequentialGroup crearGrupoV(GroupLayout layout, List<JComponent> componentes, 
+            GroupLayout.Alignment alineacion){
+        GroupLayout.SequentialGroup grupoSecuencial= layout.createSequentialGroup();
+        GroupLayout.ParallelGroup grupoParalelo;
+        if(alineacion == null) grupoParalelo= layout.createParallelGroup();
+        else grupoParalelo= layout.createParallelGroup(alineacion);
+        
+        for(JComponent componente: componentes){
+            grupoParalelo.addComponent(componente);
+        }
+        
+        grupoSecuencial.addGroup(grupoParalelo);
+        return grupoSecuencial;
     }
     
     @Override
@@ -487,7 +496,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
     private void cargarValoresComboBox() {
         cargarValores(cbtareas, lstTareas);
-        cargarValores(cbComponentes, lstComponentes);
+        //cargarValores(cbComponentes, lstComponentes);
         cargarValores(cbdependencia, lstDependencias);
         
         cbEstados.setModel(new DefaultComboBoxModel<String>(new Vector(lstEstados)));
@@ -566,7 +575,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
                 if (vtnCorreo == null) {
                     vtnCorreo = new Mail(this, true);
                 }
-                vtnCorreo.asunto(tfpatrimonio.getText());
+                vtnCorreo.asunto(tfpatrimonio.getText(), tfNota.getText());
                 vtnCorreo.datos(this.getDatosFichaTecnica());
                 vtnCorreo.pack();
                 vtnCorreo.setLocationRelativeTo(null);
@@ -680,14 +689,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tatareas = new javax.swing.JTextArea();
-        jPanel2 = new javax.swing.JPanel();
+        pnDescTarea = new javax.swing.JPanel();
         pnlTareasDisponibles = new javax.swing.JPanel();
         cbtareas = new javax.swing.JComboBox<>();
         inferiorcomponentes = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tacomponentes = new javax.swing.JTextArea();
-        jPanel4 = new javax.swing.JPanel();
+        pnDescComp = new javax.swing.JPanel();
         pnlComponentes = new javax.swing.JPanel();
         cbComponentes = new javax.swing.JComboBox<>();
         superior = new javax.swing.JPanel();
@@ -705,9 +714,19 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         cbponderacion = new javax.swing.JComboBox<>();
         lestado = new javax.swing.JLabel();
         cbEstados = new javax.swing.JComboBox<>();
+        jPanel2 = new javax.swing.JPanel();
+        rbIngCorreo = new javax.swing.JRadioButton();
+        rbIngTel = new javax.swing.JRadioButton();
+        rbIngOfi = new javax.swing.JRadioButton();
         inferior = new javax.swing.JPanel();
+        datosTecnico = new javax.swing.JPanel();
         ltecnico = new javax.swing.JLabel();
         tftecnico = new javax.swing.JTextField();
+        datosUsuario = new javax.swing.JPanel();
+        lUsuario = new javax.swing.JLabel();
+        tfUsuario = new javax.swing.JTextField();
+        lClave = new javax.swing.JLabel();
+        tfClave = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -731,26 +750,26 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1556, Short.MAX_VALUE)
+            .addGap(0, 1566, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1536, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1546, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 227, Short.MAX_VALUE)
+            .addGap(0, 160, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
                     .addGap(13, 13, 13)))
         );
 
         superiortareas.add(jPanel1, java.awt.BorderLayout.CENTER);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "TAREA", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        pnDescTarea.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "TAREA", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         pnlTareasDisponibles.setLayout(new java.awt.GridLayout(1, 1));
 
@@ -762,28 +781,28 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         });
         pnlTareasDisponibles.add(cbtareas);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout pnDescTareaLayout = new javax.swing.GroupLayout(pnDescTarea);
+        pnDescTarea.setLayout(pnDescTareaLayout);
+        pnDescTareaLayout.setHorizontalGroup(
+            pnDescTareaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(pnDescTareaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnDescTareaLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(pnlTareasDisponibles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addContainerGap()))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
+        pnDescTareaLayout.setVerticalGroup(
+            pnDescTareaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 44, Short.MAX_VALUE)
+            .addGroup(pnDescTareaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnDescTareaLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(pnlTareasDisponibles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
-        superiortareas.add(jPanel2, java.awt.BorderLayout.NORTH);
+        superiortareas.add(pnDescTarea, java.awt.BorderLayout.NORTH);
 
         centro.add(superiortareas);
 
@@ -796,6 +815,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         tacomponentes.setLineWrap(true);
         tacomponentes.setRows(5);
         jScrollPane1.setViewportView(tacomponentes);
+        tacomponentes.getAccessibleContext().setAccessibleDescription("Componentes Utilizados");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -810,17 +830,17 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 160, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
                     .addGap(14, 14, 14)))
         );
 
         inferiorcomponentes.add(jPanel3, java.awt.BorderLayout.CENTER);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "COMPONENTES", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        pnDescComp.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "COMPONENTES", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
 
         pnlComponentes.setLayout(new java.awt.GridLayout(1, 1));
 
@@ -832,28 +852,28 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         });
         pnlComponentes.add(cbComponentes);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout pnDescCompLayout = new javax.swing.GroupLayout(pnDescComp);
+        pnDescComp.setLayout(pnDescCompLayout);
+        pnDescCompLayout.setHorizontalGroup(
+            pnDescCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
+            .addGroup(pnDescCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnDescCompLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(pnlComponentes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addContainerGap()))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
+        pnDescCompLayout.setVerticalGroup(
+            pnDescCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 44, Short.MAX_VALUE)
+            .addGroup(pnDescCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnDescCompLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(pnlComponentes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
-        inferiorcomponentes.add(jPanel4, java.awt.BorderLayout.NORTH);
+        inferiorcomponentes.add(pnDescComp, java.awt.BorderLayout.NORTH);
 
         centro.add(inferiorcomponentes);
 
@@ -876,7 +896,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         tffecha.setPreferredSize(new java.awt.Dimension(150, 20));
         pnl2.add(tffecha);
 
-        lnota.setText("Nº Nota:");
+        lnota.setText("A/S");
         pnl2.add(lnota);
 
         tfNota.setMaximumSize(new java.awt.Dimension(60, 20));
@@ -908,16 +928,53 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
         superior.add(pnl3);
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Solicitado por:"));
+
+        rbIngCorreo.setText("Correo Electrónico");
+        jPanel2.add(rbIngCorreo);
+
+        rbIngTel.setText("Teléfono");
+        jPanel2.add(rbIngTel);
+
+        rbIngOfi.setText("Oficina");
+        rbIngOfi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbIngOfiActionPerformed(evt);
+            }
+        });
+        jPanel2.add(rbIngOfi);
+
+        superior.add(jPanel2);
+
         getContentPane().add(superior, java.awt.BorderLayout.NORTH);
 
         inferior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        inferior.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        inferior.setLayout(new java.awt.BorderLayout());
+
+        datosTecnico.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         ltecnico.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         ltecnico.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        ltecnico.setText("TECNICO :");
-        inferior.add(ltecnico);
-        inferior.add(tftecnico);
+        ltecnico.setText("TECNICO:");
+        datosTecnico.add(ltecnico);
+        datosTecnico.add(tftecnico);
+
+        inferior.add(datosTecnico, java.awt.BorderLayout.NORTH);
+
+        datosUsuario.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos de Usuario"));
+        datosUsuario.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        lUsuario.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lUsuario.setText("Usuario");
+        datosUsuario.add(lUsuario);
+        datosUsuario.add(tfUsuario);
+
+        lClave.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lClave.setText("Contraseña");
+        datosUsuario.add(lClave);
+        datosUsuario.add(tfClave);
+
+        inferior.add(datosUsuario, java.awt.BorderLayout.SOUTH);
 
         getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
@@ -931,6 +988,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private void cbComponentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbComponentesActionPerformed
         this.tacomponentes.append((String) cbComponentes.getSelectedItem() + ". ");
     }//GEN-LAST:event_cbComponentesActionPerformed
+
+    private void rbIngOfiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbIngOfiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbIngOfiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -979,14 +1040,17 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private javax.swing.JComboBox<String> cbponderacion;
     private javax.swing.JComboBox<String> cbtareas;
     private javax.swing.JPanel centro;
+    private javax.swing.JPanel datosTecnico;
+    private javax.swing.JPanel datosUsuario;
     private javax.swing.JPanel inferior;
     private javax.swing.JPanel inferiorcomponentes;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lClave;
+    private javax.swing.JLabel lUsuario;
     private javax.swing.JLabel ldependencia;
     private javax.swing.JLabel lestado;
     private javax.swing.JLabel lfecha;
@@ -994,15 +1058,22 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private javax.swing.JLabel lpatrimonio;
     private javax.swing.JLabel lponderacion;
     private javax.swing.JLabel ltecnico;
+    private javax.swing.JPanel pnDescComp;
+    private javax.swing.JPanel pnDescTarea;
     private javax.swing.JPanel pnl2;
     private javax.swing.JPanel pnl3;
     private javax.swing.JPanel pnlComponentes;
     private javax.swing.JPanel pnlTareasDisponibles;
+    private javax.swing.JRadioButton rbIngCorreo;
+    private javax.swing.JRadioButton rbIngOfi;
+    private javax.swing.JRadioButton rbIngTel;
     private javax.swing.JPanel superior;
     private javax.swing.JPanel superiortareas;
     private javax.swing.JTextArea tacomponentes;
     private javax.swing.JTextArea tatareas;
+    private javax.swing.JTextField tfClave;
     private javax.swing.JTextField tfNota;
+    private javax.swing.JTextField tfUsuario;
     private javax.swing.JTextField tffecha;
     private javax.swing.JTextField tfpatrimonio;
     private javax.swing.JTextField tftecnico;
