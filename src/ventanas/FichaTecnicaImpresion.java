@@ -36,11 +36,11 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
-import javax.swing.text.AbstractDocument;
 import reporte.Reporte;
 import static fichatecnica.FichaTecnica.NOMBRE_APP;
 import auxiliar.IGestionArchivo;
 import auxiliar.IGestorLectorArchivoTexto;
+import auxiliar.LimiteCaracteresDocument;
 import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.Vector;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.JComponent;
@@ -104,7 +105,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private void inicializarComponentes() {
         //inicializarComboBox(cbComponentes);
         inicializarComboBox(cbdependencia);
-        inicializarComboBox(cbtareas);     
+        inicializarComboBox(cbtareas);
     }
 
     private void inicializarMenu() throws FileNotFoundException {
@@ -366,17 +367,20 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         this.tffecha.setEditable(false);
         int maxChars;
         try {
-            maxChars = Integer.valueOf(CONFIG_GENERAL.getConfiguracionCantidadCaracteresComboBox());
+            maxChars = Integer.valueOf(CONFIG_GENERAL.getConfiguracionCantidadCaracteresTextField());
         } catch (NumberFormatException e) {
             System.err.println(e.getLocalizedMessage());
-            maxChars = 100;
+            maxChars = 250;
         }
         this.setTitle(NOMBRE_APP);
-        AbstractDocument pDoc = (AbstractDocument) tatareas.getDocument();
+        //Limite de cantidad de caracteres
+        tatareas.setDocument(new LimiteCaracteresDocument(maxChars));
+        tacomponentes.setDocument(new LimiteCaracteresDocument(maxChars));
+        /*AbstractDocument pDoc = (AbstractDocument) tatareas.getDocument();
         pDoc.setDocumentFilter(new DocumentSizeFilter(maxChars));
-
+        
         pDoc = (AbstractDocument) tacomponentes.getDocument();
-        pDoc.setDocumentFilter(new DocumentSizeFilter(maxChars));
+        pDoc.setDocumentFilter(new DocumentSizeFilter(maxChars));*/
     }
 
     private void inicializarValoresDesdeArchivo() throws FileNotFoundException, IOException {        
@@ -417,6 +421,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             tftecnico.setText(System.getProperty("user.name"));
         else
             tftecnico.setText(CONFIG_GENERAL.getDefaultNombreTecnico());
+        
+        ButtonGroup group = new ButtonGroup();
+        group.add(rbIngCorreo);
+        group.add(rbIngTel);
+        group.add(rbIngOfi);
+        rbIngCorreo.setSelected(true);
     }
 
     private void formatearPantalla(){
@@ -937,11 +947,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         jPanel2.add(rbIngTel);
 
         rbIngOfi.setText("Oficina");
-        rbIngOfi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbIngOfiActionPerformed(evt);
-            }
-        });
         jPanel2.add(rbIngOfi);
 
         superior.add(jPanel2);
@@ -988,10 +993,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private void cbComponentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbComponentesActionPerformed
         this.tacomponentes.append((String) cbComponentes.getSelectedItem() + ". ");
     }//GEN-LAST:event_cbComponentesActionPerformed
-
-    private void rbIngOfiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbIngOfiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbIngOfiActionPerformed
 
     /**
      * @param args the command line arguments

@@ -97,6 +97,10 @@ public class ConfiguracionGeneral extends ConfiguracionAbstracta{
         return this.getPropiedad("conf.cantCaracteresComboBox");
     }
     
+    public String getConfiguracionCantidadCaracteresTextField(){
+        return this.getPropiedad("conf.cantCaracteresTextField");
+    }
+    
     public String getConfiguracionCodificacion(){
         return this.getPropiedad("conf.codificacion");
     }
