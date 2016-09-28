@@ -15,10 +15,12 @@ public class DatosFichaTecnica {
     public static final String SEPARADOR= "\"", DELIMITADOR= ";";
     private final String dependencia, fecha, patrimonio, tarea, componentes, 
                          tecnico, nroNota, ponderacion, estado;
+    private final String usuario, clave, ingresoSeleccionado;
 
     public DatosFichaTecnica(String dependencia, String fecha, String nroNota,
                              String patrimonio, String ponderacion, String estado,
-                             String tarea, String componentes, String tecnico) {
+                             String tarea, String componentes, String tecnico,
+                             String usuario, String clave, String ingresoSeleccionado) {
         this.dependencia = dependencia;
         this.fecha = fecha;
         this.patrimonio = patrimonio;
@@ -28,6 +30,9 @@ public class DatosFichaTecnica {
         this.nroNota = nroNota;
         this.ponderacion = ponderacion;
         this.estado = estado;
+        this.usuario= usuario;
+        this.clave= clave;
+        this.ingresoSeleccionado= ingresoSeleccionado;
     }
 
     public static String getSEPARADOR() {
@@ -74,18 +79,44 @@ public class DatosFichaTecnica {
         return estado;
     }
 
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public String getIngresoSeleccionado() {
+        return ingresoSeleccionado;
+    }
+    
+    private String getCampo(String campo){
+        return SEPARADOR + campo + SEPARADOR + DELIMITADOR;
+    }
+        
+    @Override
+    public String toString() {
+        return getCampo(dependencia) + getCampo(fecha) + getCampo(nroNota) +
+               getCampo(patrimonio) + getCampo(ponderacion) + getCampo(estado) +
+               getCampo(tarea) + getCampo(componentes) + getCampo(tecnico);
+    }
+
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 67 * hash + Objects.hashCode(this.dependencia);
-        hash = 67 * hash + Objects.hashCode(this.fecha);
-        hash = 67 * hash + Objects.hashCode(this.patrimonio);
-        hash = 67 * hash + Objects.hashCode(this.tarea);
-        hash = 67 * hash + Objects.hashCode(this.componentes);
-        hash = 67 * hash + Objects.hashCode(this.tecnico);
-        hash = 67 * hash + Objects.hashCode(this.nroNota);
-        hash = 67 * hash + Objects.hashCode(this.ponderacion);
-        hash = 67 * hash + Objects.hashCode(this.estado);
+        int hash = 3;
+        hash = 47 * hash + Objects.hashCode(this.dependencia);
+        hash = 47 * hash + Objects.hashCode(this.fecha);
+        hash = 47 * hash + Objects.hashCode(this.patrimonio);
+        hash = 47 * hash + Objects.hashCode(this.tarea);
+        hash = 47 * hash + Objects.hashCode(this.componentes);
+        hash = 47 * hash + Objects.hashCode(this.tecnico);
+        hash = 47 * hash + Objects.hashCode(this.nroNota);
+        hash = 47 * hash + Objects.hashCode(this.ponderacion);
+        hash = 47 * hash + Objects.hashCode(this.estado);
+        hash = 47 * hash + Objects.hashCode(this.usuario);
+        hash = 47 * hash + Objects.hashCode(this.clave);
+        hash = 47 * hash + Objects.hashCode(this.ingresoSeleccionado);
         return hash;
     }
 
@@ -128,17 +159,16 @@ public class DatosFichaTecnica {
         if (!Objects.equals(this.estado, other.estado)) {
             return false;
         }
+        if (!Objects.equals(this.usuario, other.usuario)) {
+            return false;
+        }
+        if (!Objects.equals(this.clave, other.clave)) {
+            return false;
+        }
+        if (!Objects.equals(this.ingresoSeleccionado, other.ingresoSeleccionado)) {
+            return false;
+        }
         return true;
     }
-
-    private String getCampo(String campo){
-        return SEPARADOR + campo + SEPARADOR + DELIMITADOR;
-    }
-            
-    @Override
-    public String toString() {
-        return getCampo(dependencia) + getCampo(fecha) + getCampo(nroNota) +
-               getCampo(patrimonio) + getCampo(ponderacion) + getCampo(estado) +
-               getCampo(tarea) + getCampo(componentes) + getCampo(tecnico);
-    }
+    
 }

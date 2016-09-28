@@ -6,7 +6,6 @@
 package ventanas;
 
 import auxiliar.CodigoQR;
-import auxiliar.DocumentSizeFilter;
 import auxiliar.GestorArchivo;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.SortedList;
@@ -57,6 +56,7 @@ import javax.swing.GroupLayout;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -74,7 +74,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             crpRec = CONFIG_GENERAL.getCarpetaRecursos() + GestorArchivo.SEPARADOR;
     
     private final GestorArchivoFichaTecnica iga;
-
+    
+    private String ingresoSeleccionado;
+    
     /**
      * Creates new form FichaTecnicaImpresion
      *
@@ -425,8 +427,26 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         ButtonGroup group = new ButtonGroup();
         group.add(rbIngCorreo);
         group.add(rbIngTel);
-        group.add(rbIngOfi);
+        group.add(rbIngNota);
+        group.add(rbIngMos);
+        
+        agregarActionListenerRadioButton(rbIngCorreo);
+        agregarActionListenerRadioButton(rbIngTel);
+        agregarActionListenerRadioButton(rbIngNota);
+        agregarActionListenerRadioButton(rbIngMos);
+        
         rbIngCorreo.setSelected(true);
+        this.ingresoSeleccionado= rbIngCorreo.getText();
+    }
+    
+    private void agregarActionListenerRadioButton(JRadioButton rb){
+        rb.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JRadioButton r= (JRadioButton) e.getSource();
+                setIngresoSeleccionado(r.getText());
+            }
+        });
     }
 
     private void formatearPantalla(){
@@ -626,7 +646,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         DatosFichaTecnica dft = new DatosFichaTecnica(
                     dep, tffecha.getText(), tfNota.getText(), 
                     tfpatrimonio.getText(), cbponderacion.getSelectedItem().toString(), cbEstados.getSelectedItem().toString(),
-                    tatareas.getText(), tacomponentes.getText(), tftecnico.getText());
+                    tatareas.getText(), tacomponentes.getText(), tftecnico.getText(),
+                    tfUsuario.getText(), tfClave.getText(), ingresoSeleccionado);
         return dft;
     }
 
@@ -676,6 +697,14 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
     protected JTextField getTFTecnico() {
         return tftecnico;
+    }
+
+    public String getIngresoSeleccionado() {
+        return ingresoSeleccionado;
+    }
+
+    private void setIngresoSeleccionado(String ingresoSeleccionado) {
+        this.ingresoSeleccionado = ingresoSeleccionado;
     }
     
     private void crearVentanaConfiguraciones() {
@@ -727,7 +756,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         jPanel2 = new javax.swing.JPanel();
         rbIngCorreo = new javax.swing.JRadioButton();
         rbIngTel = new javax.swing.JRadioButton();
-        rbIngOfi = new javax.swing.JRadioButton();
+        rbIngNota = new javax.swing.JRadioButton();
+        rbIngMos = new javax.swing.JRadioButton();
         inferior = new javax.swing.JPanel();
         datosTecnico = new javax.swing.JPanel();
         ltecnico = new javax.swing.JLabel();
@@ -946,8 +976,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         rbIngTel.setText("Teléfono");
         jPanel2.add(rbIngTel);
 
-        rbIngOfi.setText("Oficina");
-        jPanel2.add(rbIngOfi);
+        rbIngNota.setText("Nota");
+        jPanel2.add(rbIngNota);
+
+        rbIngMos.setText("Mostrador");
+        jPanel2.add(rbIngMos);
 
         superior.add(jPanel2);
 
@@ -1066,7 +1099,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private javax.swing.JPanel pnlComponentes;
     private javax.swing.JPanel pnlTareasDisponibles;
     private javax.swing.JRadioButton rbIngCorreo;
-    private javax.swing.JRadioButton rbIngOfi;
+    private javax.swing.JRadioButton rbIngMos;
+    private javax.swing.JRadioButton rbIngNota;
     private javax.swing.JRadioButton rbIngTel;
     private javax.swing.JPanel superior;
     private javax.swing.JPanel superiortareas;

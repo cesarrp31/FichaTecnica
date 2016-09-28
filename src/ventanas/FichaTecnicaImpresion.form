@@ -510,9 +510,14 @@
                 <Property name="text" type="java.lang.String" value="Tel&#xe9;fono"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JRadioButton" name="rbIngOfi">
+            <Component class="javax.swing.JRadioButton" name="rbIngNota">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Oficina"/>
+                <Property name="text" type="java.lang.String" value="Nota"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JRadioButton" name="rbIngMos">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Mostrador"/>
               </Properties>
             </Component>
           </SubComponents>

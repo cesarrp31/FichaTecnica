@@ -46,7 +46,7 @@ public class Mail extends JDialog {
     }
 
     public void datos(DatosFichaTecnica dft) {
-        String tarea, componente, nota;
+        String tarea, componente, nota, usuario, clave, aclaracion;
         if(dft.getTarea().isEmpty()){
             tarea= "";
         }else{
@@ -60,21 +60,35 @@ public class Mail extends JDialog {
         if(dft.getNroNota().isEmpty()){
             nota= "";
         }else{
-            nota= "<b>A/S: </b>" + dft.getNroNota() +"<br>";
+            nota= agregarLineaB("A/S", dft.getNroNota());//"<b>A/S: </b>" + dft.getNroNota() +"<br>";
+        }
+        if(dft.getUsuario().isEmpty()){
+            usuario="";
+            clave= "";
+            aclaracion="";
+        }else{
+            usuario= agregarLineaB("Usuario pc", dft.getUsuario());
+            clave= agregarLineaB("Contraseña", dft.getClave());
+            aclaracion= "<b>        Es recomendable cambiar la contraseña</b><br>";
         }
         
         String msgComun= "<b>Dependencia: </b>" + dft.getDependencia() +"<br>"+
                      "<b>Fecha: </b>" + dft.getFecha() +"<br>"+
+                     agregarLineaB("Solicitado por", dft.getIngresoSeleccionado())+
                      nota +
                      "<b>Patrimonio/s: </b>" + dft.getPatrimonio() +"<br>"+
                      "<b>Ponderación: </b>" + dft.getPonderacion() +"<br>"+
-                     tarea + componente +
+                     tarea + componente + usuario + clave + aclaracion +
                      "<b>Técnico/s: </b>" + dft.getTecnico() +"<br>"+
                      "<h3><b>Estado del Servicio Técnico: </b>" + dft.getEstado() +"</h3><br>";
         msgPantalla="<head><base href=\"file:"+crpImg+"\"></head>"+msgComun+"<img src=\""+path+"\"></img>";
         msgMail=msgComun+"<br><br><img src=\"cid:image\"></img>";
         
         this.epMsg.setText(msgPantalla);
+    }
+    
+    private String agregarLineaB(String estatico, String dinamico){
+        return "<b>"+estatico+": </b>" + dinamico +"<br>";
     }
     
     protected void asunto(String asunto) {
