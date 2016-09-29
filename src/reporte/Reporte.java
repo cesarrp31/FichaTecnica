@@ -58,6 +58,9 @@ public class Reporte {
             parametros.put("nota", dft.getNroNota());
             parametros.put("ponderacion", dft.getPonderacion());
             parametros.put("estado", dft.getEstado());
+            parametros.put("usuario", dft.getUsuario());
+            parametros.put("clave", dft.getClave());
+            parametros.put("solicitud", dft.getIngresoSeleccionado());
 
             JasperPrint print = JasperFillManager.fillReport(report, parametros, new JREmptyDataSource());
 

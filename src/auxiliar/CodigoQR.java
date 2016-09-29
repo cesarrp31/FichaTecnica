@@ -33,8 +33,8 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 
 public final class CodigoQR {
-    public static final int DEFAULT_ALTO_CODIGO_QR= 200, 
-                            DEFAULT_ANCHO_CODIGO_QR= 200;
+    public static final int DEFAULT_ALTO_CODIGO_QR= 120, 
+                            DEFAULT_ANCHO_CODIGO_QR= 120;
     
     private Map<EncodeHintType, ErrorCorrectionLevel> hintMap;
     private String charset;

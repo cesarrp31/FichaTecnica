@@ -69,7 +69,7 @@ public class Mail extends JDialog {
         }else{
             usuario= agregarLineaB("Usuario pc", dft.getUsuario());
             clave= agregarLineaB("Contraseña", dft.getClave());
-            aclaracion= "<b>        Es recomendable cambiar la contraseña</b><br>";
+            aclaracion= "<b>&#09&#09Es recomendable cambiar la contraseña</b><br>";
         }
         
         String msgComun= "<b>Dependencia: </b>" + dft.getDependencia() +"<br>"+
