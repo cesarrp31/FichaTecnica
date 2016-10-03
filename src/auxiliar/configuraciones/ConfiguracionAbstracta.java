@@ -15,8 +15,10 @@ import java.util.Properties;
  */
 public abstract class ConfiguracionAbstracta {
     private final Properties configuracion;
+    private String ubicacion;
 
     protected ConfiguracionAbstracta(String ubicacion) throws IOException {
+        this.ubicacion= ubicacion;
         configuracion = GestorArchivo.obtenerPropiedades(ubicacion);
     }
     
@@ -25,7 +27,11 @@ public abstract class ConfiguracionAbstracta {
     }
     
     protected void setPropiedad(String prop, String valor){
-        configuracion.setProperty(prop, valor);
+        configuracion.setProperty(prop, valor); 
+    }
+    
+    protected void guardarConfiguraciones() throws IOException{
+        GestorArchivo.guardarPropiedades(configuracion, ubicacion);
     }
     
     public Properties getPropiedad() {

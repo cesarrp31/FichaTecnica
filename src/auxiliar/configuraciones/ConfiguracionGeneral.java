@@ -145,10 +145,6 @@ public class ConfiguracionGeneral extends ConfiguracionAbstracta{
         return this.getPropiedad("default.appNom.cargarSesion");
     }
     
-    public String getDefaultNombreTecnico(){
-        return this.getPropiedad("default.appNom.tecnico");
-    }
-
     public String getImagenBotonEnviar24(){
         return this.getPropiedad("btn.imag.enviar24");
     }
@@ -175,5 +171,9 @@ public class ConfiguracionGeneral extends ConfiguracionAbstracta{
     
     public String getImagenLogoBarra(){
         return this.getPropiedad("btn.imag.barra");
+    }
+    
+    public String getCorreoEnviarTabla(){
+        return this.getPropiedad("correo.env.tabla");
     }
 }

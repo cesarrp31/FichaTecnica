@@ -99,7 +99,8 @@ public class DatosFichaTecnica {
     public String toString() {
         return getCampo(dependencia) + getCampo(fecha) + getCampo(nroNota) +
                getCampo(patrimonio) + getCampo(ponderacion) + getCampo(estado) +
-               getCampo(tarea) + getCampo(componentes) + getCampo(tecnico);
+               getCampo(tarea) + getCampo(componentes) + getCampo(tecnico) + 
+               getCampo(usuario) + getCampo(clave) + getCampo(ingresoSeleccionado);
     }
 
     @Override

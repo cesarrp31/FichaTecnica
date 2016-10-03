@@ -41,6 +41,7 @@ import auxiliar.IGestionArchivo;
 import auxiliar.IGestorLectorArchivoTexto;
 import auxiliar.LimiteCaracteresDocument;
 import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
+import static fichatecnica.FichaTecnica.CONFIG_TECNICO;
 import java.awt.Frame;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
@@ -119,7 +120,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
                 ayuda = new JMenu("Ayuda");
         mb.add(archivo);
         mb.add(acciones);
-        //mb.add(configuraciones);
+        mb.add(configuraciones);
         mb.add(ayuda);
 
         JMenuItem salir = new JMenuItem("Salir"),
@@ -128,8 +129,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
                 enviar = new JMenuItem("Enviar"),
                 abrir = new JMenuItem("Abrir"),
                 guardar = new JMenuItem("Guardar"),
-                configuracion= new JMenuItem("Configuracion"),
-                //contacto= new JMenuItem("Contacto"),
+                //configuracion= new JMenuItem("Configuracion"),
+                configTecnico= new JMenuItem("Configuracion de Técnico"),
                 acercaDe = new JMenuItem("Acerca de...");
 
         nuevo.setAccelerator(KeyStroke.getKeyStroke(
@@ -146,8 +147,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
                              KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         acercaDe.setAccelerator(KeyStroke.getKeyStroke(
                              KeyEvent.VK_H, ActionEvent.CTRL_MASK));
-        /*contacto.setAccelerator(KeyStroke.getKeyStroke(
-                             KeyEvent.VK_T, ActionEvent.CTRL_MASK));*/
+        configTecnico.setAccelerator(KeyStroke.getKeyStroke(
+                             KeyEvent.VK_T, ActionEvent.CTRL_MASK));
+        
         abrir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -187,19 +189,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             @Override
             public void actionPerformed(ActionEvent e) {
                 vntAcercaDe();
-                /*
-                JOptionPane.showMessageDialog(null, NOMBRE_APP + "\nDiseñado y Desarrollado por:\nT.A.E. Gallo, Mario\nT.S.P. Silva, Jonatan\nA.U.S. Peralta, Cesar",
-                        "Acerca de:", JOptionPane.INFORMATION_MESSAGE);
-                */
             }
         });
-        /*
-        contacto.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                vntAcercaDe();
-            }
-        });*/
 
         salir.addActionListener(new ActionListener() {
             @Override
@@ -207,7 +198,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
                 salir();
             }
         });
-        
+        /*
         configuracion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -215,7 +206,16 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             }
         });
         configuraciones.add(configuracion);
-
+        */
+        
+        configTecnico.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                vntConfigTecnico();
+            }
+        });
+        configuraciones.add(configTecnico);
+        
         archivo.add(nuevo);
         archivo.addSeparator();
         archivo.add(abrir);
@@ -225,7 +225,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         archivo.addSeparator();
         acciones.add(enviar);
         archivo.add(salir);
-        //ayuda.add(contacto);
         ayuda.add(acercaDe);
 
         String e = crpImg + CONFIG_GENERAL.getImagenBotonEnviar24(),
@@ -383,6 +382,16 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         
         pDoc = (AbstractDocument) tacomponentes.getDocument();
         pDoc.setDocumentFilter(new DocumentSizeFilter(maxChars));*/
+        ButtonGroup group = new ButtonGroup();
+        group.add(rbIngCorreo);
+        group.add(rbIngTel);
+        group.add(rbIngNota);
+        group.add(rbIngMos);
+        
+        agregarActionListenerRadioButton(rbIngCorreo);
+        agregarActionListenerRadioButton(rbIngTel);
+        agregarActionListenerRadioButton(rbIngNota);
+        agregarActionListenerRadioButton(rbIngMos);
     }
 
     private void inicializarValoresDesdeArchivo() throws FileNotFoundException, IOException {        
@@ -420,23 +429,15 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
         boolean cargarUsuarioSesion= Boolean.valueOf(CONFIG_GENERAL.getDefaultCargarNombreUsuarioSesion());
         if(cargarUsuarioSesion)
-            tftecnico.setText(System.getProperty("user.name"));
+            actualizarNombreTecnico(System.getProperty("user.name"));
         else
-            tftecnico.setText(CONFIG_GENERAL.getDefaultNombreTecnico());
-        
-        ButtonGroup group = new ButtonGroup();
-        group.add(rbIngCorreo);
-        group.add(rbIngTel);
-        group.add(rbIngNota);
-        group.add(rbIngMos);
-        
-        agregarActionListenerRadioButton(rbIngCorreo);
-        agregarActionListenerRadioButton(rbIngTel);
-        agregarActionListenerRadioButton(rbIngNota);
-        agregarActionListenerRadioButton(rbIngMos);
+            actualizarNombreTecnico(CONFIG_TECNICO.getNombreTecnico());
         
         rbIngCorreo.setSelected(true);
         this.ingresoSeleccionado= rbIngCorreo.getText();
+        
+        this.tfUsuario.setText("");
+        this.tfClave.setText("");
     }
     
     private void agregarActionListenerRadioButton(JRadioButton rb){
@@ -659,6 +660,13 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         GestorArchivo.guardar(this.getGestorArchivo());
     }
     
+    private void vntConfigTecnico(){
+        ConfiguracionTecnico c = new ConfiguracionTecnico(this, true);
+        c.setLocationRelativeTo(null);
+        c.pack();
+        c.setVisible(true);
+    }
+    
     private IGestionArchivo getGestorArchivo(){
         return iga;
     }
@@ -699,6 +707,30 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         return tftecnico;
     }
 
+    public JTextField getTfClave() {
+        return tfClave;
+    }
+
+    public JTextField getTfUsuario() {
+        return tfUsuario;
+    }
+    
+    protected void seleccionarIngreso(String ingreso){
+        if(rbIngMos.getText().equals(ingreso)){
+            rbIngMos.setSelected(true);
+            return;
+        }
+        if(rbIngNota.getText().equals(ingreso)){
+            rbIngNota.setSelected(true);
+            return;
+        }
+        if(rbIngTel.getText().equals(ingreso)){
+            rbIngTel.setSelected(true);
+            return;
+        }
+        rbIngCorreo.setSelected(true);
+    }
+
     public String getIngresoSeleccionado() {
         return ingresoSeleccionado;
     }
@@ -707,13 +739,18 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         this.ingresoSeleccionado = ingresoSeleccionado;
     }
     
+    protected void actualizarNombreTecnico(String nombreTecnico){
+        this.tftecnico.setText(nombreTecnico);
+    }
+    
+    /*
     private void crearVentanaConfiguraciones() {
         Configuraciones c = new Configuraciones(this, true);
         c.setLocationRelativeTo(null);
         c.pack();
         c.setVisible(true);
     }
-
+    */
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -784,6 +821,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         tatareas.setColumns(20);
         tatareas.setLineWrap(true);
         tatareas.setRows(5);
+        tatareas.setToolTipText("Ingrese las Tarea/s realizada/s");
         jScrollPane2.setViewportView(tatareas);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -854,6 +892,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         tacomponentes.setColumns(20);
         tacomponentes.setLineWrap(true);
         tacomponentes.setRows(5);
+        tacomponentes.setToolTipText("Ingrese los componentes utilizados");
         jScrollPane1.setViewportView(tacomponentes);
         tacomponentes.getAccessibleContext().setAccessibleDescription("Componentes Utilizados");
 
@@ -925,6 +964,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         ldependencia.setText("Dependencia:");
         pnl2.add(ldependencia);
 
+        cbdependencia.setToolTipText("Seleccione una Dependencia");
         pnl2.add(cbdependencia);
 
         lfecha.setText("Fecha:");
@@ -939,20 +979,24 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         lnota.setText("A/S");
         pnl2.add(lnota);
 
-        tfNota.setMaximumSize(new java.awt.Dimension(60, 20));
-        tfNota.setMinimumSize(new java.awt.Dimension(60, 20));
-        tfNota.setPreferredSize(new java.awt.Dimension(60, 20));
+        tfNota.setToolTipText("Ingrese un nro. de Actuación Simple");
+        tfNota.setMaximumSize(new java.awt.Dimension(100, 20));
+        tfNota.setMinimumSize(new java.awt.Dimension(100, 20));
+        tfNota.setPreferredSize(new java.awt.Dimension(100, 20));
         pnl2.add(tfNota);
 
         superior.add(pnl2);
 
         lpatrimonio.setText("Nº Patrimonio");
         pnl3.add(lpatrimonio);
+
+        tfpatrimonio.setToolTipText("Ingrese uno o varios nros. de patrimonios");
         pnl3.add(tfpatrimonio);
 
         lponderacion.setText("Ponderación:");
         pnl3.add(lponderacion);
 
+        cbponderacion.setToolTipText("Seleccione una ponderación");
         cbponderacion.setMaximumSize(new java.awt.Dimension(52, 22));
         cbponderacion.setMinimumSize(new java.awt.Dimension(52, 22));
         cbponderacion.setPreferredSize(new java.awt.Dimension(52, 22));
@@ -961,6 +1005,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         lestado.setText("Estado");
         pnl3.add(lestado);
 
+        cbEstados.setToolTipText("Seleccione un Estado del Servicio Técnico");
         cbEstados.setMaximumSize(new java.awt.Dimension(200, 22));
         cbEstados.setMinimumSize(new java.awt.Dimension(200, 22));
         cbEstados.setPreferredSize(new java.awt.Dimension(200, 22));
@@ -995,6 +1040,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         ltecnico.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ltecnico.setText("TECNICO:");
         datosTecnico.add(ltecnico);
+
+        tftecnico.setToolTipText("Ingrese nombre del técnico que realizó el servicio técnico");
         datosTecnico.add(tftecnico);
 
         inferior.add(datosTecnico, java.awt.BorderLayout.NORTH);
@@ -1005,11 +1052,15 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         lUsuario.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lUsuario.setText("Usuario");
         datosUsuario.add(lUsuario);
+
+        tfUsuario.setToolTipText("Ingrese el nombre de usuario que se cargo por última vez en la pc");
         datosUsuario.add(tfUsuario);
 
         lClave.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lClave.setText("Contraseña");
         datosUsuario.add(lClave);
+
+        tfClave.setToolTipText("Ingrese la contraseña de usuario que se cargo por última vez en la pc");
         datosUsuario.add(tfClave);
 
         inferior.add(datosUsuario, java.awt.BorderLayout.SOUTH);
@@ -1125,13 +1176,17 @@ class GestorArchivoFichaTecnica implements IGestionArchivo{
 
     @Override
     public void abrir(File fichero) {
-        System.out.println("Abrir: " + fichero);
+        //System.out.println("Abrir: " + fichero);
         try {
-            String aux;
+            StringBuilder sb= new StringBuilder();
+            String aux="";
             String[] aux2;
             Scanner scnr = new Scanner(fichero);
             if (scnr.hasNextLine()) {
-                aux = scnr.nextLine();
+                do{
+                    sb.append(scnr.nextLine());
+                }while(scnr.hasNextLine());
+                aux= sb.toString();
                 System.out.println("Valor leido: "+aux);
                 aux2 = aux.split(DatosFichaTecnica.DELIMITADOR);
                 fti.getCBDependencia().setSelectedItem(formatearCampoLeido(aux2[0]));
@@ -1143,6 +1198,9 @@ class GestorArchivoFichaTecnica implements IGestionArchivo{
                 fti.getTATareas().setText(formatearCampoLeido(aux2[6]));
                 fti.getTAComponentes().setText(formatearCampoLeido(aux2[7]));
                 fti.getTFTecnico().setText(formatearCampoLeido(aux2[8]));
+                fti.getTfUsuario().setText(formatearCampoLeido(aux2[9]));
+                fti.getTfClave().setText(formatearCampoLeido(aux2[10]));
+                fti.seleccionarIngreso(formatearCampoLeido(aux2[11]));
             }
         } catch (Exception e) {
             System.err.println(e.getLocalizedMessage());
@@ -1176,6 +1234,7 @@ class GestorArchivoFichaTecnica implements IGestionArchivo{
                 texto= texto.replace(salto, " ");
             bw.write(texto);
             bw.close();
+            System.out.println("Datos guardados: "+fti.getDatosFichaTecnica().toString());
         } catch (Exception e) {
             System.err.println(e.getLocalizedMessage());
             e.printStackTrace();

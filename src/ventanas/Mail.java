@@ -69,7 +69,7 @@ public class Mail extends JDialog {
         }else{
             usuario= agregarLineaB("Usuario pc", dft.getUsuario());
             clave= agregarLineaB("Contraseña", dft.getClave());
-            aclaracion= "<b>&#09&#09Es recomendable cambiar la contraseña</b><br>";
+            aclaracion= "<b>&#09&#09Es recomendable cambiar la contraseña!</b><br>";
         }
         
         String msgComun= "<b>Dependencia: </b>" + dft.getDependencia() +"<br>"+
@@ -79,13 +79,42 @@ public class Mail extends JDialog {
                      "<b>Patrimonio/s: </b>" + dft.getPatrimonio() +"<br>"+
                      "<b>Ponderación: </b>" + dft.getPonderacion() +"<br>"+
                      tarea + componente + usuario + clave + aclaracion +
-                     "<b>Técnico/s: </b>" + dft.getTecnico() +"<br>"+
-                     "<h3><b>Estado del Servicio Técnico: </b>" + dft.getEstado() +"</h3><br>";
+                     "<b>Técnico/s: </b>" + dft.getTecnico() +"<br>"+"<br>"+
+                     "<h3><b>Estado del Servicio Técnico: </b>" + dft.getEstado() +"</h3><br>" +
+                     crearTabla(dft)+"<br>";
         msgPantalla="<head><base href=\"file:"+crpImg+"\"></head>"+msgComun+"<img src=\""+path+"\"></img>";
         msgMail=msgComun+"<br><br><img src=\"cid:image\"></img>";
         
         this.epMsg.setText(msgPantalla);
     }
+    
+    private String crearTabla(DatosFichaTecnica dft){
+        boolean crearTabla= Boolean.valueOf(CONFIG_GENERAL.getCorreoEnviarTabla());
+        System.out.println("Tabla? " + crearTabla+ " "+CONFIG_GENERAL.getCorreoEnviarTabla());
+        if(!crearTabla) return "";
+        
+        StringBuilder sb= new StringBuilder();
+        String aux= dft.getNroNota().isEmpty()?"":"A/S: "+dft.getNroNota()+".";
+        
+        sb.append("<table>");
+        sb.append("<tr>");
+        
+        sb.append(agregarColumnaTabla("0"));
+        sb.append(agregarColumnaTabla(dft.getFecha()));
+        sb.append(agregarColumnaTabla(dft.getDependencia()));
+        sb.append(agregarColumnaTabla(dft.getPatrimonio()));
+        sb.append(agregarColumnaTabla(dft.getTarea()+"\n"+dft.getComponentes()+"\nPonderación: "+dft.getPonderacion()));
+        sb.append(agregarColumnaTabla(dft.getTecnico()));
+        sb.append(agregarColumnaTabla(aux+"\nSolicitado por: "+dft.getIngresoSeleccionado()+".\nEstado: "+dft.getEstado()));
+        
+        sb.append("</tr>");
+        sb.append("</table>");
+        return sb.toString();
+    }
+    private String agregarColumnaTabla(String dato){
+        return "<td>"+dato+"</td>";
+    }
+    
     
     private String agregarLineaB(String estatico, String dinamico){
         return "<b>"+estatico+": </b>" + dinamico +"<br>";

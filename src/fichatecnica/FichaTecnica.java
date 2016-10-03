@@ -8,6 +8,7 @@ package fichatecnica;
 import auxiliar.GestorArchivo;
 import auxiliar.configuraciones.ConfiguracionCorreo;
 import auxiliar.configuraciones.ConfiguracionGeneral;
+import auxiliar.configuraciones.ConfiguracionTecnico;
 import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -19,10 +20,12 @@ import ventanas.FichaTecnicaImpresion;
  */
 public class FichaTecnica {
 
-    public static String NOMBRE_APP = "SRTI Sistema de Registro de Tareas Informáticas 2016 v2.0";
+    public static String NOMBRE_APP = "SRTI Sistema de Registro de Tareas Informáticas 2016 v3.0";
     
     public static ConfiguracionGeneral CONFIG_GENERAL;
     public static ConfiguracionCorreo CONFIG_CORREO;
+    public static ConfiguracionTecnico CONFIG_TECNICO;
+    
     /**
      * @param args the command line arguments
      */
@@ -64,5 +67,8 @@ public class FichaTecnica {
                 nomArc = crpCorreo + CONFIG_GENERAL.getArchivoConfiguracionCorreo();
         CONFIG_CORREO = new ConfiguracionCorreo(nomArc);
         System.out.println("Cargado correctamente el archivo de configuración de correo!");
+        
+        CONFIG_TECNICO = new ConfiguracionTecnico();
+        System.out.println("Cargado correctamente el archivo de configuración del técnico!: "+CONFIG_TECNICO.getNombreTecnico());
     }
 }
