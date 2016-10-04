@@ -512,21 +512,25 @@
             <Component class="javax.swing.JRadioButton" name="rbIngCorreo">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Correo Electr&#xf3;nico"/>
+                <Property name="toolTipText" type="java.lang.String" value="Seleccione una opci&#xf3;n"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbIngTel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Tel&#xe9;fono"/>
+                <Property name="toolTipText" type="java.lang.String" value="Seleccione una opci&#xf3;n"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbIngNota">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Nota"/>
+                <Property name="toolTipText" type="java.lang.String" value="Seleccione una opci&#xf3;n"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbIngMos">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Mostrador"/>
+                <Property name="toolTipText" type="java.lang.String" value="Seleccione una opci&#xf3;n"/>
               </Properties>
             </Component>
           </SubComponents>

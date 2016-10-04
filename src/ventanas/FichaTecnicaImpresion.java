@@ -1016,15 +1016,19 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Solicitado por:"));
 
         rbIngCorreo.setText("Correo Electrónico");
+        rbIngCorreo.setToolTipText("Seleccione una opción");
         jPanel2.add(rbIngCorreo);
 
         rbIngTel.setText("Teléfono");
+        rbIngTel.setToolTipText("Seleccione una opción");
         jPanel2.add(rbIngTel);
 
         rbIngNota.setText("Nota");
+        rbIngNota.setToolTipText("Seleccione una opción");
         jPanel2.add(rbIngNota);
 
         rbIngMos.setText("Mostrador");
+        rbIngMos.setToolTipText("Seleccione una opción");
         jPanel2.add(rbIngMos);
 
         superior.add(jPanel2);
