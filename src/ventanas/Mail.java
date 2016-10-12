@@ -14,6 +14,9 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -86,6 +89,10 @@ public class Mail extends JDialog {
         msgMail=msgComun+"<br><br><img src=\"cid:image\"></img>";
         
         this.epMsg.setText(msgPantalla);
+        
+        this.btEnviar.requestFocus();
+        
+        
     }
     
     private String crearTabla(DatosFichaTecnica dft){

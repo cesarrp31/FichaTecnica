@@ -49,18 +49,18 @@ public class Reporte {
     public static void crearReporte(DatosFichaTecnica dft, JFrame ventana) {
         try {
             Map parametros = new HashMap();
-            parametros.put("trabajos", dft.getTarea());
-            parametros.put("componentes", dft.getComponentes());
-            parametros.put("dependencia", dft.getDependencia());
-            parametros.put("patrimonio", dft.getPatrimonio());
-            parametros.put("tecnico", dft.getTecnico());
-            parametros.put("fecha", dft.getFecha());
-            parametros.put("nota", dft.getNroNota());
-            parametros.put("ponderacion", dft.getPonderacion());
-            parametros.put("estado", dft.getEstado());
-            parametros.put("usuario", dft.getUsuario());
-            parametros.put("clave", dft.getClave());
-            parametros.put("solicitud", dft.getIngresoSeleccionado());
+            parametros.put("trabajos", dft.getTarea().trim());
+            parametros.put("componentes", dft.getComponentes().trim());
+            parametros.put("dependencia", dft.getDependencia().trim());
+            parametros.put("patrimonio", dft.getPatrimonio().trim());
+            parametros.put("tecnico", dft.getTecnico().trim());
+            parametros.put("fecha", dft.getFecha().trim());
+            parametros.put("nota", dft.getNroNota().trim());
+            parametros.put("ponderacion", dft.getPonderacion().trim());
+            parametros.put("estado", dft.getEstado().trim());
+            parametros.put("usuario", dft.getUsuario().trim());
+            parametros.put("clave", dft.getClave().trim());
+            parametros.put("solicitud", dft.getIngresoSeleccionado().trim());
 
             JasperPrint print = JasperFillManager.fillReport(report, parametros, new JREmptyDataSource());
 
