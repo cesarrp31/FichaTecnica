@@ -408,9 +408,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         cargarLista(lstPonderaciones, CONFIG_GENERAL.getNombreArchivoPonderaciones());
     }
     
-    private void cargarLista(List<String> lstDatos, String archivoDatos) throws FileNotFoundException, IOException {
+    private void cargarLista(List<String> lstDatos, String nombreArchivoDatos) throws FileNotFoundException, IOException {
         lstTemp= lstDatos;
-        GestorArchivo.obtenerPropiedades(crpRec + archivoDatos, this);
+        GestorArchivo.obtenerPropiedades(crpRec + nombreArchivoDatos, this);
     }
 
     private void inicializarPantallaCarga() {
@@ -666,7 +666,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         return texto.trim();
     }
 
-    private void  abrir(){
+    private void abrir(){
         GestorArchivo.abrirArchivo(this.getGestorArchivo());
     }
     
@@ -732,17 +732,21 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     protected void seleccionarIngreso(String ingreso){
         if(rbIngMos.getText().equals(ingreso)){
             rbIngMos.setSelected(true);
+            ingresoSeleccionado= rbIngMos.getText();
             return;
         }
         if(rbIngNota.getText().equals(ingreso)){
             rbIngNota.setSelected(true);
+            ingresoSeleccionado= rbIngNota.getText();
             return;
         }
         if(rbIngTel.getText().equals(ingreso)){
             rbIngTel.setSelected(true);
+            ingresoSeleccionado= rbIngTel.getText();
             return;
         }
         rbIngCorreo.setSelected(true);
+        ingresoSeleccionado= rbIngCorreo.getText();
     }
 
     public String getIngresoSeleccionado() {
@@ -755,6 +759,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     
     protected void actualizarNombreTecnico(String nombreTecnico){
         this.tftecnico.setText(nombreTecnico);
+    }
+    
+    protected void actualizarUsuarioTecnico(String usuarioTecnico){
+        if (vtnCorreo == null) return;
+        
+        vtnCorreo.actualizarUsuario();
     }
     
     /*

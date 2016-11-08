@@ -23,6 +23,7 @@ class ConfiguracionTecnico extends javax.swing.JDialog {
         initComponents();
         
         tfTecnico.setText(CONFIG_TECNICO.getNombreTecnico());
+        tfCuenta.setText(CONFIG_TECNICO.getUsuarioTecnico());
     }
     
     private void cerrar(){
@@ -31,8 +32,10 @@ class ConfiguracionTecnico extends javax.swing.JDialog {
     
     private void aplicar(){
         try {
-            CONFIG_TECNICO.setNombreTecnico(tfTecnico.getText());
+            CONFIG_TECNICO.setNombreTecnico(tfTecnico.getText().trim());
+            CONFIG_TECNICO.setUsuarioTecnico(tfCuenta.getText().trim());
             ((FichaTecnicaImpresion)this.getParent()).actualizarNombreTecnico(tfTecnico.getText());
+            ((FichaTecnicaImpresion)this.getParent()).actualizarUsuarioTecnico(tfCuenta.getText());
         } catch (IOException ex) {
             System.err.println("No se puede guardar el valor en el archivo. "+ex.getMessage());
             ex.printStackTrace();
@@ -79,7 +82,7 @@ class ConfiguracionTecnico extends javax.swing.JDialog {
 
         panelPrincipal.add(panel1);
 
-        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Cuenta"));
+        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Usuario de Dominio"));
 
         tfCuenta.setMaximumSize(new java.awt.Dimension(400, 24));
         tfCuenta.setMinimumSize(new java.awt.Dimension(400, 24));

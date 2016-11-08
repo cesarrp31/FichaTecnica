@@ -87,7 +87,7 @@ public class GestorArchivo {
     public static void obtenerPropiedades(String nombreArchivo, IGestorLectorArchivoTexto gc) throws FileNotFoundException, IOException {
         String linea;
         File archivo = cargarArchivo(nombreArchivo);
-        Scanner scnr = new Scanner(archivo);
+        Scanner scnr = new Scanner(archivo, FichaTecnica.CONFIG_GENERAL.getConfiguracionCodificacion());
         while (scnr.hasNextLine()) {
             linea = scnr.nextLine();
             gc.agregarLinea(linea);

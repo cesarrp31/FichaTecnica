@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class ConfiguracionGeneral extends ConfiguracionAbstracta{
     public static final String APLICACION_NOMBRE= "SRTI: Sistema de Registro de Tareas Informáticas",
-                               APLICACION_VERSION= "3.0",
+                               APLICACION_VERSION= "3.1",
                                APLICACION_ANIO= "2016";
 
     public ConfiguracionGeneral() throws IOException {

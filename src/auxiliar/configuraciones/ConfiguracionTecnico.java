@@ -27,4 +27,13 @@ public class ConfiguracionTecnico extends ConfiguracionAbstracta{
         this.guardarConfiguraciones();
     }
     
+    public String getUsuarioTecnico(){
+        return this.getPropiedad("default.usuario.tecnico");
+    }
+    
+    public void setUsuarioTecnico(String usuarioTecnico) throws IOException{
+        this.setPropiedad("default.usuario.tecnico", usuarioTecnico);
+        
+        this.guardarConfiguraciones();
+    }    
 }

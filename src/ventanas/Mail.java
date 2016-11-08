@@ -9,14 +9,12 @@ import auxiliar.EnviarCorreo;
 import auxiliar.GestorArchivo;
 import datos.DatosFichaTecnica;
 import static fichatecnica.FichaTecnica.CONFIG_CORREO;
+import static fichatecnica.FichaTecnica.CONFIG_TECNICO;
 import java.io.IOException;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import javax.swing.KeyStroke;
 
 /**
  *
@@ -39,11 +37,11 @@ public class Mail extends JDialog {
         initComponents();
         
         ec= new EnviarCorreo();
-        boolean defaultUsuario = Boolean.valueOf(CONFIG_CORREO.getDefaultCorreoUser());
-        if(defaultUsuario){
-            tfDe.setText(CONFIG_CORREO.getDefaultCorreoEmisor());
-        }else{
-            tfDe.setText(System.getProperty("user.name"));
+        int defaultUsuario = Integer.valueOf(CONFIG_CORREO.getDefaultCorreoUser());
+        switch (defaultUsuario){
+            case 0: tfDe.setText(CONFIG_CORREO.getDefaultCorreoEmisor()); break;
+            case 1: tfDe.setText(System.getProperty("user.name")); break;
+            default: tfDe.setText(CONFIG_TECNICO.getUsuarioTecnico());
         }
         tfDestino.setText(CONFIG_CORREO.getDefaultCorreoDestinatario());        
     }
@@ -91,13 +89,11 @@ public class Mail extends JDialog {
         this.epMsg.setText(msgPantalla);
         
         this.btEnviar.requestFocus();
-        
-        
     }
     
     private String crearTabla(DatosFichaTecnica dft){
         boolean crearTabla= Boolean.valueOf(CONFIG_GENERAL.getCorreoEnviarTabla());
-        System.out.println("Tabla? " + crearTabla+ " "+CONFIG_GENERAL.getCorreoEnviarTabla());
+        //System.out.println("Tabla? " + crearTabla+ " "+CONFIG_GENERAL.getCorreoEnviarTabla());
         if(!crearTabla) return "";
         
         StringBuilder sb= new StringBuilder();
@@ -128,12 +124,6 @@ public class Mail extends JDialog {
     }
     
     protected void asunto(String asunto) {
-        /*
-        try {
-            tfAsunto.setText(charsetUTF8(propiedad.getProperty("default.correo.asunto")+asunto));
-        } catch (UnsupportedEncodingException ex) {
-            tfAsunto.setText(propiedad.getProperty("default.correo.asunto")+asunto);
-        }*/
         tfAsunto.setText(CONFIG_CORREO.getDefaultCorreoAsunto()+asunto);
     }
     
@@ -146,11 +136,11 @@ public class Mail extends JDialog {
         
         tfAsunto.setText(CONFIG_CORREO.getDefaultCorreoAsunto()+aux);
     }
-    /*
-    private String charsetUTF8(String in) throws UnsupportedEncodingException{
-        byte[] utf8 = in.getBytes("cp1252");
-        return new String(utf8);
-    }*/
+    
+    protected void actualizarUsuario(){
+        tfDe.setText(CONFIG_TECNICO.getUsuarioTecnico());
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -278,7 +268,6 @@ public class Mail extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalirActionPerformed
-        // TODO add your handling code here:
         this.setVisible(false);
     }//GEN-LAST:event_btSalirActionPerformed
 
