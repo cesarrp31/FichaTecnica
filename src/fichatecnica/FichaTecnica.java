@@ -19,8 +19,6 @@ import ventanas.FichaTecnicaImpresion;
  * @author coperalta
  */
 public class FichaTecnica {
-
-    public static String NOMBRE_APP = "SRTI Sistema de Registro de Tareas Informáticas 2016 v3.0";
     
     public static ConfiguracionGeneral CONFIG_GENERAL;
     public static ConfiguracionCorreo CONFIG_CORREO;

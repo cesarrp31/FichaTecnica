@@ -5,6 +5,8 @@
  */
 package auxiliar;
 
+import auxiliar.configuraciones.ConfiguracionGeneral;
+import fichatecnica.FichaTecnica;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,6 +80,8 @@ public class GestorArchivo {
     
     public static Properties obtenerPropiedades(String nombreArchivo) throws FileNotFoundException, IOException {
         String codificacion= "UTF-8";
+        if(FichaTecnica.CONFIG_GENERAL != null)
+            codificacion= FichaTecnica.CONFIG_GENERAL.getConfiguracionCodificacion();
         return obtenerPropiedades(nombreArchivo, codificacion);
     }
     public static void obtenerPropiedades(String nombreArchivo, IGestorLectorArchivoTexto gc) throws FileNotFoundException, IOException {

@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author coperalta
  */
-public class Configuracion {
+class Configuracion {
     private final String nombre, valor, descripcion;
 
     public Configuracion(String nombre, String valor, String descripcion) {

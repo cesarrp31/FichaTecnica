@@ -36,10 +36,10 @@ import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 import reporte.Reporte;
-import static fichatecnica.FichaTecnica.NOMBRE_APP;
 import auxiliar.IGestionArchivo;
 import auxiliar.IGestorLectorArchivoTexto;
 import auxiliar.LimiteCaracteresDocument;
+import auxiliar.configuraciones.ConfiguracionGeneral;
 import static fichatecnica.FichaTecnica.CONFIG_GENERAL;
 import static fichatecnica.FichaTecnica.CONFIG_TECNICO;
 import java.awt.Frame;
@@ -373,7 +373,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             System.err.println(e.getLocalizedMessage());
             maxChars = 250;
         }
-        this.setTitle(NOMBRE_APP);
+        this.setTitle(ConfiguracionGeneral.APLICACION_NOMBRE+" "+ConfiguracionGeneral.APLICACION_VERSION);
         //Limite de cantidad de caracteres
         tatareas.setDocument(new LimiteCaracteresDocument(maxChars));
         tacomponentes.setDocument(new LimiteCaracteresDocument(maxChars));
@@ -645,11 +645,25 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     protected DatosFichaTecnica getDatosFichaTecnica() {
         String dep = cbdependencia.getSelectedItem()==null?"":cbdependencia.getSelectedItem().toString();
         DatosFichaTecnica dft = new DatosFichaTecnica(
-                    dep, tffecha.getText(), tfNota.getText(), 
-                    tfpatrimonio.getText(), cbponderacion.getSelectedItem().toString(), cbEstados.getSelectedItem().toString(),
-                    tatareas.getText(), tacomponentes.getText(), tftecnico.getText(),
-                    tfUsuario.getText(), tfClave.getText(), ingresoSeleccionado);
+                    quitarCaracteresEspeciales(dep), 
+                    quitarCaracteresEspeciales(tffecha.getText()), 
+                    quitarCaracteresEspeciales(tfNota.getText()), 
+                    quitarCaracteresEspeciales(tfpatrimonio.getText()), 
+                    quitarCaracteresEspeciales(cbponderacion.getSelectedItem().toString()), 
+                    quitarCaracteresEspeciales(cbEstados.getSelectedItem().toString()),
+                    quitarCaracteresEspeciales(tatareas.getText()), 
+                    quitarCaracteresEspeciales(tacomponentes.getText()), 
+                    quitarCaracteresEspeciales(tftecnico.getText()),
+                    quitarCaracteresEspeciales(tfUsuario.getText()), 
+                    quitarCaracteresEspeciales(tfClave.getText()), 
+                    quitarCaracteresEspeciales(ingresoSeleccionado));
         return dft;
+    }
+    
+    private String quitarCaracteresEspeciales(String texto){
+        texto= texto.replaceAll("\n", " ");
+        texto= texto.replaceAll("\t", " ");
+        return texto.trim();
     }
 
     private void  abrir(){

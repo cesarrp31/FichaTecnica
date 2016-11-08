@@ -12,6 +12,9 @@ import java.io.IOException;
  * @author coperalta
  */
 public class ConfiguracionGeneral extends ConfiguracionAbstracta{
+    public static final String APLICACION_NOMBRE= "SRTI: Sistema de Registro de Tareas Informáticas",
+                               APLICACION_VERSION= "3.0",
+                               APLICACION_ANIO= "2016";
 
     public ConfiguracionGeneral() throws IOException {
         super("config\\configuracionInicial.config");

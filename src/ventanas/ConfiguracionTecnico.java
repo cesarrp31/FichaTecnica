@@ -54,8 +54,11 @@ class ConfiguracionTecnico extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        pnCentral = new javax.swing.JPanel();
+        panelPrincipal = new javax.swing.JPanel();
+        panel1 = new javax.swing.JPanel();
         tfTecnico = new javax.swing.JTextField();
+        panel2 = new javax.swing.JPanel();
+        tfCuenta = new javax.swing.JTextField();
         pnSur = new javax.swing.JPanel();
         bnGuardar = new javax.swing.JButton();
         bnAplicar = new javax.swing.JButton();
@@ -65,14 +68,27 @@ class ConfiguracionTecnico extends javax.swing.JDialog {
 
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        pnCentral.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre del Técnico"));
+        panelPrincipal.setLayout(new java.awt.GridLayout(2, 1));
+
+        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre del Técnico"));
 
         tfTecnico.setMaximumSize(new java.awt.Dimension(400, 24));
         tfTecnico.setMinimumSize(new java.awt.Dimension(400, 24));
         tfTecnico.setPreferredSize(new java.awt.Dimension(400, 24));
-        pnCentral.add(tfTecnico);
+        panel1.add(tfTecnico);
 
-        jPanel2.add(pnCentral, java.awt.BorderLayout.CENTER);
+        panelPrincipal.add(panel1);
+
+        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Cuenta"));
+
+        tfCuenta.setMaximumSize(new java.awt.Dimension(400, 24));
+        tfCuenta.setMinimumSize(new java.awt.Dimension(400, 24));
+        tfCuenta.setPreferredSize(new java.awt.Dimension(400, 24));
+        panel2.add(tfCuenta);
+
+        panelPrincipal.add(panel2);
+
+        jPanel2.add(panelPrincipal, java.awt.BorderLayout.CENTER);
 
         bnGuardar.setText("Guardar");
         bnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -105,9 +121,9 @@ class ConfiguracionTecnico extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 12, Short.MAX_VALUE)
+                .addGap(0, 8, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 13, Short.MAX_VALUE))
+                .addGap(0, 9, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,8 +195,11 @@ class ConfiguracionTecnico extends javax.swing.JDialog {
     private javax.swing.JButton bnGuardar;
     private javax.swing.JButton btnCerrar;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel pnCentral;
+    private javax.swing.JPanel panel1;
+    private javax.swing.JPanel panel2;
+    private javax.swing.JPanel panelPrincipal;
     private javax.swing.JPanel pnSur;
+    private javax.swing.JTextField tfCuenta;
     private javax.swing.JTextField tfTecnico;
     // End of variables declaration//GEN-END:variables
 }
