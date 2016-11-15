@@ -6,6 +6,7 @@
 package auxiliar.configuraciones;
 
 import auxiliar.GestorArchivo;
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -16,6 +17,7 @@ import java.util.Properties;
 public abstract class ConfiguracionAbstracta {
     private final Properties configuracion;
     private String ubicacion;
+    public static final String SEPARADOR= File.separator;
 
     protected ConfiguracionAbstracta(String ubicacion) throws IOException {
         this.ubicacion= ubicacion;
