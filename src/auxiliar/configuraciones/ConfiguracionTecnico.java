@@ -14,7 +14,7 @@ import java.io.IOException;
 public class ConfiguracionTecnico extends ConfiguracionAbstracta{
     
     public ConfiguracionTecnico() throws IOException {
-        super("config\\configuracionTecnico.config");
+        super("config"+SEPARADOR+"configuracionTecnico.config");
     }
     
     public String getNombreTecnico(){

@@ -17,7 +17,7 @@ public class ConfiguracionGeneral extends ConfiguracionAbstracta{
                                APLICACION_ANIO= "2016";
 
     public ConfiguracionGeneral() throws IOException {
-        super("config\\configuracionInicial.config");
+        super("config"+SEPARADOR+"configuracionInicial.config");
     }
     
     public String getArchivoConfiguracionCorreo(){
