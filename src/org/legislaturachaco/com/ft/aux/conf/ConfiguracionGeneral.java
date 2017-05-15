@@ -6,18 +6,17 @@
 package org.legislaturachaco.com.ft.aux.conf;
 
 import java.io.IOException;
-
 /**
  *
  * @author coperalta
  */
 public class ConfiguracionGeneral extends ConfiguracionAbstracta{
     public static final String APLICACION_NOMBRE= "SRTI: Sistema de Registro de Tareas Informáticas",
-                               APLICACION_VERSION= "3.1",
-                               APLICACION_ANIO= "2016";
+                               APLICACION_VERSION= "4.0",
+                               APLICACION_ANIO= "2017";
 
     public ConfiguracionGeneral() throws IOException {
-        super("config"+SEPARADOR+"configuracionInicial.config");
+        super("configuracionInicial.config");
     }
     
     public String getArchivoConfiguracionCorreo(){

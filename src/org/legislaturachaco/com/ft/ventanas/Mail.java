@@ -15,6 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_GENERAL;
+import org.legislaturachaco.com.ft.aux.GestorEntornoEjecucion;
 
 /**
  *
@@ -40,7 +41,7 @@ public class Mail extends JDialog {
         int defaultUsuario = Integer.valueOf(CONFIG_CORREO.getDefaultCorreoUser());
         switch (defaultUsuario){
             case 0: tfDe.setText(CONFIG_CORREO.getDefaultCorreoEmisor()); break;
-            case 1: tfDe.setText(System.getProperty("user.name")); break;
+            case 1: tfDe.setText(GestorEntornoEjecucion.getNombreUsuario()); break;
             default: tfDe.setText(CONFIG_TECNICO.getUsuarioTecnico());
         }
         tfDestino.setText(CONFIG_CORREO.getDefaultCorreoDestinatario());        

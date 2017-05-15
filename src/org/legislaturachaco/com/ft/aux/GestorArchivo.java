@@ -30,8 +30,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class GestorArchivo {
 
-    public static final String PATH_RAIZ_APP = System.getProperty("user.dir"),
-            SEPARADOR = System.getProperty("file.separator");
+    public static final String PATH_RAIZ_APP = GestorEntornoEjecucion.getCarpetaTrabajo(),
+            SEPARADOR = GestorEntornoEjecucion.getSeparadorCarpetas();
 
     public static File cargarArchivo(String nombreArchivo) throws FileNotFoundException {
         if ((nombreArchivo == null) || (nombreArchivo.isEmpty())) {

@@ -12,6 +12,8 @@ import org.legislaturachaco.com.ft.aux.conf.ConfiguracionTecnico;
 import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+import org.legislaturachaco.com.ft.aux.GestorEntornoEjecucion;
+import org.legislaturachaco.com.ft.aux.PlataformaException;
 import org.legislaturachaco.com.ft.ventanas.FichaTecnicaImpresion;
 
 /**
@@ -35,6 +37,14 @@ public class FichaTecnica {
         } catch (Exception e) {
             System.err.println(e.getLocalizedMessage());
             e.printStackTrace();
+        }
+        
+        try{
+            tipoArqDLL();
+        }catch(Exception ex){
+            System.err.println("Error: " + ex.getLocalizedMessage());
+            ex.printStackTrace();
+            return;
         }
 
         try {
@@ -68,5 +78,19 @@ public class FichaTecnica {
         
         CONFIG_TECNICO = new ConfiguracionTecnico();
         System.out.println("Cargado correctamente el archivo de configuración del técnico!: "+CONFIG_TECNICO.getNombreTecnico());
+    }
+    
+    protected static String tipoArqDLL(){
+        String tipoDLL= "", 
+                os= GestorEntornoEjecucion.getSOComputadora(),
+                arq= GestorEntornoEjecucion.getArcComputadora();
+        
+        if(os.startsWith(GestorEntornoEjecucion.WINDOWS)){
+            if(arq.endsWith(GestorEntornoEjecucion.ARQ_32_BIT)) tipoDLL="32";
+            else tipoDLL= "64";
+        }else{
+            throw new PlataformaException();
+        }        
+        return tipoDLL;
     }
 }

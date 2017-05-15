@@ -17,11 +17,11 @@ import java.util.Properties;
 public abstract class ConfiguracionAbstracta {
     private final Properties configuracion;
     private String ubicacion;
-    public static final String SEPARADOR= File.separator;
+    //public static final String SEPARADOR= File.separator;
 
     protected ConfiguracionAbstracta(String ubicacion) throws IOException {
-        this.ubicacion= ubicacion;
-        configuracion = GestorArchivo.obtenerPropiedades(ubicacion);
+        this.ubicacion= "config"+GestorArchivo.SEPARADOR+ubicacion;
+        configuracion = GestorArchivo.obtenerPropiedades(this.ubicacion);
     }
     
     protected String getPropiedad(String prop){

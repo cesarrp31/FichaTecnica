@@ -61,6 +61,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import org.legislaturachaco.com.ft.aux.GestorEntornoEjecucion;
 
 /**
  *
@@ -429,7 +430,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
         boolean cargarUsuarioSesion= Boolean.valueOf(CONFIG_GENERAL.getDefaultCargarNombreUsuarioSesion());
         if(cargarUsuarioSesion)
-            actualizarNombreTecnico(System.getProperty("user.name"));
+            actualizarNombreTecnico(GestorEntornoEjecucion.getNombreUsuario());
         else
             actualizarNombreTecnico(CONFIG_TECNICO.getNombreTecnico());
         
