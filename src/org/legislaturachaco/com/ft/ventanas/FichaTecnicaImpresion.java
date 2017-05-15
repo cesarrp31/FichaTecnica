@@ -5,8 +5,8 @@
  */
 package org.legislaturachaco.com.ft.ventanas;
 
-import org.legislaturachaco.com.aux.CodigoQR;
-import org.legislaturachaco.com.aux.GestorArchivo;
+import org.legislaturachaco.com.gral.CodigoQR;
+import org.legislaturachaco.com.gral.GestorArchivo;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.SortedList;
 import ca.odell.glazedlists.matchers.TextMatcherEditor;
@@ -36,10 +36,10 @@ import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 import org.legislaturachaco.com.ft.reportes.Reporte;
-import org.legislaturachaco.com.aux.IGestionArchivo;
-import org.legislaturachaco.com.aux.IGestorLectorArchivoTexto;
-import org.legislaturachaco.com.aux.LimiteCaracteresDocument;
-import org.legislaturachaco.com.aux.conf.ConfiguracionGeneral;
+import org.legislaturachaco.com.gral.IGestionArchivo;
+import org.legislaturachaco.com.gral.IGestorLectorArchivoTexto;
+import org.legislaturachaco.com.gral.LimiteCaracteresDocument;
+import org.legislaturachaco.com.gral.conf.ConfiguracionGeneral;
 import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_GENERAL;
 import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_TECNICO;
 import java.awt.Frame;
@@ -61,7 +61,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import org.legislaturachaco.com.aux.GestorEntornoEjecucion;
+import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
 
 /**
  *

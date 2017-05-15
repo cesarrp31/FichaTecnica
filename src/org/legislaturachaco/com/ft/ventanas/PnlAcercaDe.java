@@ -5,7 +5,7 @@
  */
 package org.legislaturachaco.com.ft.ventanas;
 
-import org.legislaturachaco.com.aux.GestorArchivo;
+import org.legislaturachaco.com.gral.GestorArchivo;
 import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_GENERAL;
 import java.io.FileNotFoundException;
 

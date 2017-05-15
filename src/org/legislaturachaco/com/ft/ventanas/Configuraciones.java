@@ -5,7 +5,7 @@
  */
 package org.legislaturachaco.com.ft.ventanas;
 
-import org.legislaturachaco.com.aux.ModeloTablaConfiguraciones;
+import org.legislaturachaco.com.gral.ModeloTablaConfiguraciones;
 import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_CORREO;
 import java.awt.Frame;
 import java.util.Collections;

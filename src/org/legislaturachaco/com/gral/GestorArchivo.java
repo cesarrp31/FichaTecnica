@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.legislaturachaco.com.aux;
+package org.legislaturachaco.com.gral;
 
-import org.legislaturachaco.com.aux.conf.ConfiguracionGeneral;
+import org.legislaturachaco.com.gral.conf.ConfiguracionGeneral;
 import org.legislaturachaco.com.ft.FichaTecnica;
 import java.awt.Image;
 import java.io.File;

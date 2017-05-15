@@ -5,8 +5,8 @@
  */
 package org.legislaturachaco.com.ft.ventanas;
 
-import org.legislaturachaco.com.aux.EnviarCorreo;
-import org.legislaturachaco.com.aux.GestorArchivo;
+import org.legislaturachaco.com.gral.EnviarCorreo;
+import org.legislaturachaco.com.gral.GestorArchivo;
 import org.legislaturachaco.com.ft.datos.DatosFichaTecnica;
 import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_CORREO;
 import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_TECNICO;
@@ -15,7 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_GENERAL;
-import org.legislaturachaco.com.aux.GestorEntornoEjecucion;
+import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
 
 /**
  *

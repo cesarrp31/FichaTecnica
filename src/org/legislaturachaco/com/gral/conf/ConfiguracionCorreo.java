@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.legislaturachaco.com.aux.conf;
+package org.legislaturachaco.com.gral.conf;
 
 import java.io.IOException;
 

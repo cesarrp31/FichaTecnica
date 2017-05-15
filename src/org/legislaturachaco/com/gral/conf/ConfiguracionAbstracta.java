@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.legislaturachaco.com.aux.conf;
+package org.legislaturachaco.com.gral.conf;
 
-import org.legislaturachaco.com.aux.GestorArchivo;
+import org.legislaturachaco.com.gral.GestorArchivo;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;

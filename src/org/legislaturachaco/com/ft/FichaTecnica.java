@@ -5,15 +5,15 @@
  */
 package org.legislaturachaco.com.ft;
 
-import org.legislaturachaco.com.aux.GestorArchivo;
-import org.legislaturachaco.com.aux.conf.ConfiguracionCorreo;
-import org.legislaturachaco.com.aux.conf.ConfiguracionGeneral;
-import org.legislaturachaco.com.aux.conf.ConfiguracionTecnico;
+import org.legislaturachaco.com.gral.GestorArchivo;
+import org.legislaturachaco.com.gral.conf.ConfiguracionCorreo;
+import org.legislaturachaco.com.gral.conf.ConfiguracionGeneral;
+import org.legislaturachaco.com.gral.conf.ConfiguracionTecnico;
 import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
-import org.legislaturachaco.com.aux.GestorEntornoEjecucion;
-import org.legislaturachaco.com.aux.PlataformaException;
+import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
+import org.legislaturachaco.com.gral.PlataformaException;
 import org.legislaturachaco.com.ft.ventanas.FichaTecnicaImpresion;
 
 /**
