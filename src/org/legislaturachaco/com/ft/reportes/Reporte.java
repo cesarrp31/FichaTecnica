@@ -5,7 +5,7 @@
  */
 package org.legislaturachaco.com.ft.reportes;
 
-import org.legislaturachaco.com.ft.aux.GestorArchivo;
+import org.legislaturachaco.com.aux.GestorArchivo;
 import org.legislaturachaco.com.ft.datos.DatosFichaTecnica;
 import java.io.File;
 import java.util.HashMap;
