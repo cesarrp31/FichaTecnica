@@ -5,7 +5,6 @@
  */
 package org.legislaturachaco.com.gral;
 
-import org.legislaturachaco.com.gral.conf.ConfiguracionGeneral;
 import org.legislaturachaco.com.ft.FichaTecnica;
 import java.awt.Image;
 import java.io.File;

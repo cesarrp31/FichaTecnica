@@ -12,9 +12,10 @@ package org.legislaturachaco.com.gral;
 public class PlataformaException extends RuntimeException{
     
     public PlataformaException(){
-        super("El entorno de ejecución no es el esperado. Entorno actual: "
-                + "OS "+GestorEntornoEjecucion.getSOComputadora()+
-                ", Versión "+GestorEntornoEjecucion.getVersionSOComputadora());
+        this("El entorno de ejecución no es el esperado. Entorno actual: "
+                + "OS "+GestorEntornoEjecucion.getSOComputadora()
+                + ", Versión "+GestorEntornoEjecucion.getVersionSOComputadora()
+                + ", Arquitectura "+GestorEntornoEjecucion.getArcComputadora());
     }
     
     public PlataformaException(String msg){

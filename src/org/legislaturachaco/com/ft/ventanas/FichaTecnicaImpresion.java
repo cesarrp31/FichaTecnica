@@ -267,6 +267,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     
     private void inicializarBarraHerramientas() throws FileNotFoundException {
         JToolBar barraHerramientas = new JToolBar();
+        barraHerramientas.setFloatable(false);
+        
         String e = crpImg + CONFIG_GENERAL.getImagenBotonEnviar(),
                 i = crpImg + CONFIG_GENERAL.getImagenBotonImprimir(),
                 n = crpImg + CONFIG_GENERAL.getImagenBotonNuevo(),
@@ -374,7 +376,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             System.err.println(e.getLocalizedMessage());
             maxChars = 250;
         }
-        this.setTitle(ConfiguracionGeneral.APLICACION_NOMBRE+" "+ConfiguracionGeneral.APLICACION_VERSION);
+        this.setTitle(ConfiguracionGeneral.APLICACION_NOMBRE+" "
+                     +ConfiguracionGeneral.APLICACION_VERSION+" "
+                     +ConfiguracionGeneral.PLATAFORMA);
         //Limite de cantidad de caracteres
         tatareas.setDocument(new LimiteCaracteresDocument(maxChars));
         tacomponentes.setDocument(new LimiteCaracteresDocument(maxChars));

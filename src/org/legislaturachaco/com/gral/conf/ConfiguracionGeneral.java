@@ -6,12 +6,15 @@
 package org.legislaturachaco.com.gral.conf;
 
 import java.io.IOException;
+import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
 /**
  *
  * @author coperalta
  */
 public class ConfiguracionGeneral extends ConfiguracionAbstracta{
-    public static final String APLICACION_NOMBRE= "SRTI: Sistema de Registro de Tareas Informáticas",
+    public static final String PLATAFORMA= GestorEntornoEjecucion.getSOComputadora()+"/"
+                                            + GestorEntornoEjecucion.getArcComputadora(),
+                               APLICACION_NOMBRE= "SRTI: Sistema de Registro de Tareas Informáticas",
                                APLICACION_VERSION= "4.0",
                                APLICACION_ANIO= "2017";
 

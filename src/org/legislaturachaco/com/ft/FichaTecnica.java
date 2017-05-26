@@ -15,6 +15,8 @@ import javax.swing.UIManager;
 import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
 import org.legislaturachaco.com.gral.PlataformaException;
 import org.legislaturachaco.com.ft.ventanas.FichaTecnicaImpresion;
+import org.legislaturachaco.com.ft.ventanas.FichaTecnicaImpresionYTareas;
+import org.legislaturachaco.com.gral.SOException;
 
 /**
  *
@@ -25,6 +27,8 @@ public class FichaTecnica {
     public static ConfiguracionGeneral CONFIG_GENERAL;
     public static ConfiguracionCorreo CONFIG_CORREO;
     public static ConfiguracionTecnico CONFIG_TECNICO;
+    
+    private static String tipoDLL= null, nombreOS= null;
     
     /**
      * @param args the command line arguments
@@ -40,7 +44,15 @@ public class FichaTecnica {
         }
         
         try{
-            tipoArqDLL();
+            nombreOS= getSO();
+        }catch(Exception ex){
+            System.err.println("Error: " + ex.getLocalizedMessage());
+            ex.printStackTrace();
+            return;
+        }
+        
+        try{
+            tipoDLL= tipoArqDLL();
         }catch(Exception ex){
             System.err.println("Error: " + ex.getLocalizedMessage());
             ex.printStackTrace();
@@ -50,13 +62,16 @@ public class FichaTecnica {
         try {
             cargarArchivosConfiguraciones();
         } catch (Exception e) {
-            System.err.println("No se puede cargar el archivo de configuracion inicial! " + e.getLocalizedMessage());
+            System.err.println("No se puede cargar el archivo de configuracion inicial! " 
+                    + e.getLocalizedMessage());
             e.printStackTrace();
             return;
         }
 
+        System.out.println("OS: " + nombreOS + ". ARQ: " + tipoDLL);
+        
         try {
-            FichaTecnicaImpresion ft = new FichaTecnicaImpresion();
+            FichaTecnicaImpresion ft = new FichaTecnicaImpresionYTareas(tipoDLL);
             ft.pack();
             ft.setLocationRelativeTo(null);
             ft.setExtendedState(ft.getExtendedState() | JFrame.MAXIMIZED_BOTH);
@@ -81,16 +96,32 @@ public class FichaTecnica {
     }
     
     protected static String tipoArqDLL(){
-        String tipoDLL= "", 
-                os= GestorEntornoEjecucion.getSOComputadora(),
+        String os= GestorEntornoEjecucion.getSOComputadora(),
                 arq= GestorEntornoEjecucion.getArcComputadora();
         
-        if(os.startsWith(GestorEntornoEjecucion.WINDOWS)){
-            if(arq.endsWith(GestorEntornoEjecucion.ARQ_32_BIT)) tipoDLL="32";
-            else tipoDLL= "64";
-        }else{
-            throw new PlataformaException();
-        }        
-        return tipoDLL;
+        if(os.startsWith(GestorEntornoEjecucion.WINDOWS)&&
+           arq.endsWith(GestorEntornoEjecucion.ARQ_32_BIT)) return "32";
+        
+        if(os.startsWith(GestorEntornoEjecucion.WINDOWS)&&
+           arq.endsWith(GestorEntornoEjecucion.ARQ_64_BIT)) return "64";
+        
+        if(os.startsWith(GestorEntornoEjecucion.LINUX)&&
+           arq.endsWith(GestorEntornoEjecucion.ARQ_32_BIT)) return "32";
+        
+        if(os.startsWith(GestorEntornoEjecucion.LINUX)&&
+           arq.endsWith(GestorEntornoEjecucion.ARQ_64_BIT)) return "64";
+        
+        throw new PlataformaException();
+    }
+    
+    private static String getSO(){
+        String os= GestorEntornoEjecucion.getSOComputadora();
+        
+        if((!os.equals(GestorEntornoEjecucion.WINDOWS))&&
+                (!os.equals(GestorEntornoEjecucion.LINUX))){
+            throw new SOException();
+        }
+        
+        return os;
     }
 }

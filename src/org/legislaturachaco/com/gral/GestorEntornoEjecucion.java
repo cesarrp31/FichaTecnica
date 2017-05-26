@@ -12,7 +12,8 @@ package org.legislaturachaco.com.gral;
 public class GestorEntornoEjecucion {
     public static final String ARQ_64_BIT= "amd64", 
                                 ARQ_32_BIT="x86",
-                                WINDOWS= "Windows";    
+                                WINDOWS= "Windows",
+                                LINUX= "Linux";    
     
     private GestorEntornoEjecucion(){}
     
