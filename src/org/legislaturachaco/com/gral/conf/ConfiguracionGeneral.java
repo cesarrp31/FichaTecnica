@@ -12,7 +12,7 @@ import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
  * @author coperalta
  */
 public class ConfiguracionGeneral extends ConfiguracionAbstracta{
-    public static final String PLATAFORMA= GestorEntornoEjecucion.getSOComputadora()+"/"
+    public static final String PLATAFORMA= GestorEntornoEjecucion.getSOComputadora()+" / "
                                             + GestorEntornoEjecucion.getArcComputadora(),
                                APLICACION_NOMBRE= "SRTI: Sistema de Registro de Tareas Informáticas",
                                APLICACION_VERSION= "4.0",

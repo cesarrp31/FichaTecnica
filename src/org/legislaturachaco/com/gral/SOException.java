@@ -13,7 +13,7 @@ public class SOException extends RuntimeException{
     
     public SOException(){
         this("Se ha detectado un s.o. desconocido. SO actual: "
-                + "OS "+GestorEntornoEjecucion.getSOComputadora()
+                + GestorEntornoEjecucion.getSOComputadora()
                 + ", Versión "+GestorEntornoEjecucion.getVersionSOComputadora());
     }
     

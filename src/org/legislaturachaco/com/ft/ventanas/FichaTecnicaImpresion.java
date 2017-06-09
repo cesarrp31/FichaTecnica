@@ -15,6 +15,7 @@ import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
 import org.legislaturachaco.com.ft.datos.DatosFichaTecnica;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -61,6 +62,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import org.legislaturachaco.com.exchange.tareas.GestorTareasExchange;
+import org.legislaturachaco.com.exchange.tareas.ITareaExchange;
+import org.legislaturachaco.com.gral.FormateadorTareaExchange;
 import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
 
 /**
@@ -77,7 +81,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     
     private final GestorArchivoFichaTecnica iga;
     
-    private String ingresoSeleccionado;
+    private GestorTareasExchange gte;
+    
+    private String ingresoSeleccionado, tipoDLL;
     
     /**
      * Creates new form FichaTecnicaImpresion
@@ -104,6 +110,21 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         //No se utiliza por ahora ambos paneles
         pnDescComp.setVisible(false);
         pnDescTarea.setVisible(false);
+    }
+    
+    public FichaTecnicaImpresion(String tipoDLL) throws IOException{
+        this();
+        this.tipoDLL= tipoDLL;
+        
+        try{
+            gte= new GestorTareasExchange(this.tipoDLL);
+            System.out.println(gte.getVersion());
+             //cbListaTareas.setFont(new Font("Arial Unicode MS", Font.PLAIN, 10)); 
+            cargarListaTareaNoTerminadasEnComboBox();
+        }catch(Exception e){
+            System.err.println("Problema con el gestor exchange");
+            e.printStackTrace();
+        }       
     }
 
     private void inicializarComponentes() {
@@ -254,6 +275,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         salir.setIcon(ii);
         
         this.setJMenuBar(mb);
+        //this.getJMenuBar().setPreferredSize(new Dimension(50,50));
     }
 
     private void vntAcercaDe(){
@@ -267,6 +289,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     
     private void inicializarBarraHerramientas() throws FileNotFoundException {
         JToolBar barraHerramientas = new JToolBar();
+        barraHerramientas.setPreferredSize(new Dimension(50,50));
+        
         barraHerramientas.setFloatable(false);
         
         String e = crpImg + CONFIG_GENERAL.getImagenBotonEnviar(),
@@ -341,7 +365,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         barraHerramientas.addSeparator();
         barraHerramientas.add(Box.createHorizontalGlue());
         
-        String logo = CONFIG_GENERAL.getCarpetaImagenes() + GestorArchivo.SEPARADOR + CONFIG_GENERAL.getImagenLogoBarra();
+        String logo = CONFIG_GENERAL.getCarpetaImagenes() + GestorArchivo.SEPARADOR 
+                + CONFIG_GENERAL.getImagenLogoBarra();
         JLabel icono= new JLabel();
         icono.setIcon(GestorArchivo.crearImageIcon(logo, ""));
         barraHerramientas.add(icono);
@@ -377,8 +402,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             maxChars = 250;
         }
         this.setTitle(ConfiguracionGeneral.APLICACION_NOMBRE+" "
-                     +ConfiguracionGeneral.APLICACION_VERSION+" "
-                     +ConfiguracionGeneral.PLATAFORMA);
+                     +ConfiguracionGeneral.APLICACION_VERSION+" ("
+                     +ConfiguracionGeneral.PLATAFORMA + ")");
         //Limite de cantidad de caracteres
         tatareas.setDocument(new LimiteCaracteresDocument(maxChars));
         tacomponentes.setDocument(new LimiteCaracteresDocument(maxChars));
@@ -406,7 +431,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         lstEstados = new ArrayList<>();
         lstPonderaciones= new ArrayList<>();
 
-        cargarLista(lstTareas, CONFIG_GENERAL.getNombreArchivoTareas());
+        //cargarLista(lstTareas, CONFIG_GENERAL.getNombreArchivoTareas());
+        cargarListaTareas();
         cargarLista(lstComponentes, CONFIG_GENERAL.getNombreArchivoComponentes());
         cargarLista(lstDependencias, CONFIG_GENERAL.getNombreArchivoDependencias());
         cargarLista(lstEstados, CONFIG_GENERAL.getNombreArchivoEstados());
@@ -417,6 +443,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         lstTemp= lstDatos;
         GestorArchivo.obtenerPropiedades(crpRec + nombreArchivoDatos, this);
     }
+    
+    /**
+     * No Implementado por ahora
+     */
+    private void cargarListaTareas(){}
 
     private void inicializarPantallaCarga() {
         //cbComponentes.setSelectedItem(null);
@@ -477,6 +508,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         componentes= new ArrayList<>();
         componentes.add(ltecnico);
         componentes.add(tftecnico);
+        componentes.add(btnActTareasNoLeidaTecnico);
+        componentes.add(btnActTareasTecnico);
         crearGrupo(datosTecnico, componentes);
                 
         componentes= new ArrayList<>();
@@ -484,8 +517,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         componentes.add(tfUsuario);
         componentes.add(lClave);
         componentes.add(tfClave);
-        crearGrupo(datosUsuario, componentes);
-        
+        crearGrupo(datosUsuario, componentes);        
     }
     
     private void crearGrupo(JPanel contenedor, List<JComponent> componentes){
@@ -497,8 +529,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         GroupLayout.SequentialGroup hGroup = crearGrupoH(layout, componentes);
         layout.setHorizontalGroup(hGroup);
         GroupLayout.SequentialGroup vGroup = crearGrupoV(layout, componentes, GroupLayout.Alignment.BASELINE);
-        layout.setVerticalGroup(vGroup);
-        
+        layout.setVerticalGroup(vGroup);        
     }
     
     private GroupLayout.SequentialGroup crearGrupoH(GroupLayout layout, List<JComponent> componentes){
@@ -772,6 +803,27 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         vtnCorreo.actualizarUsuario();
     }
     
+    private void cargarListaTodasTareaEnComboBox(){
+        if(gte!=null){
+            cargarLista(gte.getListaTareas());
+        }
+    }
+    
+    private void cargarListaTareaNoTerminadasEnComboBox(){
+        if(gte!=null){
+            cargarLista(gte.getListaTareasNoTerminadas());
+        }
+    }
+    
+    private void cargarLista(List<ITareaExchange> lista){
+        cbListaTareas.removeAllItems();
+        int i= 0;
+        for(ITareaExchange te: lista){
+            System.out.println(FormateadorTareaExchange.detectorCodificacion(te.toString()));
+            cbListaTareas.addItem(new FormateadorTareaExchange(i++, te));
+        }
+    }
+    
     /*
     private void crearVentanaConfiguraciones() {
         Configuraciones c = new Configuraciones(this, true);
@@ -819,15 +871,20 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         cbponderacion = new javax.swing.JComboBox<>();
         lestado = new javax.swing.JLabel();
         cbEstados = new javax.swing.JComboBox<>();
-        jPanel2 = new javax.swing.JPanel();
+        pnl4 = new javax.swing.JPanel();
+        pnlRadioButton = new javax.swing.JPanel();
         rbIngCorreo = new javax.swing.JRadioButton();
         rbIngTel = new javax.swing.JRadioButton();
         rbIngNota = new javax.swing.JRadioButton();
         rbIngMos = new javax.swing.JRadioButton();
+        pnlTareas = new javax.swing.JPanel();
+        cbListaTareas = new javax.swing.JComboBox<>();
         inferior = new javax.swing.JPanel();
         datosTecnico = new javax.swing.JPanel();
         ltecnico = new javax.swing.JLabel();
         tftecnico = new javax.swing.JTextField();
+        btnActTareasNoLeidaTecnico = new javax.swing.JButton();
+        btnActTareasTecnico = new javax.swing.JButton();
         datosUsuario = new javax.swing.JPanel();
         lUsuario = new javax.swing.JLabel();
         tfUsuario = new javax.swing.JTextField();
@@ -865,11 +922,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 160, Short.MAX_VALUE)
+            .addGap(0, 157, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
                     .addGap(13, 13, 13)))
         );
 
@@ -937,11 +994,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 160, Short.MAX_VALUE)
+            .addGap(0, 157, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGap(14, 14, 14)))
         );
 
@@ -1041,25 +1098,36 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
         superior.add(pnl3);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Solicitado por:"));
+        pnl4.setBorder(javax.swing.BorderFactory.createTitledBorder("Solicitado por:"));
+        pnl4.setMinimumSize(new java.awt.Dimension(366, 58));
+        pnl4.setPreferredSize(new java.awt.Dimension(366, 58));
 
         rbIngCorreo.setText("Correo Electrónico");
         rbIngCorreo.setToolTipText("Seleccione una opción");
-        jPanel2.add(rbIngCorreo);
+        pnlRadioButton.add(rbIngCorreo);
 
         rbIngTel.setText("Teléfono");
         rbIngTel.setToolTipText("Seleccione una opción");
-        jPanel2.add(rbIngTel);
+        pnlRadioButton.add(rbIngTel);
 
         rbIngNota.setText("Nota");
         rbIngNota.setToolTipText("Seleccione una opción");
-        jPanel2.add(rbIngNota);
+        pnlRadioButton.add(rbIngNota);
 
         rbIngMos.setText("Mostrador");
         rbIngMos.setToolTipText("Seleccione una opción");
-        jPanel2.add(rbIngMos);
+        pnlRadioButton.add(rbIngMos);
 
-        superior.add(jPanel2);
+        pnl4.add(pnlRadioButton);
+
+        cbListaTareas.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        cbListaTareas.setMinimumSize(new java.awt.Dimension(400, 20));
+        cbListaTareas.setPreferredSize(new java.awt.Dimension(400, 20));
+        pnlTareas.add(cbListaTareas);
+
+        pnl4.add(pnlTareas);
+
+        superior.add(pnl4);
 
         getContentPane().add(superior, java.awt.BorderLayout.NORTH);
 
@@ -1075,6 +1143,24 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
         tftecnico.setToolTipText("Ingrese nombre del técnico que realizó el servicio técnico");
         datosTecnico.add(tftecnico);
+
+        btnActTareasNoLeidaTecnico.setText("X");
+        btnActTareasNoLeidaTecnico.setToolTipText("Tareas No Leídas");
+        btnActTareasNoLeidaTecnico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActTareasNoLeidaTecnicoActionPerformed(evt);
+            }
+        });
+        datosTecnico.add(btnActTareasNoLeidaTecnico);
+
+        btnActTareasTecnico.setText("T");
+        btnActTareasTecnico.setToolTipText("Todas Las Tareas");
+        btnActTareasTecnico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActTareasTecnicoActionPerformed(evt);
+            }
+        });
+        datosTecnico.add(btnActTareasTecnico);
 
         inferior.add(datosTecnico, java.awt.BorderLayout.NORTH);
 
@@ -1109,6 +1195,22 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private void cbComponentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbComponentesActionPerformed
         this.tacomponentes.append((String) cbComponentes.getSelectedItem() + ". ");
     }//GEN-LAST:event_cbComponentesActionPerformed
+
+    private void btnActTareasNoLeidaTecnicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActTareasNoLeidaTecnicoActionPerformed
+        if((this.gte!=null)||(!tftecnico.getText().equals(""))){
+            this.gte.getGestorExchange().setCredencialesUsuario(tftecnico.getText(), "");
+            this.gte.getGestorExchange().actualizarListaTareas();            
+            cargarListaTareaNoTerminadasEnComboBox();
+        }
+    }//GEN-LAST:event_btnActTareasNoLeidaTecnicoActionPerformed
+
+    private void btnActTareasTecnicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActTareasTecnicoActionPerformed
+        if((this.gte!=null)||(!tftecnico.getText().equals(""))){
+            this.gte.getGestorExchange().setCredencialesUsuario(tftecnico.getText(), "");
+            this.gte.getGestorExchange().actualizarListaTareas();            
+            cargarListaTodasTareaEnComboBox();
+        }
+    }//GEN-LAST:event_btnActTareasTecnicoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1151,8 +1253,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActTareasNoLeidaTecnico;
+    private javax.swing.JButton btnActTareasTecnico;
     private javax.swing.JComboBox<String> cbComponentes;
     private javax.swing.JComboBox<String> cbEstados;
+    private javax.swing.JComboBox<FormateadorTareaExchange> cbListaTareas;
     private javax.swing.JComboBox<String> cbdependencia;
     private javax.swing.JComboBox<String> cbponderacion;
     private javax.swing.JComboBox<String> cbtareas;
@@ -1162,7 +1267,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private javax.swing.JPanel inferior;
     private javax.swing.JPanel inferiorcomponentes;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -1179,7 +1283,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private javax.swing.JPanel pnDescTarea;
     private javax.swing.JPanel pnl2;
     private javax.swing.JPanel pnl3;
+    private javax.swing.JPanel pnl4;
     private javax.swing.JPanel pnlComponentes;
+    private javax.swing.JPanel pnlRadioButton;
+    private javax.swing.JPanel pnlTareas;
     private javax.swing.JPanel pnlTareasDisponibles;
     private javax.swing.JRadioButton rbIngCorreo;
     private javax.swing.JRadioButton rbIngMos;

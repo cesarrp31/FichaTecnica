@@ -27,7 +27,7 @@ import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_GENERAL;
 public class Reporte {
     private static JasperReport report;
     private static String nombJasper;
-    private JDialog visor;
+    private static JDialog visor;
     
     public static void prepararReporte(){
         String crpRec= CONFIG_GENERAL.getCarpetaRecursos()+GestorArchivo.SEPARADOR;
@@ -65,7 +65,7 @@ public class Reporte {
             JasperPrint print = JasperFillManager.fillReport(report, parametros, new JREmptyDataSource());
 
             JasperViewer jv = new JasperViewer(print, false);
-            JDialog visor = new JDialog(ventana, ventana.getTitle(), true);
+            visor = new JDialog(ventana, ventana.getTitle(), true);
             visor.setContentPane(jv.getContentPane());
             visor.setSize(jv.getSize());
 

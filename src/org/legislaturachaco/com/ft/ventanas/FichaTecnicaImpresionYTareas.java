@@ -19,6 +19,5 @@ public class FichaTecnicaImpresionYTareas extends FichaTecnicaImpresion {
         super();
         this.tipoDLL= tipoDLL;
     }
-    
-    
+
 }

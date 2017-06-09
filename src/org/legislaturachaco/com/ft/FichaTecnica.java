@@ -15,7 +15,6 @@ import javax.swing.UIManager;
 import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
 import org.legislaturachaco.com.gral.PlataformaException;
 import org.legislaturachaco.com.ft.ventanas.FichaTecnicaImpresion;
-import org.legislaturachaco.com.ft.ventanas.FichaTecnicaImpresionYTareas;
 import org.legislaturachaco.com.gral.SOException;
 
 /**
@@ -52,7 +51,8 @@ public class FichaTecnica {
         }
         
         try{
-            tipoDLL= tipoArqDLL();
+            //tipoDLL= tipoArqDLL();
+            tipoDLL= GestorEntornoEjecucion.getArcComputadora();
         }catch(Exception ex){
             System.err.println("Error: " + ex.getLocalizedMessage());
             ex.printStackTrace();
@@ -71,7 +71,7 @@ public class FichaTecnica {
         System.out.println("OS: " + nombreOS + ". ARQ: " + tipoDLL);
         
         try {
-            FichaTecnicaImpresion ft = new FichaTecnicaImpresionYTareas(tipoDLL);
+            FichaTecnicaImpresion ft = new FichaTecnicaImpresion(tipoDLL);
             ft.pack();
             ft.setLocationRelativeTo(null);
             ft.setExtendedState(ft.getExtendedState() | JFrame.MAXIMIZED_BOTH);
@@ -79,6 +79,7 @@ public class FichaTecnica {
         } catch (Exception ex) {
             System.err.println("Error: " + ex.getLocalizedMessage());
             ex.printStackTrace();
+            return;
         }
     }
 
@@ -117,11 +118,10 @@ public class FichaTecnica {
     private static String getSO(){
         String os= GestorEntornoEjecucion.getSOComputadora();
         
-        if((!os.equals(GestorEntornoEjecucion.WINDOWS))&&
-                (!os.equals(GestorEntornoEjecucion.LINUX))){
+        if((!os.startsWith(GestorEntornoEjecucion.WINDOWS))&&
+                (!os.startsWith(GestorEntornoEjecucion.LINUX))){
             throw new SOException();
-        }
-        
+        }        
         return os;
     }
 }
