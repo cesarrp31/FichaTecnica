@@ -11,14 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.legislaturachaco.com.exchange.tareas.ITareaExchange;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 import org.apache.tika.detect.AutoDetectReader;
 import org.apache.tika.exception.TikaException;
@@ -47,7 +42,7 @@ public class FormateadorTareaExchange {
         String ch= detectorCodificacion(objeto.toString());
         String respuesta = i + ": " + objeto.toString();
 
-        System.out.println("Valor: "+objeto.toString()+". Enc: "+ch+". Default "+Charset.defaultCharset());
+        //System.out.println("Valor: "+objeto.toString()+". Enc: "+ch+". Default "+Charset.defaultCharset());
 
         return new String(respuesta.getBytes(Charset.forName(ch)), Charset.defaultCharset());
     }
