@@ -5,6 +5,8 @@
  */
 package org.legislaturachaco.com.gral;
 
+import java.nio.charset.Charset;
+
 /**
  *
  * @author cesar
@@ -53,6 +55,14 @@ public class GestorEntornoEjecucion {
         return System.getProperty("file.separator");
     }
     
+    public static String getDefaultEncodingFiles(){
+        return System.getProperty("file.encoding");
+    }
+    
+    public static Charset getDefaultEncodingChar(){
+        return Charset.defaultCharset();
+    }
+    
     public static void main(String [] args){
         System.err.println(GestorEntornoEjecucion.getArcComputadora());
         System.err.println(GestorEntornoEjecucion.getModeloDatos());
@@ -62,6 +72,6 @@ public class GestorEntornoEjecucion {
         System.err.println(GestorEntornoEjecucion.getCarpetaUsuario());
         System.err.println(GestorEntornoEjecucion.getVersionSOComputadora());
         System.err.println(GestorEntornoEjecucion.getSeparadorCarpetas());
-    }            
-    
+        System.err.println(GestorEntornoEjecucion.getDefaultEncodingFiles());
+    }
 }

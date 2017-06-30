@@ -41,9 +41,9 @@ public class ModeloTablaTareasExchange extends AbstractTableModel{
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         int ft= this.getRowCount(), ct= this.getColumnCount();
-        if(rowIndex >= ft) throw new RuntimeException("Valor de fila no válido: "+rowIndex+". Màximo valor: "+ft);
-        if(columnIndex >= ct) throw new RuntimeException("Valor de columna no válido: "+columnIndex+". Màximo valor: "+ct);
-        
+        if(rowIndex >= ft) throw new RuntimeException("Valor de fila no válido: "+rowIndex+". Máximo valor: "+ft);
+        if(columnIndex >= ct) throw new RuntimeException("Valor de columna no válido: "+columnIndex+". Máximo valor: "+ct);
+        System.out.println("Valora devolver: "+rowIndex+":"+columnIndex);
         switch (columnIndex){
             case 0: return rowIndex;
             case 1: return this.listaTareas.get(rowIndex).getCuerpoTarea();

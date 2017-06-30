@@ -39,15 +39,23 @@ public class FormateadorTareaExchange {
 
     @Override
     public String toString() {
-        String ch= detectorCodificacion(objeto.toString());
-        String respuesta = i + ": " + objeto.toString();
+        String ch= detectorCodificacion(objeto.getCuerpoTarea());
+        //System.out.println(Charset.availableCharsets());
+        //String ns= new String(objeto.getCuerpoTarea().getBytes(Charset.forName("Cp1252")), Charset.forName("UTF-16"));
+        //String respuesta = i + ": " + ns;
 
-        //System.out.println("Valor: "+objeto.toString()+". Enc: "+ch+". Default "+Charset.defaultCharset());
+        System.out.println("Valor: "+objeto.toString()+". Enc: "+ch+". Default "+Charset.defaultCharset());
 
-        return new String(respuesta.getBytes(Charset.forName(ch)), Charset.defaultCharset());
+        //return respuesta;
+        
+        return objeto.getCuerpoTarea();
     }
 
     public static String detectorCodificacion(String in) {
+        return detectorCodificacionCharset(in).displayName();
+    }
+    
+    public static Charset detectorCodificacionCharset(String in) {
         try {
 
             // convert String into InputStream
@@ -60,11 +68,11 @@ public class FormateadorTareaExchange {
 
             String line;
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
+                //System.out.println(line);
             }
             br.close();
 
-            return charset.toString();
+            return charset;
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -75,6 +83,10 @@ public class FormateadorTareaExchange {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return Charset.defaultCharset().toString();
+        return Charset.defaultCharset();
+    }
+    
+    public static String stringCorrectos(String in){
+        return new String (in.getBytes(detectorCodificacionCharset(in)));
     }
 }

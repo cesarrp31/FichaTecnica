@@ -66,9 +66,10 @@ import javax.swing.KeyStroke;
 import javax.swing.table.TableColumn;
 import org.legislaturachaco.com.exchange.tareas.GestorTareasExchange;
 import org.legislaturachaco.com.exchange.tareas.ITareaExchange;
-import org.legislaturachaco.com.gral.FormateadorTareaExchange;
+import org.legislaturachaco.com.gral.FilaRender;
 import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
 import org.legislaturachaco.com.gral.ModeloTablaTareasExchange;
+import org.legislaturachaco.com.gral.MouseSobreTablaAdapter;
 
 /**
  *
@@ -123,10 +124,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             cargarListaTareaNoTerminadasEnComboBox();
             
             tbTareas.setDragEnabled(false);
-            //tbTareas.setFillsViewportHeight(true);
-            //srcPnl.getViewport().setBackground(Color.red);
-            
+            //tbTareas.setDefaultRenderer(Object.class, new FilaRender());
+            tbTareas.addMouseMotionListener(new MouseSobreTablaAdapter(tbTareas));
             tamanioColumna(30);
+            tbTareas.getTableHeader().setReorderingAllowed(false);
         }catch(Exception e){
             System.err.println("Problema con el gestor exchange "+e.getLocalizedMessage());
             e.printStackTrace();
@@ -813,18 +814,23 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     }
     
     private void cargarLista(List<ITareaExchange> lista){
-        cbListaTareas.removeAllItems();
-        int i= 0;
-        for(ITareaExchange te: lista){
-            System.out.println(FormateadorTareaExchange.detectorCodificacion(te.toString()));
-            cbListaTareas.addItem(new FormateadorTareaExchange(i++, te));
-        }
-        
-        tbTareas.setModel(new ModeloTablaTareasExchange(lista));
-        //tbTareas.setPreferredSize(new Dimension(tbTareas.getWidth(), tbTareas.getModel().getRowCount()+10));
-        tbTareas.revalidate();
-        
-        tamanioColumna(30);
+        try{
+            /*
+            cbListaTareas.removeAllItems();
+            int i= 0;
+            for(ITareaExchange te: lista){
+                //System.out.println(FormateadorTareaExchange.detectorCodificacion(te.getCuerpoTarea())+": "+te.getCuerpoTarea());
+                cbListaTareas.addItem(new FormateadorTareaExchange(i++, te));
+            }*/
+
+            tbTareas.setModel(new ModeloTablaTareasExchange(lista));
+            //tbTareas.setPreferredSize(new Dimension(tbTareas.getParent().getWidth(), tbTareas.getParent().getHeight()));
+            //tbTareas.revalidate();
+            scrPnl.revalidate();
+            tamanioColumna(30);
+        }catch(Exception e){
+            e.printStackTrace();
+        }        
     }
     
     private void tamanioColumna(int tam){
@@ -832,6 +838,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         tc.setPreferredWidth(tam);
         tc.setMinWidth(tam);
         tc.setMaxWidth(tam);
+    }
+    
+    public void obtenerSelecionado(){
+        System.out.println(this.tbTareas.getSelectedRow());
     }
     
     /*
@@ -855,8 +865,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         superiortareas = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tatareas = new javax.swing.JTextArea();
-        inferiorcomponentes = new javax.swing.JPanel();
-        srcPnl = new javax.swing.JScrollPane();
+        inferiorTareas = new javax.swing.JPanel();
+        scrPnl = new javax.swing.JScrollPane();
         tbTareas = new javax.swing.JTable();
         superior = new javax.swing.JPanel();
         pnl2 = new javax.swing.JPanel();
@@ -879,8 +889,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         rbIngTel = new javax.swing.JRadioButton();
         rbIngNota = new javax.swing.JRadioButton();
         rbIngMos = new javax.swing.JRadioButton();
-        pnlTareas = new javax.swing.JPanel();
-        cbListaTareas = new javax.swing.JComboBox<>();
         inferior = new javax.swing.JPanel();
         datosTecnico = new javax.swing.JPanel();
         ltecnico = new javax.swing.JLabel();
@@ -913,32 +921,27 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
         centro.add(superiortareas);
 
-        inferiorcomponentes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        inferiorcomponentes.setLayout(new java.awt.BorderLayout(5, 5));
+        inferiorTareas.setLayout(new java.awt.GridLayout(1, 1));
 
-        srcPnl.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrPnl.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         tbTareas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {},
-                {},
-                {},
-                {}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tbTareas.setFillsViewportHeight(true);
-        tbTareas.setMaximumSize(new java.awt.Dimension(700, 10));
-        tbTareas.setMinimumSize(new java.awt.Dimension(469, 402));
-        tbTareas.setPreferredSize(new java.awt.Dimension(0, 0));
         tbTareas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        srcPnl.setViewportView(tbTareas);
+        scrPnl.setViewportView(tbTareas);
 
-        inferiorcomponentes.add(srcPnl, java.awt.BorderLayout.CENTER);
+        inferiorTareas.add(scrPnl);
 
-        centro.add(inferiorcomponentes);
+        centro.add(inferiorTareas);
 
         getContentPane().add(centro, java.awt.BorderLayout.CENTER);
 
@@ -1018,13 +1021,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         pnlRadioButton.add(rbIngMos);
 
         pnl4.add(pnlRadioButton);
-
-        cbListaTareas.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        cbListaTareas.setMinimumSize(new java.awt.Dimension(400, 20));
-        cbListaTareas.setPreferredSize(new java.awt.Dimension(400, 20));
-        pnlTareas.add(cbListaTareas);
-
-        pnl4.add(pnlTareas);
 
         superior.add(pnl4);
 
@@ -1147,14 +1143,13 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private javax.swing.JButton btnActTareasNoLeidaTecnico;
     private javax.swing.JButton btnActTareasTecnico;
     private javax.swing.JComboBox<String> cbEstados;
-    private javax.swing.JComboBox<FormateadorTareaExchange> cbListaTareas;
     private javax.swing.JComboBox<String> cbdependencia;
     private javax.swing.JComboBox<String> cbponderacion;
     private javax.swing.JPanel centro;
     private javax.swing.JPanel datosTecnico;
     private javax.swing.JPanel datosUsuario;
     private javax.swing.JPanel inferior;
-    private javax.swing.JPanel inferiorcomponentes;
+    private javax.swing.JPanel inferiorTareas;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lClave;
     private javax.swing.JLabel lUsuario;
@@ -1169,12 +1164,11 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private javax.swing.JPanel pnl3;
     private javax.swing.JPanel pnl4;
     private javax.swing.JPanel pnlRadioButton;
-    private javax.swing.JPanel pnlTareas;
     private javax.swing.JRadioButton rbIngCorreo;
     private javax.swing.JRadioButton rbIngMos;
     private javax.swing.JRadioButton rbIngNota;
     private javax.swing.JRadioButton rbIngTel;
-    private javax.swing.JScrollPane srcPnl;
+    private javax.swing.JScrollPane scrPnl;
     private javax.swing.JPanel superior;
     private javax.swing.JPanel superiortareas;
     private javax.swing.JTextArea tatareas;

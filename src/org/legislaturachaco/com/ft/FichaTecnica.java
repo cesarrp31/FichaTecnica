@@ -69,7 +69,7 @@ public class FichaTecnica {
         }
 
         System.out.println("OS: " + nombreOS + ". ARQ: " + tipoDLL);
-        
+        System.out.println("Default Encoding: "+System.getProperty("file.encoding"));
         try {
             FichaTecnicaImpresion ft = new FichaTecnicaImpresion(tipoDLL);
             ft.pack();
