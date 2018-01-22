@@ -14,7 +14,6 @@ import ca.odell.glazedlists.swing.AutoCompleteSupport;
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel;
 import org.legislaturachaco.com.ft.datos.DatosFichaTecnica;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -63,10 +62,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.Timer;
 import javax.swing.table.TableColumn;
 import org.legislaturachaco.com.exchange.tareas.GestorTareasExchange;
 import org.legislaturachaco.com.exchange.tareas.ITareaExchange;
-import org.legislaturachaco.com.gral.FilaRender;
 import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
 import org.legislaturachaco.com.gral.ModeloTablaTareasExchange;
 import org.legislaturachaco.com.gral.MouseSobreTablaAdapter;
@@ -75,20 +74,20 @@ import org.legislaturachaco.com.gral.MouseSobreTablaAdapter;
  *
  * @author jsilva
  */
-public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestorLectorArchivoTexto{
+public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestorLectorArchivoTexto {
 
     private Mail vtnCorreo;
-    private List<String> lstTareas, lstComponentes, lstDependencias, 
-                         lstTemp, lstEstados, lstPonderaciones;
+    private List<String> lstComponentes, lstDependencias,
+            lstTemp, lstEstados, lstPonderaciones;
     private final String crpImg = CONFIG_GENERAL.getCarpetaImagenes() + GestorArchivo.SEPARADOR,
             crpRec = CONFIG_GENERAL.getCarpetaRecursos() + GestorArchivo.SEPARADOR;
-    
+
     private final GestorArchivoFichaTecnica iga;
-    
+
     private GestorTareasExchange gte;
-    
+
     private String ingresoSeleccionado, tipoDLL;
-    
+
     /**
      * Creates new form FichaTecnicaImpresion
      *
@@ -105,33 +104,32 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         inicializarValoresEstaticos();
         formatearPantalla();
         inicializarBarraHerramientas();
-        
-        this.iga= new GestorArchivoFichaTecnica(this);
+
+        this.iga = new GestorArchivoFichaTecnica(this);
         this.tatareas.setWrapStyleWord(true);
-        Reporte.prepararReporte();        
+        Reporte.prepararReporte();
     }
-    
-    public FichaTecnicaImpresion(String tipoDLL) throws IOException{
+
+    public FichaTecnicaImpresion(String tipoDLL) throws IOException {
         this();
-        this.tipoDLL= tipoDLL;
-        
-        try{
-            //this.srcPnl.setPreferredSize(preferredSize);
-            
-            gte= new GestorTareasExchange(this.tipoDLL);
+        this.tipoDLL = tipoDLL;
+
+        try {
+            //this.srcPnl.setPreferredSize(preferredSize);            
+            gte = new GestorTareasExchange(this.tipoDLL);
             System.out.println(gte.getVersion());
-            
+
             cargarListaTareaNoTerminadasEnComboBox();
-            
+
             tbTareas.setDragEnabled(false);
             //tbTareas.setDefaultRenderer(Object.class, new FilaRender());
             tbTareas.addMouseMotionListener(new MouseSobreTablaAdapter(tbTareas));
             tamanioColumna(30);
             tbTareas.getTableHeader().setReorderingAllowed(false);
-        }catch(Exception e){
-            System.err.println("Problema con el gestor exchange "+e.getLocalizedMessage());
+        } catch (Exception e) {
+            System.err.println("Problema con el gestor exchange " + e.getLocalizedMessage());
             e.printStackTrace();
-        }       
+        }
     }
 
     private void inicializarComponentes() {
@@ -144,7 +142,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
         JMenu archivo = new JMenu("Archivo"),
                 acciones = new JMenu("Acciones"),
-                configuraciones= new JMenu("Configuraciones"),
+                configuraciones = new JMenu("Herramientas"),
                 ayuda = new JMenu("Ayuda");
         mb.add(archivo);
         mb.add(acciones);
@@ -158,26 +156,26 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
                 abrir = new JMenuItem("Abrir"),
                 guardar = new JMenuItem("Guardar"),
                 //configuracion= new JMenuItem("Configuracion"),
-                configTecnico= new JMenuItem("Configuracion de Técnico"),
+                configTecnico = new JMenuItem("Configuracion de Técnico"),
                 acercaDe = new JMenuItem("Acerca de...");
 
         nuevo.setAccelerator(KeyStroke.getKeyStroke(
-                             KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+                KeyEvent.VK_N, ActionEvent.CTRL_MASK));
         abrir.setAccelerator(KeyStroke.getKeyStroke(
-                             KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+                KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         guardar.setAccelerator(KeyStroke.getKeyStroke(
-                             KeyEvent.VK_G, ActionEvent.CTRL_MASK));
+                KeyEvent.VK_G, ActionEvent.CTRL_MASK));
         imprimir.setAccelerator(KeyStroke.getKeyStroke(
-                             KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+                KeyEvent.VK_P, ActionEvent.CTRL_MASK));
         enviar.setAccelerator(KeyStroke.getKeyStroke(
-                             KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+                KeyEvent.VK_E, ActionEvent.CTRL_MASK));
         salir.setAccelerator(KeyStroke.getKeyStroke(
-                             KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+                KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         acercaDe.setAccelerator(KeyStroke.getKeyStroke(
-                             KeyEvent.VK_H, ActionEvent.CTRL_MASK));
+                KeyEvent.VK_H, ActionEvent.CTRL_MASK));
         configTecnico.setAccelerator(KeyStroke.getKeyStroke(
-                             KeyEvent.VK_T, ActionEvent.CTRL_MASK));
-        
+                KeyEvent.VK_T, ActionEvent.CTRL_MASK));
+
         abrir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -234,8 +232,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             }
         });
         configuraciones.add(configuracion);
-        */
-        
+         */
+
         configTecnico.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -243,7 +241,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             }
         });
         configuraciones.add(configTecnico);
-        
+
         archivo.add(nuevo);
         archivo.addSeparator();
         archivo.add(abrir);
@@ -261,10 +259,10 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
                 g = crpImg + CONFIG_GENERAL.getImagenBotonGuardar24(),
                 a = crpImg + CONFIG_GENERAL.getImagenBotonAbrir24(),
                 s = crpImg + CONFIG_GENERAL.getImagenBotonSalir24();
-        
+
         ImageIcon ii = GestorArchivo.crearImageIcon(e, "");
         enviar.setIcon(ii);
-        
+
         ii = GestorArchivo.crearImageIcon(i, "");
         imprimir.setIcon(ii);
 
@@ -276,29 +274,29 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
         ii = GestorArchivo.crearImageIcon(g, "");
         guardar.setIcon(ii);
-        
+
         ii = GestorArchivo.crearImageIcon(s, "");
         salir.setIcon(ii);
-        
+
         this.setJMenuBar(mb);
         //this.getJMenuBar().setPreferredSize(new Dimension(50,50));
     }
 
-    private void vntAcercaDe(){
-        JDialog v= new JDialog(this, true);
+    private void vntAcercaDe() {
+        JDialog v = new JDialog(this, true);
         v.setTitle(this.getTitle());
         v.setContentPane(new PnlAcercaDe());
         v.pack();
         v.setLocationRelativeTo(null);
         v.setVisible(true);
     }
-    
+
     private void inicializarBarraHerramientas() throws FileNotFoundException {
         JToolBar barraHerramientas = new JToolBar();
-        barraHerramientas.setPreferredSize(new Dimension(50,50));
-        
+        barraHerramientas.setPreferredSize(new Dimension(50, 50));
+
         barraHerramientas.setFloatable(false);
-        
+
         String e = crpImg + CONFIG_GENERAL.getImagenBotonEnviar(),
                 i = crpImg + CONFIG_GENERAL.getImagenBotonImprimir(),
                 n = crpImg + CONFIG_GENERAL.getImagenBotonNuevo(),
@@ -369,11 +367,12 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         barraHerramientas.addSeparator();
         barraHerramientas.add(btnEnviar);
         barraHerramientas.addSeparator();
+        //barraHerramientas.addSeparator();
         barraHerramientas.add(Box.createHorizontalGlue());
-        
-        String logo = CONFIG_GENERAL.getCarpetaImagenes() + GestorArchivo.SEPARADOR 
+
+        String logo = CONFIG_GENERAL.getCarpetaImagenes() + GestorArchivo.SEPARADOR
                 + CONFIG_GENERAL.getImagenLogoBarra();
-        JLabel icono= new JLabel();
+        JLabel icono = new JLabel();
         icono.setIcon(GestorArchivo.crearImageIcon(logo, ""));
         barraHerramientas.add(icono);
         btnEnviar.setToolTipText("Enviar por Correo");
@@ -407,9 +406,9 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             System.err.println(e.getLocalizedMessage());
             maxChars = 250;
         }
-        this.setTitle(ConfiguracionGeneral.APLICACION_NOMBRE+" "
-                     +ConfiguracionGeneral.APLICACION_VERSION+" ("
-                     +ConfiguracionGeneral.PLATAFORMA + ")");
+        this.setTitle(ConfiguracionGeneral.APLICACION_NOMBRE + " "
+                + ConfiguracionGeneral.APLICACION_VERSION + " ("
+                + ConfiguracionGeneral.PLATAFORMA + ")");
         //Limite de cantidad de caracteres
         tatareas.setDocument(new LimiteCaracteresDocument(maxChars));
         /*AbstractDocument pDoc = (AbstractDocument) tatareas.getDocument();
@@ -422,19 +421,19 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         group.add(rbIngTel);
         group.add(rbIngNota);
         group.add(rbIngMos);
-        
+
         agregarActionListenerRadioButton(rbIngCorreo);
         agregarActionListenerRadioButton(rbIngTel);
         agregarActionListenerRadioButton(rbIngNota);
         agregarActionListenerRadioButton(rbIngMos);
     }
 
-    private void inicializarValoresDesdeArchivo() throws FileNotFoundException, IOException {        
-        lstTareas = new ArrayList<>();
+    private void inicializarValoresDesdeArchivo() throws FileNotFoundException, IOException {
+        //lstTareas = new ArrayList<>();
         lstComponentes = new ArrayList<>();
         lstDependencias = new ArrayList<>();
         lstEstados = new ArrayList<>();
-        lstPonderaciones= new ArrayList<>();
+        lstPonderaciones = new ArrayList<>();
 
         //cargarLista(lstTareas, CONFIG_GENERAL.getNombreArchivoTareas());
         cargarListaTareas();
@@ -443,16 +442,17 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         cargarLista(lstEstados, CONFIG_GENERAL.getNombreArchivoEstados());
         cargarLista(lstPonderaciones, CONFIG_GENERAL.getNombreArchivoPonderaciones());
     }
-    
+
     private void cargarLista(List<String> lstDatos, String nombreArchivoDatos) throws FileNotFoundException, IOException {
-        lstTemp= lstDatos;
+        lstTemp = lstDatos;
         GestorArchivo.obtenerPropiedades(crpRec + nombreArchivoDatos, this);
     }
-    
+
     /**
      * No Implementado por ahora
      */
-    private void cargarListaTareas(){}
+    private void cargarListaTareas() {
+    }
 
     private void inicializarPantallaCarga() {
         //cbComponentes.setSelectedItem(null);
@@ -466,31 +466,32 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         Date actual = new Date();
         tffecha.setText(new SimpleDateFormat(CONFIG_GENERAL.getConfiguracionFormatoFecha()).format(actual));
 
-        boolean cargarUsuarioSesion= Boolean.valueOf(CONFIG_GENERAL.getDefaultCargarNombreUsuarioSesion());
-        if(cargarUsuarioSesion)
+        boolean cargarUsuarioSesion = Boolean.valueOf(CONFIG_GENERAL.getDefaultCargarNombreUsuarioSesion());
+        if (cargarUsuarioSesion) {
             actualizarNombreTecnico(GestorEntornoEjecucion.getNombreUsuario());
-        else
+        } else {
             actualizarNombreTecnico(CONFIG_TECNICO.getNombreTecnico());
-        
+        }
+
         rbIngCorreo.setSelected(true);
-        this.ingresoSeleccionado= rbIngCorreo.getText();
-        
+        this.ingresoSeleccionado = rbIngCorreo.getText();
+
         this.tfUsuario.setText("");
         this.tfClave.setText("");
     }
-    
-    private void agregarActionListenerRadioButton(JRadioButton rb){
+
+    private void agregarActionListenerRadioButton(JRadioButton rb) {
         rb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JRadioButton r= (JRadioButton) e.getSource();
+                JRadioButton r = (JRadioButton) e.getSource();
                 setIngresoSeleccionado(r.getText());
             }
         });
     }
 
-    private void formatearPantalla(){
-        List<JComponent> componentes= new ArrayList<>();
+    private void formatearPantalla() {
+        List<JComponent> componentes = new ArrayList<>();
         componentes.add(ldependencia);
         componentes.add(cbdependencia);
         componentes.add(lfecha);
@@ -498,8 +499,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         componentes.add(lnota);
         componentes.add(tfNota);
         crearGrupo(pnl2, componentes);
-        
-        componentes= new ArrayList<>();
+
+        componentes = new ArrayList<>();
         componentes.add(lpatrimonio);
         componentes.add(tfpatrimonio);
         componentes.add(lponderacion);
@@ -507,58 +508,62 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         componentes.add(lestado);
         componentes.add(cbEstados);
         crearGrupo(pnl3, componentes);
-        
-        componentes= new ArrayList<>();
+
+        componentes = new ArrayList<>();
         componentes.add(ltecnico);
         componentes.add(tftecnico);
         componentes.add(btnActTareasNoLeidaTecnico);
         componentes.add(btnActTareasTecnico);
+        componentes.add(btnDeseleccionar);
         crearGrupo(datosTecnico, componentes);
-                
-        componentes= new ArrayList<>();
+
+        componentes = new ArrayList<>();
         componentes.add(lUsuario);
         componentes.add(tfUsuario);
         componentes.add(lClave);
         componentes.add(tfClave);
-        crearGrupo(datosUsuario, componentes);        
+        crearGrupo(datosUsuario, componentes);
     }
-    
-    private void crearGrupo(JPanel contenedor, List<JComponent> componentes){
+
+    private void crearGrupo(JPanel contenedor, List<JComponent> componentes) {
         GroupLayout layout = new GroupLayout(contenedor);
         contenedor.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
-        
+
         GroupLayout.SequentialGroup hGroup = crearGrupoH(layout, componentes);
         layout.setHorizontalGroup(hGroup);
         GroupLayout.SequentialGroup vGroup = crearGrupoV(layout, componentes, GroupLayout.Alignment.BASELINE);
-        layout.setVerticalGroup(vGroup);        
+        layout.setVerticalGroup(vGroup);
     }
-    
-    private GroupLayout.SequentialGroup crearGrupoH(GroupLayout layout, List<JComponent> componentes){
-        GroupLayout.SequentialGroup grupoSecuencial= layout.createSequentialGroup();
 
-        for(JComponent componente: componentes){
+    private GroupLayout.SequentialGroup crearGrupoH(GroupLayout layout, List<JComponent> componentes) {
+        GroupLayout.SequentialGroup grupoSecuencial = layout.createSequentialGroup();
+
+        for (JComponent componente : componentes) {
             grupoSecuencial.addComponent(componente);
         }
         return grupoSecuencial;
     }
-    
-    private GroupLayout.SequentialGroup crearGrupoV(GroupLayout layout, List<JComponent> componentes, 
-            GroupLayout.Alignment alineacion){
-        GroupLayout.SequentialGroup grupoSecuencial= layout.createSequentialGroup();
+
+    private GroupLayout.SequentialGroup crearGrupoV(GroupLayout layout, List<JComponent> componentes,
+            GroupLayout.Alignment alineacion) {
+        GroupLayout.SequentialGroup grupoSecuencial = layout.createSequentialGroup();
         GroupLayout.ParallelGroup grupoParalelo;
-        if(alineacion == null) grupoParalelo= layout.createParallelGroup();
-        else grupoParalelo= layout.createParallelGroup(alineacion);
-        
-        for(JComponent componente: componentes){
+        if (alineacion == null) {
+            grupoParalelo = layout.createParallelGroup();
+        } else {
+            grupoParalelo = layout.createParallelGroup(alineacion);
+        }
+
+        for (JComponent componente : componentes) {
             grupoParalelo.addComponent(componente);
         }
-        
+
         grupoSecuencial.addGroup(grupoParalelo);
         return grupoSecuencial;
     }
-    
+
     @Override
     public void agregarLinea(String linea) {
         lstTemp.add(linea);
@@ -567,7 +572,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private void cargarValoresComboBox() {
         //cargarValores(cbComponentes, lstComponentes);
         cargarValores(cbdependencia, lstDependencias);
-        
+
         cbEstados.setModel(new DefaultComboBoxModel<String>(new Vector(lstEstados)));
         cbponderacion.setModel(new DefaultComboBoxModel<String>(new Vector(lstPonderaciones)));
     }
@@ -577,7 +582,6 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         for (String dato : lstDatos) {
             datos.add(dato);
         }
-
         DefaultEventComboBoxModel<String> modelo = new DefaultEventComboBoxModel<String>(datos);
         cb.setModel(modelo);
 
@@ -596,8 +600,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
     private void imprimir() {
         DatosFichaTecnica dft;
-        if(controlCamposCompletados()){
-            dft= this.getDatosFichaTecnica();
+        if (controlCamposCompletados()) {
+            dft = this.getDatosFichaTecnica();
             generarCodigoQR(dft);
 
             Reporte.crearReporte(dft, this);
@@ -627,25 +631,26 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         String pathCompleto = CONFIG_GENERAL.getCarpetaTemporal()
                 + GestorArchivo.SEPARADOR
                 + CONFIG_GENERAL.getImagenCodigoQR();
-             
-        CodigoQR qr= new CodigoQR();
+
+        CodigoQR qr = new CodigoQR();
         try {
-            qr.crearCodigoQR(dft.toString(), pathCompleto);            
-            System.out.println("Valor creado: \n"+qr.leerCodigoQR(pathCompleto));
+            qr.crearCodigoQR(dft.toString(), pathCompleto);
+            System.out.println("Valor creado: \n" + qr.leerCodigoQR(pathCompleto));
         } catch (Exception ex) {
-            System.err.println("Error: "+ex.getLocalizedMessage());
+            System.err.println("Error: " + ex.getLocalizedMessage());
             ex.printStackTrace();
         }
     }
 
     private void enviar() {
-        if(controlCamposCompletados()){
+        if (controlCamposCompletados()) {
             try {
                 if (vtnCorreo == null) {
                     vtnCorreo = new Mail(this, true);
                 }
+                vtnCorreo.tareaSeleccionada(obtenerSelecionado());
                 vtnCorreo.asunto(tfpatrimonio.getText(), tfNota.getText());
-                vtnCorreo.datos(this.getDatosFichaTecnica());
+                vtnCorreo.cargarDatos(this.getDatosFichaTecnica());
                 vtnCorreo.pack();
                 vtnCorreo.setLocationRelativeTo(null);
                 vtnCorreo.setVisible(true);
@@ -654,72 +659,72 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
                 JOptionPane.showMessageDialog(null, "Se ha producido un error en el envio de archivo: " + e.getLocalizedMessage(),
                         "ERROR!", JOptionPane.ERROR_MESSAGE);
             }
-        }        
+        }
     }
 
-    private boolean controlCamposCompletados(){
-        boolean camposCompletados= true;
-        String msg="";
-        if((this.cbdependencia.getSelectedItem() == null)||
-           (this.cbdependencia.getSelectedItem().toString().isEmpty())){
-            msg= "Escriba una dependencia.\n";
+    private boolean controlCamposCompletados() {
+        boolean camposCompletados = true;
+        String msg = "";
+        if ((this.cbdependencia.getSelectedItem() == null)
+                || (this.cbdependencia.getSelectedItem().toString().isEmpty())) {
+            msg = "Escriba una dependencia.\n";
         }
-        if(this.tfpatrimonio.getText().isEmpty()){
-            msg+="Escriba 1 o varios nro de patrimonios.\n";
+        if (this.tfpatrimonio.getText().isEmpty()) {
+            msg += "Escriba 1 o varios nro de patrimonios.\n";
         }
-        
-        if(this.tftecnico.getText().isEmpty()){
-            msg+="Escriba 1 o varios nombres de técnicos.\n";
+
+        if (this.tftecnico.getText().isEmpty()) {
+            msg += "Escriba 1 o varios nombres de técnicos.\n";
         }
-        
-        if(!msg.isEmpty()){
+
+        if (!msg.isEmpty()) {
             JOptionPane.showMessageDialog(null, msg,
                     "Información!", JOptionPane.INFORMATION_MESSAGE);
-            camposCompletados= false;
-        }        
+            camposCompletados = false;
+        }
         return camposCompletados;
     }
-    
+
     protected DatosFichaTecnica getDatosFichaTecnica() {
-        String dep = cbdependencia.getSelectedItem()==null?"":cbdependencia.getSelectedItem().toString();
+        String dep = cbdependencia.getSelectedItem() == null ? "" : cbdependencia.getSelectedItem().toString();
         DatosFichaTecnica dft = new DatosFichaTecnica(
-                    quitarCaracteresEspeciales(dep), 
-                    quitarCaracteresEspeciales(tffecha.getText()), 
-                    quitarCaracteresEspeciales(tfNota.getText()), 
-                    quitarCaracteresEspeciales(tfpatrimonio.getText()), 
-                    quitarCaracteresEspeciales(cbponderacion.getSelectedItem().toString()), 
-                    quitarCaracteresEspeciales(cbEstados.getSelectedItem().toString()),
-                    quitarCaracteresEspeciales(tatareas.getText()), 
-                    quitarCaracteresEspeciales(""), //componentes que ya no exite el control
-                    quitarCaracteresEspeciales(tftecnico.getText()),
-                    quitarCaracteresEspeciales(tfUsuario.getText()), 
-                    quitarCaracteresEspeciales(tfClave.getText()), 
-                    quitarCaracteresEspeciales(ingresoSeleccionado));
+                quitarCaracteresEspeciales(dep),
+                quitarCaracteresEspeciales(tffecha.getText()),
+                quitarCaracteresEspeciales(tfNota.getText()),
+                quitarCaracteresEspeciales(tfpatrimonio.getText()),
+                quitarCaracteresEspeciales(cbponderacion.getSelectedItem().toString()),
+                quitarCaracteresEspeciales(cbEstados.getSelectedItem().toString()),
+                quitarCaracteresEspeciales(tatareas.getText()),
+                quitarCaracteresEspeciales(""), //componentes que ya no exite el control
+                quitarCaracteresEspeciales(tftecnico.getText()),
+                quitarCaracteresEspeciales(tfUsuario.getText()),
+                quitarCaracteresEspeciales(tfClave.getText()),
+                quitarCaracteresEspeciales(ingresoSeleccionado));
         return dft;
     }
-    
-    private String quitarCaracteresEspeciales(String texto){
-        texto= texto.replaceAll("\n", " ");
-        texto= texto.replaceAll("\t", " ");
+
+    private String quitarCaracteresEspeciales(String texto) {
+        texto = texto.replaceAll("\n", " ");
+        texto = texto.replaceAll("\t", " ");
         return texto.trim();
     }
 
-    private void abrir(){
+    private void abrir() {
         GestorArchivo.abrirArchivo(this.getGestorArchivo());
     }
-    
-    private void guardar(){
+
+    private void guardar() {
         GestorArchivo.guardar(this.getGestorArchivo());
     }
-    
-    private void vntConfigTecnico(){
+
+    private void vntConfigTecnico() {
         ConfiguracionTecnico c = new ConfiguracionTecnico(this, true);
         c.setLocationRelativeTo(null);
         c.pack();
         c.setVisible(true);
     }
-    
-    private IGestionArchivo getGestorArchivo(){
+
+    private IGestionArchivo getGestorArchivo() {
         return iga;
     }
 
@@ -762,25 +767,25 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     public JTextField getTfUsuario() {
         return tfUsuario;
     }
-    
-    protected void seleccionarIngreso(String ingreso){
-        if(rbIngMos.getText().equals(ingreso)){
+
+    protected void seleccionarIngreso(String ingreso) {
+        if (rbIngMos.getText().equals(ingreso)) {
             rbIngMos.setSelected(true);
-            ingresoSeleccionado= rbIngMos.getText();
+            ingresoSeleccionado = rbIngMos.getText();
             return;
         }
-        if(rbIngNota.getText().equals(ingreso)){
+        if (rbIngNota.getText().equals(ingreso)) {
             rbIngNota.setSelected(true);
-            ingresoSeleccionado= rbIngNota.getText();
+            ingresoSeleccionado = rbIngNota.getText();
             return;
         }
-        if(rbIngTel.getText().equals(ingreso)){
+        if (rbIngTel.getText().equals(ingreso)) {
             rbIngTel.setSelected(true);
-            ingresoSeleccionado= rbIngTel.getText();
+            ingresoSeleccionado = rbIngTel.getText();
             return;
         }
         rbIngCorreo.setSelected(true);
-        ingresoSeleccionado= rbIngCorreo.getText();
+        ingresoSeleccionado = rbIngCorreo.getText();
     }
 
     public String getIngresoSeleccionado() {
@@ -790,31 +795,33 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     private void setIngresoSeleccionado(String ingresoSeleccionado) {
         this.ingresoSeleccionado = ingresoSeleccionado;
     }
-    
-    protected void actualizarNombreTecnico(String nombreTecnico){
+
+    protected void actualizarNombreTecnico(String nombreTecnico) {
         this.tftecnico.setText(nombreTecnico);
     }
-    
-    protected void actualizarUsuarioTecnico(String usuarioTecnico){
-        if (vtnCorreo == null) return;
-        
+
+    protected void actualizarUsuarioTecnico(String usuarioTecnico) {
+        if (vtnCorreo == null) {
+            return;
+        }
+
         vtnCorreo.actualizarUsuario();
     }
-    
-    private void cargarListaTodasTareaEnComboBox(){
-        if(gte!=null){
+
+    private void cargarListaTodasTareaEnComboBox() {
+        if (gte != null) {
             cargarLista(gte.getListaTareas());
         }
     }
-    
-    private void cargarListaTareaNoTerminadasEnComboBox(){
-        if(gte!=null){
+
+    private void cargarListaTareaNoTerminadasEnComboBox() {
+        if (gte != null) {
             cargarLista(gte.getListaTareasNoTerminadas());
         }
     }
-    
-    private void cargarLista(List<ITareaExchange> lista){
-        try{
+
+    private void cargarLista(List<ITareaExchange> lista) {
+        try {
             /*
             cbListaTareas.removeAllItems();
             int i= 0;
@@ -827,23 +834,41 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
             //tbTareas.setPreferredSize(new Dimension(tbTareas.getParent().getWidth(), tbTareas.getParent().getHeight()));
             //tbTareas.revalidate();
             scrPnl.revalidate();
-            tamanioColumna(30);
-        }catch(Exception e){
+            tamanioColumna(30, this.tbTareas.getColumn(ModeloTablaTareasExchange.NRO));
+            tamanioColumna(150, this.tbTareas.getColumn(ModeloTablaTareasExchange.FECHA_CREACION));
+            tamanioColumna(150, this.tbTareas.getColumn(ModeloTablaTareasExchange.FECHA_VENCIMIENTO));
+
+            /*TableRowSorter<TableModel> tr= new TableRowSorter<>(tbTareas.getModel());
+            tbTareas.setRowSorter(tr);*/
+        } catch (Exception e) {
             e.printStackTrace();
-        }        
+        }
     }
-    
-    private void tamanioColumna(int tam){
-        TableColumn tc= this.tbTareas.getColumn(ModeloTablaTareasExchange.NRO);
+
+    private void tamanioColumna(int tam) {
+        this.tamanioColumna(tam, this.tbTareas.getColumn(ModeloTablaTareasExchange.NRO));
+    }
+
+    private void tamanioColumna(int tam, TableColumn tc) {
+        //TableColumn tc= this.tbTareas.getColumn(ModeloTablaTareasExchange.NRO);
         tc.setPreferredWidth(tam);
         tc.setMinWidth(tam);
         tc.setMaxWidth(tam);
     }
-    
-    public void obtenerSelecionado(){
-        System.out.println(this.tbTareas.getSelectedRow());
+
+    private ITareaExchange obtenerSelecionado() {
+        ITareaExchange tarea= null;
+        try {
+            int idx= this.tbTareas.getSelectedRow();
+            System.out.println(idx);
+            tarea= ((ModeloTablaTareasExchange)this.tbTareas.getModel()).getTarea(idx);
+            System.out.println(tarea);
+        } catch (Exception ex) {
+            System.err.println("Error: " + ex.getLocalizedMessage());
+        }
+        return tarea;
     }
-    
+
     /*
     private void crearVentanaConfiguraciones() {
         Configuraciones c = new Configuraciones(this, true);
@@ -851,7 +876,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         c.pack();
         c.setVisible(true);
     }
-    */
+     */
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -895,6 +920,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         tftecnico = new javax.swing.JTextField();
         btnActTareasNoLeidaTecnico = new javax.swing.JButton();
         btnActTareasTecnico = new javax.swing.JButton();
+        btnDeseleccionar = new javax.swing.JButton();
         datosUsuario = new javax.swing.JPanel();
         lUsuario = new javax.swing.JLabel();
         tfUsuario = new javax.swing.JTextField();
@@ -1027,7 +1053,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         getContentPane().add(superior, java.awt.BorderLayout.NORTH);
 
         inferior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        inferior.setLayout(new java.awt.BorderLayout());
+        inferior.setLayout(new java.awt.GridLayout(2, 1));
 
         datosTecnico.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
@@ -1039,7 +1065,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         tftecnico.setToolTipText("Ingrese nombre del técnico que realizó el servicio técnico");
         datosTecnico.add(tftecnico);
 
-        btnActTareasNoLeidaTecnico.setText("X");
+        btnActTareasNoLeidaTecnico.setText("N");
         btnActTareasNoLeidaTecnico.setToolTipText("Tareas No Leídas");
         btnActTareasNoLeidaTecnico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1057,7 +1083,16 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         });
         datosTecnico.add(btnActTareasTecnico);
 
-        inferior.add(datosTecnico, java.awt.BorderLayout.NORTH);
+        btnDeseleccionar.setText("X");
+        btnDeseleccionar.setToolTipText("Ninguna Tarea");
+        btnDeseleccionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeseleccionarActionPerformed(evt);
+            }
+        });
+        datosTecnico.add(btnDeseleccionar);
+
+        inferior.add(datosTecnico);
 
         datosUsuario.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos de Usuario"));
         datosUsuario.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
@@ -1076,7 +1111,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
         tfClave.setToolTipText("Ingrese la contraseña de usuario que se cargo por última vez en la pc");
         datosUsuario.add(tfClave);
 
-        inferior.add(datosUsuario, java.awt.BorderLayout.SOUTH);
+        inferior.add(datosUsuario);
 
         getContentPane().add(inferior, java.awt.BorderLayout.PAGE_END);
 
@@ -1084,20 +1119,54 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnActTareasNoLeidaTecnicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActTareasNoLeidaTecnicoActionPerformed
-        if((this.gte!=null)||(!tftecnico.getText().equals(""))){
-            this.gte.getGestorExchange().setCredencialesUsuario(tftecnico.getText(), "");
-            this.gte.getGestorExchange().actualizarListaTareas();            
-            cargarListaTareaNoTerminadasEnComboBox();
+        if ((this.gte != null) || (!tftecnico.getText().equals(""))) {
+            this.gte.getGestorExchange().setCredencialesUsuario(CONFIG_TECNICO.getUsuarioTecnico(), "");
+            this.gte.getGestorExchange().actualizarListaTareas();
+
+            if (gte.getGestorExchange().existeError()) {
+                manejarErrores("Error: " + gte.getGestorExchange().claseError());
+            } else {
+                cargarListaTareaNoTerminadasEnComboBox();
+            }
         }
     }//GEN-LAST:event_btnActTareasNoLeidaTecnicoActionPerformed
 
     private void btnActTareasTecnicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActTareasTecnicoActionPerformed
-        if((this.gte!=null)||(!tftecnico.getText().equals(""))){
-            this.gte.getGestorExchange().setCredencialesUsuario(tftecnico.getText(), "");
-            this.gte.getGestorExchange().actualizarListaTareas();            
-            cargarListaTodasTareaEnComboBox();
+        if ((this.gte != null) || (!tftecnico.getText().equals(""))) {
+            this.gte.getGestorExchange().setCredencialesUsuario(CONFIG_TECNICO.getUsuarioTecnico(), "");
+            this.gte.getGestorExchange().actualizarListaTareas();
+
+            if (gte.getGestorExchange().existeError()) {
+                manejarErrores("Error: " + gte.getGestorExchange().claseError());
+            } else {
+                cargarListaTodasTareaEnComboBox();
+            }
         }
     }//GEN-LAST:event_btnActTareasTecnicoActionPerformed
+
+    private void btnDeseleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeseleccionarActionPerformed
+        // TODO add your handling code here:
+        this.tbTareas.clearSelection();
+    }//GEN-LAST:event_btnDeseleccionarActionPerformed
+
+    private void manejarErrores(String msgError) {
+        JOptionPane popup = new JOptionPane(msgError, JOptionPane.ERROR_MESSAGE);
+        JDialog dialog = popup.createDialog("Error");
+        dialog.setModal(true);
+        dialog.addWindowListener(null);
+
+        Timer timer = new Timer(2000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.setVisible(false);
+                dialog.dispose();
+                System.out.println("ERRORRRRRRR");
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
+        dialog.setVisible(true);
+    }
 
     /**
      * @param args the command line arguments
@@ -1142,6 +1211,7 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActTareasNoLeidaTecnico;
     private javax.swing.JButton btnActTareasTecnico;
+    private javax.swing.JButton btnDeseleccionar;
     private javax.swing.JComboBox<String> cbEstados;
     private javax.swing.JComboBox<String> cbdependencia;
     private javax.swing.JComboBox<String> cbponderacion;
@@ -1183,7 +1253,8 @@ public class FichaTecnicaImpresion extends javax.swing.JFrame implements IGestor
 
 }
 
-class GestorArchivoFichaTecnica implements IGestionArchivo{
+class GestorArchivoFichaTecnica implements IGestionArchivo {
+
     private final FichaTecnicaImpresion fti;
 
     public GestorArchivoFichaTecnica(FichaTecnicaImpresion fti) {
@@ -1194,16 +1265,16 @@ class GestorArchivoFichaTecnica implements IGestionArchivo{
     public void abrir(File fichero) {
         //System.out.println("Abrir: " + fichero);
         try {
-            StringBuilder sb= new StringBuilder();
-            String aux="";
+            StringBuilder sb = new StringBuilder();
+            String aux = "";
             String[] aux2;
             Scanner scnr = new Scanner(fichero);
             if (scnr.hasNextLine()) {
-                do{
+                do {
                     sb.append(scnr.nextLine());
-                }while(scnr.hasNextLine());
-                aux= sb.toString();
-                System.out.println("Valor leido: "+aux);
+                } while (scnr.hasNextLine());
+                aux = sb.toString();
+                System.out.println("Valor leido: " + aux);
                 aux2 = aux.split(DatosFichaTecnica.DELIMITADOR);
                 fti.getCBDependencia().setSelectedItem(formatearCampoLeido(aux2[0]));
                 fti.getTFFecha().setText(formatearCampoLeido(aux2[1]));
@@ -1221,59 +1292,60 @@ class GestorArchivoFichaTecnica implements IGestionArchivo{
         } catch (FileNotFoundException e) {
             System.err.println(e.getLocalizedMessage());
             e.printStackTrace();
-        }        
-    }
-    
-    private String formatearCampoLeido(String valor){
-        String aux="";
-        if (valor.startsWith(DatosFichaTecnica.SEPARADOR)){
-            aux= valor.substring(1);
         }
-        if (valor.endsWith(DatosFichaTecnica.SEPARADOR)){
-            aux= aux.substring(0, aux.length()-1);
+    }
+
+    private String formatearCampoLeido(String valor) {
+        String aux = "";
+        if (valor.startsWith(DatosFichaTecnica.SEPARADOR)) {
+            aux = valor.substring(1);
+        }
+        if (valor.endsWith(DatosFichaTecnica.SEPARADOR)) {
+            aux = aux.substring(0, aux.length() - 1);
         }
         return aux;
     }
-    
+
     @Override
-    public void guardar(File fichero) {        
+    public void guardar(File fichero) {
         BufferedWriter bw;
-        String ext = "." + this.extensionArchivo(), texto="", salto="\n";
+        String ext = "." + this.extensionArchivo(), texto = "", salto = "\n";
         try {
             if (fichero.getPath().endsWith(ext)) {
                 bw = new BufferedWriter(new FileWriter(fichero));
             } else {
                 bw = new BufferedWriter(new FileWriter(fichero + ext));
             }
-            texto= fti.getDatosFichaTecnica().toString();
-            if(texto.contains(salto))
-                texto= texto.replace(salto, " ");
+            texto = fti.getDatosFichaTecnica().toString();
+            if (texto.contains(salto)) {
+                texto = texto.replace(salto, " ");
+            }
             bw.write(texto);
             bw.close();
-            System.out.println("Datos guardados: "+fti.getDatosFichaTecnica().toString());
+            System.out.println("Datos guardados: " + fti.getDatosFichaTecnica().toString());
         } catch (Exception e) {
             System.err.println(e.getLocalizedMessage());
             e.printStackTrace();
-        }        
+        }
     }
-    
+
     @Override
-    public Frame ventana(){
+    public Frame ventana() {
         return this.fti;
     }
-    
+
     @Override
-    public String extensionArchivo(){
+    public String extensionArchivo() {
         return CONFIG_GENERAL.getConfiguracionArchivoExtension();
     }
-    
+
     @Override
-    public String descripcionTipoArchivo(){
+    public String descripcionTipoArchivo() {
         return CONFIG_GENERAL.getConfiguracionArchivoDescripcion();
     }
-    
+
     @Override
-    public String carpetaGuardado(){
+    public String carpetaGuardado() {
         return CONFIG_GENERAL.getCarpetaGuardado();
-    }    
+    }
 }

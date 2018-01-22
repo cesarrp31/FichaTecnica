@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import org.legislaturachaco.com.exchange.tareas.ITareaExchange;
 import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_GENERAL;
 import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
 
@@ -44,10 +45,10 @@ public class Mail extends JDialog {
             case 1: tfDe.setText(GestorEntornoEjecucion.getNombreUsuario()); break;
             default: tfDe.setText(CONFIG_TECNICO.getUsuarioTecnico());
         }
-        tfDestino.setText(CONFIG_CORREO.getDefaultCorreoDestinatario());        
+        tfDestino.setText(CONFIG_CORREO.getDefaultCorreoDestinatario());
     }
-
-    public void datos(DatosFichaTecnica dft) {
+    
+    public void cargarDatos(DatosFichaTecnica dft) {
         String tarea, componente, nota, usuario, clave, aclaracion;
         if(dft.getTarea().isEmpty()){
             tarea= "";
@@ -87,9 +88,23 @@ public class Mail extends JDialog {
         msgPantalla="<head><base href=\"file:"+crpImg+"\"></head>"+msgComun+"<img src=\""+path+"\"></img>";
         msgMail=msgComun+"<br><br><img src=\"cid:image\"></img>";
         
-        this.epMsg.setText(msgPantalla);
-        
+        this.epMsg.setText(msgPantalla);        
         this.btEnviar.requestFocus();
+    }
+
+    protected void tareaSeleccionada(ITareaExchange tarea){
+        if(tarea == null) return;
+        
+        StringBuilder sb= new StringBuilder();
+        sb.append("<b>Fecha:</b> ");
+        sb.append(tarea.getFechaCreacionTarea());
+        sb.append("<br><b>Asunto:</b> ");
+        sb.append(tarea.getAsuntoTarea());
+        sb.append("<br><b>Cuerpo:</b> ");
+        sb.append(tarea.getCuerpoTarea());
+        sb.append("<br><b>Vencimiento:</b> ");
+        sb.append(tarea.getFechaVencimientoTarea());
+        epTarea.setText(sb.toString());
     }
     
     private String crearTabla(DatosFichaTecnica dft){
@@ -118,8 +133,7 @@ public class Mail extends JDialog {
     private String agregarColumnaTabla(String dato){
         return "<td>"+dato+"</td>";
     }
-    
-    
+        
     private String agregarLineaB(String estatico, String dinamico){
         return "<b>"+estatico+": </b>" + dinamico +"<br>";
     }
@@ -166,6 +180,9 @@ public class Mail extends JDialog {
         pnlSur = new javax.swing.JPanel();
         btEnviar = new javax.swing.JButton();
         btSalir = new javax.swing.JButton();
+        pnlOeste = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        epTarea = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -199,7 +216,7 @@ public class Mail extends JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pass, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE))))
+                                .addComponent(pass, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE))))
                     .addGroup(pnlNorteLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -237,11 +254,11 @@ public class Mail extends JDialog {
         pnlCentral.setLayout(pnlCentralLayout);
         pnlCentralLayout.setHorizontalGroup(
             pnlCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 865, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
         );
         pnlCentralLayout.setVerticalGroup(
             pnlCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
         );
 
         getContentPane().add(pnlCentral, java.awt.BorderLayout.CENTER);
@@ -263,6 +280,26 @@ public class Mail extends JDialog {
         pnlSur.add(btSalir);
 
         getContentPane().add(pnlSur, java.awt.BorderLayout.SOUTH);
+
+        epTarea.setEditable(false);
+        epTarea.setContentType("text/html"); // NOI18N
+        jScrollPane3.setViewportView(epTarea);
+
+        javax.swing.GroupLayout pnlOesteLayout = new javax.swing.GroupLayout(pnlOeste);
+        pnlOeste.setLayout(pnlOesteLayout);
+        pnlOesteLayout.setHorizontalGroup(
+            pnlOesteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOesteLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        pnlOesteLayout.setVerticalGroup(
+            pnlOesteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(pnlOeste, java.awt.BorderLayout.WEST);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -339,14 +376,17 @@ public class Mail extends JDialog {
     private javax.swing.JButton btEnviar;
     private javax.swing.JButton btSalir;
     private javax.swing.JEditorPane epMsg;
+    private javax.swing.JEditorPane epTarea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPasswordField pass;
     private javax.swing.JPanel pnlCentral;
     private javax.swing.JPanel pnlNorte;
+    private javax.swing.JPanel pnlOeste;
     private javax.swing.JPanel pnlSur;
     private javax.swing.JTextField tfAsunto;
     private javax.swing.JTextField tfDe;

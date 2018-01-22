@@ -57,7 +57,7 @@ public class PnlAcercaDe extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Diseñado y Desarrollado por:", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 24))); // NOI18N
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("<html>\n<body>\n<h2>Téc. Administración de Empresas Gallo, Mario<br>\nTéc. Supuperior en Programación Silva, Jonatan<br>\nAnalista de Sistemas Peralta, Cesar</h2>\n</body>\n</html>");
+        jLabel2.setText("<html>\n<body>\n<h2>Téc. Administración de Empresas Gallo, Mario<br>\nTéc. Superior en Programación Silva, Jonatan<br>\nAnalista de Sistemas Peralta, Cesar</h2>\n</body>\n</html>");
         jPanel1.add(jLabel2);
 
         add(jPanel1);
