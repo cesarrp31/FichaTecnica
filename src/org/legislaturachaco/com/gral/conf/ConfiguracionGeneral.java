@@ -5,13 +5,17 @@
  */
 package org.legislaturachaco.com.gral.conf;
 
+import java.io.File;
 import java.io.IOException;
+import org.legislaturachaco.com.gral.GestorArchivo;
 import org.legislaturachaco.com.gral.GestorEntornoEjecucion;
 /**
  *
  * @author coperalta
  */
 public class ConfiguracionGeneral extends ConfiguracionAbstracta{
+    private static final String CARPETA_CONFIG= "config";
+    
     public static final String PLATAFORMA= GestorEntornoEjecucion.getSOComputadora()+" / "
                                             + GestorEntornoEjecucion.getArcComputadora(),
                                APLICACION_NOMBRE= "SRTI: Sistema de Registro de Tareas Informáticas",
@@ -19,7 +23,7 @@ public class ConfiguracionGeneral extends ConfiguracionAbstracta{
                                APLICACION_ANIO= "2017";
 
     public ConfiguracionGeneral() throws IOException {
-        super("configuracionInicial.config");
+        super(CARPETA_CONFIG+GestorArchivo.SEPARADOR+"configuracionInicial.config");
     }
     
     public String getArchivoConfiguracionCorreo(){
@@ -28,6 +32,14 @@ public class ConfiguracionGeneral extends ConfiguracionAbstracta{
     
     public String getCarpetaConfiguracionCorreo(){
         return this.getPropiedad("crp.configCorreo");
+    }
+    
+    public String getArchivoConfiguracionTecnico(){
+        return this.getPropiedad("cnf.Tecnico");
+    }
+    
+    public String getCarpetaConfiguracionTecnico(){
+        return this.getPropiedad("crp.configTecnico");
     }
     
     public String getCarpetaImagenes(){

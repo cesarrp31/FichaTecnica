@@ -20,6 +20,7 @@ public class DocumentSizeFilter extends DocumentFilter {
         maxCharacters = maxChars;
     }
 
+    @Override
     public void insertString(FilterBypass fb, int offs,
                              String str, AttributeSet a)
         throws BadLocationException {
@@ -37,6 +38,7 @@ public class DocumentSizeFilter extends DocumentFilter {
             Toolkit.getDefaultToolkit().beep();
     }
     
+    @Override
     public void replace(FilterBypass fb, int offs,
                         int length, 
                         String str, AttributeSet a)

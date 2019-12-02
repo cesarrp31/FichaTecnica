@@ -5,15 +5,19 @@
  */
 package org.legislaturachaco.com.gral;
 
-import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_CORREO;
+import java.util.Properties;
+import static org.legislaturachaco.ft.FichaTecnica.CONFIG_CORREO;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -24,36 +28,36 @@ import javax.mail.internet.MimeMultipart;
  * @author coperalta
  */
 public class EnviarCorreo {
+    private Properties propiedades;
+    
+    public EnviarCorreo() {
+        this.propiedades= CONFIG_CORREO.getPropiedad();
+    }
+
+    
+    public EnviarCorreo(Properties propiedades) {
+        this.propiedades= propiedades;
+    }
 
     public void enviarCorreoSimple(String usuario, String password,
             String destino, String asunto, String msg, String tipoMensaje) throws MessagingException {
+        String usuarioCompleto= usuario+"@legislaturachaco.gov.ar";
+
         // Propiedades de la conexión
-        CONFIG_CORREO.setSmtpUser(usuario);
-        String a= ", ";
-        System.out.print("Propiedades de Correo PreConfiguradas Cargadas: ");
-        
-        System.out.print(CONFIG_CORREO.getSmtpHost() + a);
-        System.out.print(CONFIG_CORREO.getSmtpStartTlsEnable() + a);
-        System.out.print(CONFIG_CORREO.getSmtpPort() + a);
-        System.out.print(CONFIG_CORREO.getSmtpUser() + a);
-        System.out.println(CONFIG_CORREO.getSmtpAuth());
+        this.mostrarPropiedades(propiedades);
 
         // Preparamos la sesion
-        Session session = Session.getDefaultInstance(CONFIG_CORREO.getPropiedad());
+        Session session = this.getSession(usuarioCompleto, password);
 
         // Construimos el mensaje
-        MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(usuario));
-        message.addRecipient(
-                Message.RecipientType.TO,
-                new InternetAddress(destino));
-        message.setSubject(asunto);
-        //message.setText(msg);
+        MimeMessage message = getMimeMessage(session, usuarioCompleto, destino, asunto);
+        
+        //Cargar Contenido
         message.setContent(msg, tipoMensaje);
 
         // Lo enviamos.
         Transport transport = session.getTransport(CONFIG_CORREO.getTransport());
-        transport.connect(usuario, password);
+        transport.connect(CONFIG_CORREO.getSmtpHost(), usuario, password);
         transport.sendMessage(message, message.getAllRecipients());
 
         // Cierre.
@@ -62,36 +66,29 @@ public class EnviarCorreo {
 
     public void enviarCorreoImagen(String usuario, String password,
             String destino, String asunto, String msg, String pathImg, String tipoMensaje) throws MessagingException {
-        // Propiedades de la conexión
-        CONFIG_CORREO.setSmtpUser(usuario);
-        String a= ", ";
-        System.out.println("Propiedades de Correo PreConfiguradas Cargadas: ");
+        String usuarioCompleto= usuario+"@legislaturachaco.gov.ar";
         
-        System.out.print(CONFIG_CORREO.getSmtpHost() + a);
-        System.out.print(CONFIG_CORREO.getSmtpStartTlsEnable() + a);
-        System.out.print(CONFIG_CORREO.getSmtpPort() + a);
-        System.out.print(CONFIG_CORREO.getSmtpUser() + a);
-        System.out.println(CONFIG_CORREO.getSmtpAuth());
-
+        propiedades.put("mail.smtp.user", usuarioCompleto);
+        propiedades.put("mail.smtp.from", usuarioCompleto);
+        propiedades.put("mail.smtp.submitter", usuarioCompleto);
+        // Propiedades de la conexión
+        this.mostrarPropiedades(propiedades);
+        
         // Preparamos la sesion
-        Session session = Session.getDefaultInstance(CONFIG_CORREO.getPropiedad());
+        Session session = this.getSession(usuarioCompleto, password);
 
         // Construimos el mensaje
-        MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(usuario));
-        message.addRecipient(
-                Message.RecipientType.TO,
-                new InternetAddress(destino));
-        message.setSubject(asunto);
-
+        MimeMessage message = getMimeMessage(session, usuarioCompleto, destino, asunto);
+        
+        //Cargar Contenido
         MimeMultipart multipart = new MimeMultipart();
 
-        // Texto (html)
+        //  Texto (html)
         BodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(msg, tipoMensaje);
         multipart.addBodyPart(messageBodyPart);
 
-        // Imagen
+        //  Imagen
         messageBodyPart = new MimeBodyPart();
         DataSource fds = new FileDataSource(pathImg);
 
@@ -104,10 +101,38 @@ public class EnviarCorreo {
         
         // Lo enviamos.
         Transport transport = session.getTransport(CONFIG_CORREO.getTransport());
-        transport.connect(usuario, password);
+        transport.connect(CONFIG_CORREO.getSmtpHost(), new Integer(CONFIG_CORREO.getSmtpPort()), usuario, password);
         transport.sendMessage(message, message.getAllRecipients());
 
         // Cierre.
         transport.close();
+    }
+    
+    private void mostrarPropiedades(Properties propiedades){
+        System.out.println("Propiedades de Correo PreConfiguradas Cargadas: ");
+        
+        propiedades.forEach((k,v) -> System.out.println(k+":"+v));
+    }
+
+    private Session getSession(String usuario, String password) {
+        return Session.getInstance(CONFIG_CORREO.getPropiedad(),
+                new Authenticator(){
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication(){
+                        return new PasswordAuthentication(usuario, password);
+                    }
+                });
+    }
+    
+    private MimeMessage getMimeMessage(Session session, String usuario, String destino, String asunto) 
+            throws AddressException, MessagingException{
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(usuario));
+        message.addRecipient(
+                Message.RecipientType.TO,
+                new InternetAddress(destino));
+        message.setSubject(asunto);
+        message.setSender(new InternetAddress(usuario));
+        return message;
     }
 }

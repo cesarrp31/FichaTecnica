@@ -5,7 +5,7 @@
  */
 package org.legislaturachaco.com.gral;
 
-import org.legislaturachaco.com.ft.FichaTecnica;
+import org.legislaturachaco.ft.FichaTecnica;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,16 +63,8 @@ public class GestorArchivo {
     public static Properties obtenerPropiedades(String nombreArchivo, String codificacion) throws FileNotFoundException, IOException {
         Properties propiedad = new Properties();
         File archivo = cargarArchivo(nombreArchivo);
-        InputStream inputStream = new FileInputStream(archivo);
-        try {
-            Reader reader = new InputStreamReader(inputStream, codificacion);
-            try {
-                propiedad.load(reader);
-            } finally {
-                reader.close();
-            }
-        } finally {
-            inputStream.close();
+        try (InputStream inputStream = new FileInputStream(archivo); Reader reader = new InputStreamReader(inputStream, codificacion)) {
+            propiedad.load(reader);
         }
         return propiedad;
     }
@@ -94,9 +86,9 @@ public class GestorArchivo {
     }
     
     public static void guardarPropiedades(Properties propiedad, String nombreArchivo) throws FileNotFoundException, IOException{
-        OutputStream out = new FileOutputStream(nombreArchivo);
-        propiedad.store(out, null);
-        out.close();
+        try (OutputStream out = new FileOutputStream(nombreArchivo)) {
+            propiedad.store(out, null);
+        }
     }
     
     public static void abrirArchivo(IGestionArchivo gestor){

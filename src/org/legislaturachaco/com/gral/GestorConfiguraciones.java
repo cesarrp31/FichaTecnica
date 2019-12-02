@@ -13,7 +13,7 @@ import java.util.Map;
  * @author coperalta
  */
 public class GestorConfiguraciones implements IGestorLectorArchivoTexto{
-    private Map<String, String[]> mapConfig;
+    private final Map<String, String[]> mapConfig;
 
     public GestorConfiguraciones() {
         mapConfig= new HashMap<>();

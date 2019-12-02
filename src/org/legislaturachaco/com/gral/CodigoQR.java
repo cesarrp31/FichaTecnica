@@ -11,9 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.imageio.ImageIO;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.EncodeHintType;
@@ -27,8 +25,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import org.legislaturachaco.com.ft.FichaTecnica;
-import static org.legislaturachaco.com.ft.FichaTecnica.CONFIG_GENERAL;
+import static org.legislaturachaco.ft.FichaTecnica.CONFIG_GENERAL;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 

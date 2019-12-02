@@ -6,7 +6,6 @@
 package org.legislaturachaco.com.gral.conf;
 
 import org.legislaturachaco.com.gral.GestorArchivo;
-import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -16,11 +15,10 @@ import java.util.Properties;
  */
 public abstract class ConfiguracionAbstracta {
     private final Properties configuracion;
-    private String ubicacion;
-    //public static final String SEPARADOR= File.separator;
+    private final String ubicacion;
 
     protected ConfiguracionAbstracta(String ubicacion) throws IOException {
-        this.ubicacion= "config"+GestorArchivo.SEPARADOR+ubicacion;
+        this.ubicacion= ubicacion;
         configuracion = GestorArchivo.obtenerPropiedades(this.ubicacion);
     }
     

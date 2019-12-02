@@ -19,6 +19,5 @@ public class SOException extends RuntimeException{
     
     public SOException(String msg){
         super(msg);
-    }
-    
+    }    
 }
